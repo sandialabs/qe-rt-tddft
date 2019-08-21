@@ -10,13 +10,6 @@ AC_ARG_WITH(qe-source,
 # make path absolute
 abspath=`readlink -f ${qe_source} 2>/dev/null` && qe_source=$abspath
 
-# Option: enable band parallelization
-AC_ARG_ENABLE(band-parallel,
-   [AC_HELP_STRING([--enable-band-parallel],[enable band parallelization])],
-   BAND_PARALLEL="$enableval",
-   BAND_PARALLEL="no"
-)
-
 # Look for make.sys
 AC_CHECK_FILE(${qe_source}/make.inc, [], [AC_MSG_ERROR([Cannot find make.inc in ${qe_source}])])
 
