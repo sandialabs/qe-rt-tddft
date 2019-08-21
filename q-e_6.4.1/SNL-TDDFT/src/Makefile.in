@@ -35,8 +35,7 @@ tddft_version.f90: version
 
 tddft.x: $(TDDFT_OBJS) $(PWOBJS) $(QEMODS) $(LIBOBJS)
 	$(LD) $(LDFLAGS) -o $@ $(TDDFT_OBJS) $(PWOBJS) $(QEMODS) $(LIBOBJS) $(QELIBS)
-	(cd ../bin; ln -sf ../src/tddft.x .)
-
+	
 clean:
 	-/bin/rm -f tddft.x *.o *.F90 *__genmod.f90 *.d *.mod *.i *.L
 
