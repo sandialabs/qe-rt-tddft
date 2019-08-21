@@ -1,5 +1,5 @@
 # Autoconf template for snl-tddft
-AC_INIT(snl-tddft, 6.4, adbacze@sandia.gov, snl-tddft)
+AC_INIT(snl-tddft, 6.4.1, adbacze@sandia.gov, snl-tddft)
 
 # Option: Quantum-Espresso source directory (QE_SOURCE)
 AC_ARG_WITH(qe-source,
@@ -28,7 +28,7 @@ AC_MSG_CHECKING([Quantum-Espresso version])
 version=`grep version_number ${qe_source}/Modules/version.f90 | cut -d\' -f2`
 AC_MSG_RESULT([$version])
 case $version in
-  6.4*   ) ;;
+  6.4.1   ) ;;
   *) AC_MSG_ERROR([Cannot compile against this version of Quantum-Espresso]) ;;
 esac
 
