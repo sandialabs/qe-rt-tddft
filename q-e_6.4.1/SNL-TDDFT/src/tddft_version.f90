@@ -5,9 +5,7 @@
 ! in the root directory of the present distribution,
 ! or http://www.gnu.org/copyleft/gpl.txt .
 !
-
 ! NOTE: this file is automatically created
-
 !----------------------------------------------------------------------------
 MODULE tddft_version
   !
@@ -15,6 +13,6 @@ MODULE tddft_version
   !
   SAVE
   !
-  CHARACTER (LEN=40) :: tddft_git_revision = "08e3b0a5236ce8d125913f4d2234a77c1105277d"
+  CHARACTER (LEN=40) :: tddft_git_revision = "e71c7e0f5bf0230a4c7c45fba109ec3c00550917"
   !
 END MODULE tddft_version
