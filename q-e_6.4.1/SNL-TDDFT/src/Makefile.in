@@ -1,4 +1,4 @@
-# Makefile for ce-tddft
+# Makefile for SNL-TDDFT
 
 QE_SOURCE=@qe_source@
 include $(QE_SOURCE)/make.inc
@@ -11,7 +11,7 @@ MODFLAGS = $(MOD_FLAG)$(QE_SOURCE)/iotk/src $(MOD_FLAG)$(QE_SOURCE)/Modules \
            $(MOD_FLAG)$(QE_SOURCE)/PW/src \
            $(MOD_FLAG)$(QE_SOURCE)/UtilXlib $(MOD_FLAG).
 
-TDDFT_OBJS = tddft.o
+TDDFT_OBJS = tddft_version.o tddft.o
 
 LIBOBJS = $(QE_SOURCE)/clib/clib.a $(QE_SOURCE)/iotk/src/libiotk.a
 QEMODS = $(QE_SOURCE)/Modules/libqemod.a \
