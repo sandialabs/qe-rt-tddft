@@ -35,13 +35,9 @@ PROGRAM tddft
 #endif
   CALL environment_start(code)
 
-  ! read plugin command line arguments, if any
-  IF(meta_ionode) CALL plugin_arguments()
-  CALL plugin_arguments_bcast( meta_ionode_id, world_comm )
-
 #ifndef __BANDS
   IF(nbgrp > 1) &
-    call errore('tddft_main', 'configure and recompile TDDFT with --enable-band-parallel', 1)
+    call errore('tddft', 'configure and recompile TDDFT with --enable-band-parallel', 1)
 #endif
 
   write(stdout,*)
@@ -74,7 +70,6 @@ PROGRAM tddft
 !  ntyp_ = ntyp
 !  ibrav_ = ibrav
 !  assume_isolated_ = 'none'
-!  call plugin_read_input()
 !  call tddft_allocate()
 !  call tddft_setup()
 !  call tddft_summary()
