@@ -35,7 +35,7 @@ esac
 # export settings to generated files
 AC_SUBST(qe_source)
 AC_SUBST(dflags_tddft)
-AC_OUTPUT([makedeps.sh src/Makefile src/Makefile], [chmod +x makedeps.sh])
+AC_OUTPUT([makedeps.sh src/Makefile], [chmod +x makedeps.sh])
 
 # default commands
 ./makedeps.sh
