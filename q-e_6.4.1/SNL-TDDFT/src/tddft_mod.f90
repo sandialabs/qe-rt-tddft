@@ -64,7 +64,7 @@ MODULE tddft_mod
   
     NAMELIST /tddft/ job, prefix, tmp_dir, verbosity, &
                      nsteps_el, nsteps_ion, &
-                     dt_el, dt_ion, duration, 
+                     dt_el, dt_ion, duration
   
     IF(ionode .or. my_image_id == 0)THEN 
    
