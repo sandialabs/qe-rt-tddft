@@ -255,7 +255,7 @@ IF(.NOT.ALLOCATED(this%work)) CALL errore('gmres_solve','work not allocated', 1)
                     h(k,inner) = tmp
                 ENDDO
 
-                CALL givens_rtation(h(inner,inner), h(inner+1,inner), cs(inner), sn(inner))
+                CALL givens_rotation(h(inner,inner), h(inner+1,inner), cs(inner), sn(inner))
                 tmp = CONJG(cs(inner))*s(inner)
                 s(inner+1) = -sn(inner)*s(inner)
                 s(inner) = tmp
@@ -283,7 +283,7 @@ IF(.NOT.ALLOCATED(this%work)) CALL errore('gmres_solve','work not allocated', 1)
             !CALL A( ) ! x(1,irhs), this%work(:,2)
             CALL zcopy(ndim, this%work(:,2), 1, this%work(:,1), 1)
             CALL zaxpy(ndim, -1.0_dp, b(1,irhs), 1, this%work(:,1), 1)
-            CALL zscale(ndim, -1.0_dp, this%work(:,1), 1)
+            CALL zscal(ndim, -1.0_dp, this%work(:,1), 1)
             normr = DBLE(zdotc(ndim, this%work(:,1), 1, this%work(:,1), 1))
 #ifdef __MPI
             CALL mp_sum(normr, intra_pool_comm)
