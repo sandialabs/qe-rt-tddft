@@ -5,8 +5,18 @@ MODULE it_solver_mod
     USE kinds,	ONLY : dp
     ! 
     SAVE
-    ! 
+    !
+    PRIVATE
+    PUBLIC :: &
+	adjust_max_kry_dim,     &! sets the maximum dimension of the Krylov subspace before a restart
+        adjust_max_restarts, 	&! sets the maximum number of restarts before calling it quits
+        adjust_tol,		&! sets the tolerance for *any* iterative solver
+        gmres_begin,		&! allocates the working space for GMRES
+        gmres_end,		&! deallocates the working space for GMRES 
+        gmres_solve		 ! solves A*x=b
+    	       
 TYPE it_solver_type
+
     COMPLEX(dp), ALLOCATABLE, DIMENSION(:,:) :: &
 	work			 ! working space
     INTEGER, ALLOCATABLE, DIMENSION(:) :: &
@@ -17,16 +27,8 @@ TYPE it_solver_type
         max_kry_dim = 15,	&! maximum dimension of the Krylov subspace before a restart
 	max_restarts = 200	 ! maximum number of restarts before calling it quits
     REAL(dp) :: &
-	tol = 1.E-12     	 ! tolerance for the iterative solve
-    CONTAINS
-
-    PROCEDURE :: adjust_max_kry_dim 	! sets the maximum dimension of the Krylov subspace before a restart
-    PROCEDURE :: adjust_max_restarts	! sets the maximum number of restarts before calling it quits
-    PROCEDURE :: adjust_tol		! sets the tolerance for *any* iterative solver
-    PROCEDURE :: gmres_begin		! allocates the working space for GMRES
-    PROCEDURE :: gmres_end		! deallocates the working space for GMRES 
-    PROCEDURE :: gmres_solve		! solves A*x=b
-
+	tol = 1.E-12_dp     	 ! tolerance for the iterative solve
+    
 END TYPE it_solver_type
 
 CONTAINS
@@ -46,20 +48,20 @@ SUBROUTINE adjust_max_kry_dim(this, max_kry_dim)
 
 END SUBROUTINE adjust_max_kry_dim
 
-!SUBROUTINE adjust_max_restarts(this, max_restarts)
-!    ! 
-!    ! ... interface for setting the maximum number of restarts before calling it quits
-!    ! 
-!    IMPLICIT NONE
-!    ! input variables
-!    CLASS(it_solver_type), INTENT(INOUT) :: this
-!    INTEGER, INTENT(IN) :: max_restarts
-!
-!    this%max_restarts = max_restarts
-!
-!    RETURN
-!
-!END SUBROUTINE adjust_max_restarts
+SUBROUTINE adjust_max_restarts(this, max_restarts)
+    ! 
+    ! ... interface for setting the maximum number of restarts before calling it quits
+    ! 
+    IMPLICIT NONE
+    ! input variables
+    CLASS(it_solver_type), INTENT(INOUT) :: this
+    INTEGER, INTENT(IN) :: max_restarts
+
+    this%max_restarts = max_restarts
+
+    RETURN
+
+END SUBROUTINE adjust_max_restarts
 
 SUBROUTINE adjust_tol(this, tol)
     ! 
@@ -308,6 +310,8 @@ IF(.NOT.ALLOCATED(this%work)) CALL errore('gmres_solve','work not allocated', 1)
 
 END SUBROUTINE gmres_solve
 
+END MODULE it_solver_mod
+
 SUBROUTINE gaussian_elimination(m, n, A, b)
     ! 
     ! ... simple implementation of Gaussian elimination, as required by GMRES
@@ -385,5 +389,3 @@ SUBROUTINE givens_rotation(a, b, c, s)
     ENDIF
 
 END SUBROUTINE givens_rotation
-
-END MODULE it_solver_mod
