@@ -36,7 +36,7 @@ SUBROUTINE adjust_max_kry_dim(this, max_kry_dim)
     ! 
     IMPLICIT NONE
     ! input variables
-    CLASS(it_solvers_type), INTENT(INOUT) :: this
+    CLASS(it_solver_type), INTENT(INOUT) :: this
     INTEGER, INTENT(IN) :: max_kry_dim
 
     this%max_kry_dim = max_kry_dim
@@ -51,7 +51,7 @@ SUBROUTINE adjust_max_restarts(this, max_restarts)
     ! 
     IMPLICIT NONE
     ! input variables
-    CLASS(it_solvers_type), INTENT(INOUT) :: this
+    CLASS(it_solver_type), INTENT(INOUT) :: this
     INTEGER, INTENT(IN) :: max_restarts
 
     this%max_restarts = max_restarts
@@ -66,7 +66,7 @@ SUBROUTINE adjust_tol(this, tol)
     ! 
     IMPLICIT NONE
     ! input variables
-    CLASS(it_solvers_type), INTENT(INOUT) :: this
+    CLASS(it_solver_type), INTENT(INOUT) :: this
     REAL(dp), INTENT(IN) :: tol
 
     this%tol = tol
@@ -81,7 +81,7 @@ SUBROUTINE gmres_begin(this, ndimx)
     ! 
     IMPLICIT NONE
     ! input variables
-    CLASS(it_solvers_type), INTENT(INOUT) :: this
+    CLASS(it_solver_type), INTENT(INOUT) :: this
     INTEGER, INTENT(IN) :: ndimx
     ! internal variable
     INTEGER :: ierr
@@ -106,7 +106,7 @@ SUBROUTINE gmres_end(this)
     ! 
     IMPLICIT NONE
     ! input variables
-    CLASS(it_solvers_type), INTENT(INOUT) :: this
+    CLASS(it_solver_type), INTENT(INOUT) :: this
 
     DEALLOCATE(this%work)
 
