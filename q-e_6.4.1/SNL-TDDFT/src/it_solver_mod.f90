@@ -315,7 +315,8 @@ END MODULE it_solver_mod
 SUBROUTINE gaussian_elimination(m, n, A, b)
     ! 
     ! ... simple implementation of Gaussian elimination, as required by GMRES
-    ! 
+    !
+    USE kinds,	ONLY : dp
     IMPLICIT NONE
     ! input variables
     INTEGER, INTENT(IN) :: m, n
@@ -369,6 +370,7 @@ SUBROUTINE givens_rotation(a, b, c, s)
     ! 
     ! ... simple implementation of a Givens rotation, as required by GMRES
     ! 
+    USE kinds,	ONLY : dp
     IMPLICIT NONE
     ! input variables
     COMPLEX(dp) :: a, b, c, s
