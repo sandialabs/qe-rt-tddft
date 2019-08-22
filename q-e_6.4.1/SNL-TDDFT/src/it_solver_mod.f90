@@ -21,7 +21,7 @@ TYPE it_solver_type
     CONTAINS
     PROCEDURE :: &
         adjust_max_kry_dim,	&! sets the maximum dimension of the Krylov subspace before a restart
-        adjust_max_restarts,    &! sets the maximum number of restarts before calling it quits
+        !adjust_max_restarts,    &! sets the maximum number of restarts before calling it quits
         adjust_tol,		&! sets the tolerance for *any* iterative solver
 	gmres_begin,		&! allocates the working space for GMRES
 	gmres_end,		&! deallocates the working space for GMRES 
@@ -45,20 +45,20 @@ SUBROUTINE adjust_max_kry_dim(this, max_kry_dim)
 
 END SUBROUTINE adjust_max_kry_dim
 
-SUBROUTINE adjust_max_restarts(this, max_restarts)
-    ! 
-    ! ... interface for setting the maximum number of restarts before calling it quits
-    ! 
-    IMPLICIT NONE
-    ! input variables
-    CLASS(it_solver_type), INTENT(INOUT) :: this
-    INTEGER, INTENT(IN) :: max_restarts
-
-    this%max_restarts = max_restarts
-
-    RETURN
-
-END SUBROUTINE adjust_max_restarts
+!SUBROUTINE adjust_max_restarts(this, max_restarts)
+!    ! 
+!    ! ... interface for setting the maximum number of restarts before calling it quits
+!    ! 
+!    IMPLICIT NONE
+!    ! input variables
+!    CLASS(it_solver_type), INTENT(INOUT) :: this
+!    INTEGER, INTENT(IN) :: max_restarts
+!
+!    this%max_restarts = max_restarts
+!
+!    RETURN
+!
+!END SUBROUTINE adjust_max_restarts
 
 SUBROUTINE adjust_tol(this, tol)
     ! 
@@ -289,7 +289,7 @@ IF(.NOT.ALLOCATED(this%work)) CALL errore('gmres_solve','work not allocated', 1)
             s(this%max_kry_dim+1) = normr
             
             error = abs(s(this%max_kry_dim+1))/normb
-            IF(error<=tol)THEN
+            IF(error<=this%tol)THEN
                 RETURN
             ENDIF
 
