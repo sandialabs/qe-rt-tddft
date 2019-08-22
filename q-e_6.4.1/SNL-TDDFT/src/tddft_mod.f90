@@ -147,10 +147,10 @@ MODULE tddft_mod
    
     ENDIF
   
-#ifdef __MPI
-    ! broadcast input variables  
-    CALL broadcast_inputs(this)
-#endif
+!#ifdef __MPI
+!    ! broadcast input variables  
+!    CALL broadcast_inputs(this)
+!#endif
   
   END SUBROUTINE read_settings_file
 
