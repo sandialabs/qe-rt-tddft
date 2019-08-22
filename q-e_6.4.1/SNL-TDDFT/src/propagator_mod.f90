@@ -7,7 +7,6 @@ MODULE propagator_mod
   ! 
   SAVE
   ! 
-  PRIVATE 
   PUBLIC :: &
       set_dt_el,                    &! sets the size of the time step (attoseconds)
       set_implicit_flag,            &! sets the flag that indicates we're using an implicit solver

@@ -8,7 +8,6 @@ MODULE tddft_mod
   ! 
   SAVE
   !
-  PRIVATE
   PUBLIC :: & 
       read_settings_file	     ! reads the settings for a TDDFT calculation in from a file
   TYPE tddft_type

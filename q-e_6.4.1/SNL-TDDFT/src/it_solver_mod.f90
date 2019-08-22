@@ -6,7 +6,6 @@ MODULE it_solver_mod
   ! 
   SAVE
   !
-  PRIVATE
   PUBLIC :: &
       set_max_kry_dim,     	    &! sets the maximum dimension of the Krylov subspace before a restart
       set_max_restarts, 	    &! sets the maximum number of restarts before calling it quits
