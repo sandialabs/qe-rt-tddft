@@ -3,6 +3,7 @@ MODULE propagator_mod
   ! ... Class that provides a time propagator for TDDFT
   ! 
   USE kinds,  ONLY : dp
+  USE it_solver_mod
   ! 
   SAVE
   ! 
