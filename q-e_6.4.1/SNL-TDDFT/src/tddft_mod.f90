@@ -35,123 +35,123 @@ MODULE tddft_mod
 
   END TYPE tddft_type
 
-CONTAINS 
+  CONTAINS 
 
-SUBROUTINE read_settings_file(this)
-  !
-  ! ... Reads in the tddft input file, which is just a single namelist for now
-  !
-  USE io_files,         ONLY : prefix, tmp_dir  
-  USE io_global,        ONLY : ionode
-  USE mp_images,        ONLY : my_image_id
-
-  IMPLICIT NONE
-  ! input variable
-  TYPE(tddft_type), INTENT(INOUT) :: this
-
-  INTEGER :: ierr
-  CHARACTER(len=256), EXTERNAL :: trimcheck
-  CHARACTER(len=256) :: verbosity
-  INTEGER :: iverbosity, nsteps_ion, nsteps_el
-  LOGICAL :: &
-      lcorrect_ehrenfest_forces,&
-      lcorrect_moving_ions,     &
-      lscalar_perturbation,     &
-      lstopping_perturbation,   &
-      lvector_perturbation,     &
-      lxray_perturbation       
-  REAL(dp) :: dt_el, dt_ion, duration
-
-  NAMELIST /tddft/ job, prefix, tmp_dir, verbosity, &
-                   nsteps_el, nsteps_ion, &
-                   dt_el, dt_ion, duration, 
-
-  IF(ionode .or. my_image_id == 0)THEN 
- 
-      ! attaches unit 5 to the file specified as a command line argument
-      CALL input_from_file() 
-
-      ! define input default values
-      CALL get_environment_variable( 'ESPRESSO_TMPDIR', tmp_dir ) 
-      IF(trim(tmp_dir) == ' ') tmp_dir = './scratch/'
-      tmp_dir = trimcheck(tmp_dir)
-      job          = ''
-      prefix       = 'pwscf'
-      tmp_dir      = './scratch/'    
-      verbosity    = 'low'
-
-      lcorrect_ehrenfest_forces = .FALSE.
-      lcorrect_moving_ions = .FALSE.
-      lscalar_perturbation = .FALSE.
-      lstopping_perturbation = .FALSE.
-      lvector_perturbation = .FALSE.
-      lxray_perturbation = .FALSE.
-
-      ! default propagation is one step that is 1 as long
-      dt_el = 1.0_dp
-      dt_ion = 1.0_dp
-      duration = 1.0_dp
-      nsteps_el = 1
-      nsteps_ion = 1
-      nsteps_el_per_nsteps_ion = 1
- 
-      ! read tddft namelist from the input file    
-      READ( 5, tddft, err = 200, iostat = ierr )
+  SUBROUTINE read_settings_file(this)
+    !
+    ! ... Reads in the tddft input file, which is just a single namelist for now
+    !
+    USE io_files,         ONLY : prefix, tmp_dir  
+    USE io_global,        ONLY : ionode
+    USE mp_images,        ONLY : my_image_id
+  
+    IMPLICIT NONE
+    ! input variable
+    TYPE(tddft_type), INTENT(INOUT) :: this
+  
+    INTEGER :: ierr
+    CHARACTER(len=256), EXTERNAL :: trimcheck
+    CHARACTER(len=256) :: verbosity
+    INTEGER :: iverbosity, nsteps_ion, nsteps_el
+    LOGICAL :: &
+        lcorrect_ehrenfest_forces,&
+        lcorrect_moving_ions,     &
+        lscalar_perturbation,     &
+        lstopping_perturbation,   &
+        lvector_perturbation,     &
+        lxray_perturbation       
+    REAL(dp) :: dt_el, dt_ion, duration
+  
+    NAMELIST /tddft/ job, prefix, tmp_dir, verbosity, &
+                     nsteps_el, nsteps_ion, &
+                     dt_el, dt_ion, duration, 
+  
+    IF(ionode .or. my_image_id == 0)THEN 
+   
+        ! attaches unit 5 to the file specified as a command line argument
+        CALL input_from_file() 
+  
+        ! define input default values
+        CALL get_environment_variable( 'ESPRESSO_TMPDIR', tmp_dir ) 
+        IF(trim(tmp_dir) == ' ') tmp_dir = './scratch/'
+        tmp_dir = trimcheck(tmp_dir)
+        job          = ''
+        prefix       = 'pwscf'
+        tmp_dir      = './scratch/'    
+        verbosity    = 'low'
+  
+        lcorrect_ehrenfest_forces = .FALSE.
+        lcorrect_moving_ions = .FALSE.
+        lscalar_perturbation = .FALSE.
+        lstopping_perturbation = .FALSE.
+        lvector_perturbation = .FALSE.
+        lxray_perturbation = .FALSE.
+  
+        ! default propagation is one step that is 1 as long
+        dt_el = 1.0_dp
+        dt_ion = 1.0_dp
+        duration = 1.0_dp
+        nsteps_el = 1
+        nsteps_ion = 1
+        nsteps_el_per_nsteps_ion = 1
+   
+        ! read tddft namelist from the input file    
+        READ( 5, tddft, err = 200, iostat = ierr )
 200 CALL errore('read_settings_file', 'reading tddft namelist', ierr)
-
-      this%lcorrect_ehrenfest_forces = lcorrect_ehrenfest_forces
-      this%lcorrect_moving_ions = lcorrect_moving_ions
-      this%lscalar_perturbation = lscalar_perturbation
-      this%lstopping_perturbation = lstopping_perturbation
-      this%lvector_perturbation = lvector_perturbation
-      this%lxray_perturbation = lxray_perturbation
-
-      ! TODO: sanitize this, someday
-      this%nsteps_el = CEILING(duration/dt_el)
-      this%dt_el = duration/nsteps_el
-      this%nsteps_ion = CEILING(duration/dt_ion)
-      this%dt_ion = duration/nsteps_ion
-      this%nsteps_el_per_nsteps_ion = CEILING(nsteps_el/nsteps_ion)
-
-      ! set the integer verbosity flag
-      SELECT CASE (verbosity)
-         CASE('low')
-           this%iverbosity = 1
-         CASE('medium')
-           this%iverbosity = 11
-         CASE('high')
-           this%iverbosity = 21
-         CASE DEFAULT
-           CALL errore('read_settings_file', 'verbosity can be ''low'', ''medium'' or ''high''', 1)
-      END SELECT
-
-      IF(this%lscalar_perturbation)THEN
-          ALLOCATE(this%scalar_perturbation)
-          CALL this%scalar_perturbation%read_settings_file()
-      ENDIF
-
-      IF(this%lstopping_perturbation)THEN
-          ALLOCATE(this%stopping_perturbation)
-          CALL this%stopping_perturbation%read_settings_file()
-      ENDIF
-
-      IF(this%lvector_perturbation)THEN
-          ALLOCATE(this%vector_perturbation)
-          CALL this%vector_perturbation%read_settings_file()
-      ENDIF
-
-      IF(this%lxray_perturbation)THEN
-          ALLOCATE(this%xray_perturbation)
-          CALL this%xray_perturbation%read_settings_file()
-      ENDIF
- 
-  ENDIF
-
+  
+        this%lcorrect_ehrenfest_forces = lcorrect_ehrenfest_forces
+        this%lcorrect_moving_ions = lcorrect_moving_ions
+        this%lscalar_perturbation = lscalar_perturbation
+        this%lstopping_perturbation = lstopping_perturbation
+        this%lvector_perturbation = lvector_perturbation
+        this%lxray_perturbation = lxray_perturbation
+  
+        ! TODO: sanitize this, someday
+        this%nsteps_el = CEILING(duration/dt_el)
+        this%dt_el = duration/nsteps_el
+        this%nsteps_ion = CEILING(duration/dt_ion)
+        this%dt_ion = duration/nsteps_ion
+        this%nsteps_el_per_nsteps_ion = CEILING(nsteps_el/nsteps_ion)
+  
+        ! set the integer verbosity flag
+        SELECT CASE (verbosity)
+           CASE('low')
+             this%iverbosity = 1
+           CASE('medium')
+             this%iverbosity = 11
+           CASE('high')
+             this%iverbosity = 21
+           CASE DEFAULT
+             CALL errore('read_settings_file', 'verbosity can be ''low'', ''medium'' or ''high''', 1)
+        END SELECT
+  
+        IF(this%lscalar_perturbation)THEN
+            ALLOCATE(this%scalar_perturbation)
+            CALL this%scalar_perturbation%read_settings_file()
+        ENDIF
+  
+        IF(this%lstopping_perturbation)THEN
+            ALLOCATE(this%stopping_perturbation)
+            CALL this%stopping_perturbation%read_settings_file()
+        ENDIF
+  
+        IF(this%lvector_perturbation)THEN
+            ALLOCATE(this%vector_perturbation)
+            CALL this%vector_perturbation%read_settings_file()
+        ENDIF
+  
+        IF(this%lxray_perturbation)THEN
+            ALLOCATE(this%xray_perturbation)
+            CALL this%xray_perturbation%read_settings_file()
+        ENDIF
+   
+    ENDIF
+  
 #ifdef __MPI
-  ! broadcast input variables  
-  CALL broadcast_inputs(this)
+    ! broadcast input variables  
+    CALL broadcast_inputs(this)
 #endif
-
-END SUBROUTINE read_settings_file
+  
+  END SUBROUTINE read_settings_file
 
 END MODULE tddft_mod
