@@ -1,6 +1,6 @@
 MODULE it_solver_mod
     ! 
-    ! ... Variables for the iterative solution of Ax = b
+    ! ... Class that provides the iterative solution to Ax = b
     ! 
     USE kinds,	ONLY : dp
     ! 
@@ -8,32 +8,32 @@ MODULE it_solver_mod
     !
     PRIVATE
     PUBLIC :: &
-	adjust_max_kry_dim,     &! sets the maximum dimension of the Krylov subspace before a restart
-        adjust_max_restarts, 	&! sets the maximum number of restarts before calling it quits
-        adjust_tol,		&! sets the tolerance for *any* iterative solver
-        gmres_begin,		&! allocates the working space for GMRES
-        gmres_end,		&! deallocates the working space for GMRES 
-        gmres_solve		 ! solves A*x=b
+	set_max_kry_dim,     	    &! sets the maximum dimension of the Krylov subspace before a restart
+        set_max_restarts, 	    &! sets the maximum number of restarts before calling it quits
+        set_tol,		    &! sets the tolerance for *any* iterative solver
+        gmres_begin,		    &! allocates the working space for GMRES
+        gmres_end,		    &! deallocates the working space for GMRES 
+        gmres_solve		     ! solves A*x=b
     	       
-TYPE it_solver_type
-
-    COMPLEX(dp), ALLOCATABLE, DIMENSION(:,:) :: &
-	work			 ! working space
-    INTEGER, ALLOCATABLE, DIMENSION(:) :: &
-        inner_counts,		&! counter for the inner loop on each RHS
-        outer_counts             ! counter for the outer loop on each RHS  
-    INTEGER :: &
- 	number_rhs,             &! number of right hand sides (RHS), almost certainly the number of orbitals per k-point
-        max_kry_dim = 15,	&! maximum dimension of the Krylov subspace before a restart
-	max_restarts = 200	 ! maximum number of restarts before calling it quits
-    REAL(dp) :: &
-	tol = 1.E-12_dp     	 ! tolerance for the iterative solve
+    TYPE it_solver_type
     
-END TYPE it_solver_type
+        COMPLEX(dp), ALLOCATABLE, DIMENSION(:,:) :: &
+    	    work		     ! working space
+        INTEGER, ALLOCATABLE, DIMENSION(:) :: &
+            inner_counts,	    &! counter for the inner loop on each RHS
+            outer_counts             ! counter for the outer loop on each RHS  
+        INTEGER :: &
+     	    number_rhs,             &! number of right hand sides (RHS), almost certainly the number of orbitals per k-point
+            max_kry_dim = 15,	    &! maximum dimension of the Krylov subspace before a restart
+    	    max_restarts = 200	     ! maximum number of restarts before calling it quits
+        REAL(dp) :: &
+    	    tol = 1.E-12_dp          ! tolerance for the iterative solve
+        
+    END TYPE it_solver_type
 
 CONTAINS
 
-SUBROUTINE adjust_max_kry_dim(this, max_kry_dim)
+SUBROUTINE set_max_kry_dim(this, max_kry_dim)
     ! 
     ! ... interface for setting the maximum dimension of the Krylov subspace for the iterative solver
     ! 
@@ -46,9 +46,9 @@ SUBROUTINE adjust_max_kry_dim(this, max_kry_dim)
 
     RETURN
 
-END SUBROUTINE adjust_max_kry_dim
+END SUBROUTINE set_max_kry_dim
 
-SUBROUTINE adjust_max_restarts(this, max_restarts)
+SUBROUTINE set_max_restarts(this, max_restarts)
     ! 
     ! ... interface for setting the maximum number of restarts before calling it quits
     ! 
@@ -61,9 +61,9 @@ SUBROUTINE adjust_max_restarts(this, max_restarts)
 
     RETURN
 
-END SUBROUTINE adjust_max_restarts
+END SUBROUTINE set_max_restarts
 
-SUBROUTINE adjust_tol(this, tol)
+SUBROUTINE set_tol(this, tol)
     ! 
     ! ... interface for setting the tolerance of the iterative solver
     ! 
@@ -76,7 +76,7 @@ SUBROUTINE adjust_tol(this, tol)
 
     RETURN
 
-END SUBROUTINE adjust_tol
+END SUBROUTINE set_tol
 
 SUBROUTINE gmres_begin(this, ndimx)
     ! 
