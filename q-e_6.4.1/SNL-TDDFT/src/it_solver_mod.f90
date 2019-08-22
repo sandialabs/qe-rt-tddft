@@ -15,8 +15,9 @@ TYPE it_solver_type
     INTEGER :: &
  	number_rhs,             &! number of right hand sides (RHS), almost certainly the number of orbitals per k-point
         max_kry_dim = 15,	&! maximum dimension of the Krylov subspace before a restart
-	max_restarts = 200	&! maximum number of restarts before calling it quits
-    REAL(dp) :: tol = 1.E-12     ! tolerance for the iterative solve
+	max_restarts = 200	 ! maximum number of restarts before calling it quits
+    REAL(dp) :: &
+	tol = 1.E-12     	 ! tolerance for the iterative solve
     CONTAINS
     PROCEDURE :: &
         adjust_max_kry_dim,	&! sets the maximum dimension of the Krylov subspace before a restart
@@ -258,7 +259,7 @@ IF(.NOT.ALLOCATED(this%work)) CALL errore('gmres_solve','work not allocated', 1)
                 h(inner,inner) = CONJG(cs(inner))*h(inner,inner) + CONJG(sn(inner))*h(inner+1,inner)
                 
                 error = abs(s(inner+1))/normb
-                IF(error<=tol)THEN
+                IF(error<=this%tol)THEN
                     y(1:inner) = s(1:inner)
                     CALL gaussian_elimination(this%max_kry_dim+1, inner, h, y)
                     DO k = 1, inner
