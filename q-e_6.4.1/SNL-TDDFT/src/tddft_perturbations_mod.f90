@@ -7,31 +7,33 @@ MODULE tddft_perturbations_mod
   ! 
   SAVE
   !
+  PUBLIC :: &
+      read_settings_file_scalar,	&
+      read_settings_file_stopping,      &
+      read_settings_file_vector,        &
+      read_settings_file_xray
+  
   TYPE scalar_perturbation_type
 
       INTEGER :: dummy
-      PUBLIC :: read_settings_file_scalar
       
   END TYPE scalar_perturbation_type
 
   TYPE stopping_perturbation_type
 
       INTEGER :: dummy
-      PUBLIC :: read_settings_file_stopping
       
   END TYPE stopping_perturbation_type
 
   TYPE vector_perturbation_type
 
       INTEGER :: dummy
-      PUBLIC :: read_settings_file_vector
       
   END TYPE vector_perturbation_type
 
   TYPE xray_perturbation_type
 
       INTEGER :: dummy
-      PUBLIC :: read_settings_file_xray
 
   END TYPE xray_perturbation_type
 
