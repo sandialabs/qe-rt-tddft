@@ -17,7 +17,7 @@ TYPE it_solver_type
         max_kry_dim = 15,	&! maximum dimension of the Krylov subspace before a restart
 	max_restarts = 200	&! maximum number of restarts before calling it quits
     REAL(dp) :: &
-        tol = 1.E-12_dp		 ! tolerance for the iterative solve
+        tol = 1.E-12		 ! tolerance for the iterative solve
     CONTAINS
     PROCEDURE :: &
         adjust_max_kry_dim,	&! sets the maximum dimension of the Krylov subspace before a restart
@@ -27,6 +27,8 @@ TYPE it_solver_type
 	gmres_end,		&! deallocates the working space for GMRES 
 	gmres_solve		 ! solves A*x=b
 END TYPE it_solver_type
+
+CONTAINS
 
 SUBROUTINE adjust_max_kry_dim(this, max_kry_dim)
     ! 
