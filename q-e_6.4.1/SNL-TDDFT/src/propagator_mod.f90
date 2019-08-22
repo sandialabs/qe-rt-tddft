@@ -42,8 +42,46 @@ SUBROUTINE set_dt_el(this, dt_el)
 
 END SUBROUTINE set_dt_el
 
-SUBROUTINE set_implicit_flag
+SUBROUTINE set_implicit_flag(this, implicit_flag)
+    !
+    ! ... interface for setting the implicit propagation flag's value
+    !
+    IMPLICIT NONE
+    ! input variables
+    CLASS(propagator_type), INTENT(INOUT) :: this
+    LOGICAL :: implicit_flag
+   
+    this%implicit_flag = implicit_flag
+
+    RETURN
 
 END SUBROUTINE set_implicit_flag
+
+SUBROUTINE set_nstages(this, nstages)
+    !
+    ! ... interface for setting the number of stages for a propagator
+    ! 
+    IMPLICIT NONE
+    ! input variables
+    CLASS(propagator_type), INTENT(INOUT) :: this
+    INTEGER :: nstages
+
+    this%nstages = nstages
+  
+    RETURN
+
+END SUBROUTINE set_nstages
+
+SUBROUTINE electron_step(this)
+    ! 
+    ! ... interface for marching the electrons forward by one step
+    ! 
+    IMPLICIT NONE
+    ! input variables
+    CLASS(propagator_type), INTENT(INOUT) :: this
+
+    RETURN
+
+END SUBROUTINE electron_step
 
 END MODULE propagator_mod
