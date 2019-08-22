@@ -15,6 +15,7 @@ MODULE tddft_mod
       INTEGER :: &
           iverbosity,		    &! integer indicating the level of verbosity
           nsteps_el,          	    &! total number of electronic steps
+          nsteps_el_per_nsteps_ion, &! number of electronic steps per ionic steps
           nsteps_ion		     ! total number of ionic steps
       LOGICAL :: &
           lcorrect_ehrenfest_forces,&! flag = .TRUE. => compute the correct Ehrenfest forces (USPP/PAW feature)
@@ -51,7 +52,7 @@ MODULE tddft_mod
     INTEGER :: ierr
     CHARACTER(len=256), EXTERNAL :: trimcheck
     CHARACTER(len=256) :: verbosity
-    INTEGER :: iverbosity, nsteps_ion, nsteps_el
+    INTEGER :: iverbosity, nsteps_ion, nsteps_el, nsteps_el_per_nsteps_ion
     LOGICAL :: &
         lcorrect_ehrenfest_forces,&
         lcorrect_moving_ions,     &
@@ -110,7 +111,7 @@ MODULE tddft_mod
         this%dt_el = duration/nsteps_el
         this%nsteps_ion = CEILING(duration/dt_ion)
         this%dt_ion = duration/nsteps_ion
-        this%nsteps_el_per_nsteps_ion = CEILING(nsteps_el/nsteps_ion)
+        this%nsteps_el_per_nsteps_ion = nsteps_el/nsteps_ion
   
         ! set the integer verbosity flag
         SELECT CASE (verbosity)
@@ -126,22 +127,22 @@ MODULE tddft_mod
   
         IF(this%lscalar_perturbation)THEN
             ALLOCATE(this%scalar_perturbation)
-            CALL this%scalar_perturbation%read_settings_file()
+            CALL this%scalar_perturbation%read_settings_file_scalar()
         ENDIF
   
         IF(this%lstopping_perturbation)THEN
             ALLOCATE(this%stopping_perturbation)
-            CALL this%stopping_perturbation%read_settings_file()
+            CALL this%stopping_perturbation%read_settings_file_stopping()
         ENDIF
   
         IF(this%lvector_perturbation)THEN
             ALLOCATE(this%vector_perturbation)
-            CALL this%vector_perturbation%read_settings_file()
+            CALL this%vector_perturbation%read_settings_file_vector()
         ENDIF
   
         IF(this%lxray_perturbation)THEN
             ALLOCATE(this%xray_perturbation)
-            CALL this%xray_perturbation%read_settings_file()
+            CALL this%xray_perturbation%read_settings_file_xray()
         ENDIF
    
     ENDIF
