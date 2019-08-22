@@ -16,8 +16,7 @@ TYPE it_solver_type
  	number_rhs,             &! number of right hand sides (RHS), almost certainly the number of orbitals per k-point
         max_kry_dim = 15,	&! maximum dimension of the Krylov subspace before a restart
 	max_restarts = 200	&! maximum number of restarts before calling it quits
-    REAL(dp) :: &
-        tol = 1.E-12		 ! tolerance for the iterative solve
+    REAL(dp) :: tol = 1.E-12     ! tolerance for the iterative solve
     CONTAINS
     PROCEDURE :: &
         adjust_max_kry_dim,	&! sets the maximum dimension of the Krylov subspace before a restart
@@ -58,7 +57,7 @@ SUBROUTINE adjust_max_restarts(this, max_restarts)
 
     RETURN
 
-END SUBROUTINE adjust_max_kry_dim
+END SUBROUTINE adjust_max_restarts
 
 SUBROUTINE adjust_tol(this, tol)
     ! 
@@ -123,6 +122,7 @@ SUBROUTINE gmres_solve(this, A, b, x, ndimx, ndim, nbnd)
     ! 
     IMPLICIT NONE
     ! input variables
+    CLASS(it_solver_type), INTENT(INOUT) :: this
     INTEGER, INTENT(IN) :: ndimx		! the maximum dimension of the vectors
     INTEGER, INTENT(IN) :: ndim			! the actual dimension of the vectors
     INTEGER, INTENT(IN) :: nbnd			! the number of bands
