@@ -3,7 +3,6 @@ PROGRAM tddft
   USE kinds,           ONLY : DP
   USE io_global,       ONLY : stdout, meta_ionode, meta_ionode_id
   USE mp,              ONLY : mp_bcast
-!  USE tddft_module,    ONLY : job, molecule, max_seconds
 !  USE check_stop,      ONLY : check_stop_init
 !  USE control_flags,   ONLY : io_level, gamma_only, use_para_diag
   USE mp_global,       ONLY : mp_startup
@@ -19,12 +18,14 @@ PROGRAM tddft
                                ibrav_ => ibrav
   USE ions_base,        ONLY : nat, ntyp => nsp
   USE cell_base,        ONLY : ibrav
+  USE tddft_mod
   USE tddft_version
   USE iotk_module  
   !------------------------------------------------------------------------
   IMPLICIT NONE
   CHARACTER (LEN=9)   :: code = 'TDDFT'
-  LOGICAL, EXTERNAL  :: check_para_diag
+  LOGICAL, EXTERNAL   :: check_para_diag
+  TYPE(tddft_type)    :: this_calculation
   !------------------------------------------------------------------------
 
   ! initialize
@@ -43,6 +44,8 @@ PROGRAM tddft
   write(stdout,*)
   write(stdout,'(5X,''***** SNL-TDDFT git revision '',A,'' *****'')') tddft_git_revision
   write(stdout,*)
+ 
+  this_calculation%read_settings_file()
 
 !  call tddft_readin()
 !  call check_stop_init( max_seconds )
