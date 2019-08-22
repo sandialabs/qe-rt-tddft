@@ -10,93 +10,104 @@ MODULE tddft_perturbations_mod
   TYPE scalar_perturbation_type
 
       INTEGER :: dummy
-      PUBLIC :: read_settings_file
+      PUBLIC :: read_settings_file_scalar
       
-      CONTAINS
-
-      SUBROUTINE read_settings_file
-
-          IMPLICIT NONE
-
-          INTEGER :: dummy
-          INTEGER :: ierr
-
-          READ(5, scalar, err = 201, iostat = ierr)
-201 CALL errore('read_settings_file', 'reading scalar namelist', ierr)
-
-          this%dummy = dummy
-
-      END SUBROUTINE read_settings_file
-
   END TYPE scalar_perturbation_type
-  
+
   TYPE stopping_perturbation_type
 
       INTEGER :: dummy
-      PUBLIC :: read_settings_file
+      PUBLIC :: read_settings_file_stopping
       
-      CONTAINS
-
-      SUBROUTINE read_settings_file
-
-          IMPLICIT NONE
-
-          INTEGER :: dummy
-          INTEGER :: ierr
-
-          READ(5, scalar, err = 202, iostat = ierr)
-202 CALL errore('read_settings_file', 'reading stopping namelist', ierr)
-
-          this%dummy = dummy
-
-      END SUBROUTINE read_settings_file
-
   END TYPE stopping_perturbation_type
-  
+
   TYPE vector_perturbation_type
 
       INTEGER :: dummy
-      PUBLIC :: read_settings_file
+      PUBLIC :: read_settings_file_vector
       
-      CONTAINS
-
-      SUBROUTINE read_settings_file
-
-          IMPLICIT NONE
-
-          INTEGER :: dummy
-          INTEGER :: ierr
-
-          READ(5, scalar, err = 203, iostat = ierr)
-203 CALL errore('read_settings_file', 'reading vector namelist', ierr)
-
-          this%dummy = dummy
-
-      END SUBROUTINE read_settings_file
-
   END TYPE vector_perturbation_type
-    
+
   TYPE xray_perturbation_type
 
       INTEGER :: dummy
-      PUBLIC :: read_settings_file
+      PUBLIC :: read_settings_file_xray
 
-      CONTAINS
+  END TYPE xray_perturbation_type
 
-      SUBROUTINE read_settings_file
+  CONTAINS
 
-          IMPLICIT NONE
+    SUBROUTINE read_settings_file_scalar(this)
 
-          INTEGER :: dummy
-          INTEGER :: ierr
+        IMPLICIT NONE
 
-          READ(5, scalar, err = 204, iostat = ierr)
+        ! input variables
+        TYPE(scalar_perturbation_type), INTENT(INOUT) :: this
+        ! internal variables
+        INTEGER :: dummy
+        INTEGER :: ierr
+
+        NAMELIST /scalar/ dummy
+
+        READ(5, scalar, err = 201, iostat = ierr)
+201 CALL errore('read_settings_file', 'reading scalar namelist', ierr)
+
+        this%dummy = dummy
+
+    END SUBROUTINE read_settings_file_scalar
+
+    SUBROUTINE read_settings_file_stopping(this)
+
+        IMPLICIT NONE
+        ! input variables
+        TYPE(stopping_perturbation_type), INTENT(INOUT) :: this 
+        ! internal variables
+        INTEGER :: dummy
+        INTEGER :: ierr
+
+        NAMELIST /stopping/ dummy
+
+        READ(5, stopping, err = 202, iostat = ierr)
+202 CALL errore('read_settings_file', 'reading stopping namelist', ierr)
+
+        this%dummy = dummy
+
+    END SUBROUTINE read_settings_file_stopping
+
+    SUBROUTINE read_settings_file_vector(this)
+
+        IMPLICIT NONE
+        ! input variables
+        TYPE(vector_perturbation_type), INTENT(INOUT) :: this
+        ! internal variables
+        INTEGER :: dummy
+        INTEGER :: ierr
+
+        NAMELIST /vector/ dummy
+
+        READ(5, vector, err = 203, iostat = ierr)
+203 CALL errore('read_settings_file', 'reading vector namelist', ierr)
+
+        this%dummy = dummy
+
+    END SUBROUTINE read_settings_file_vector
+
+    SUBROUTINE read_settings_file_xray(this)
+
+        IMPLICIT NONE 
+        ! input variables
+        TYPE(xray_perturbation_type), INTENT(INOUT) :: this
+        ! internal variables
+        INTEGER :: dummy
+        INTEGER :: ierr
+
+        NAMELIST /xray/ dummy
+
+        READ(5, xray, err = 204, iostat = ierr)
 204 CALL errore('read_settings_file', 'reading xray namelist', ierr)
 
-          this%dummy = dummy
+        this%dummy = dummy
 
-      END SUBROUTINE read_settings_file
- 
-  END TYPE xray_perturbation_type 
+    END SUBROUTINE read_settings_file_xray
 
 END MODULE tddft_perturbations_mod
