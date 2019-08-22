@@ -7,7 +7,7 @@ MODULE it_solver_mod
     SAVE
     ! 
 TYPE it_solver_type
-    COMPLEX(DP), ALLOCATABLE, DIMENSION(:,:) :: &
+    COMPLEX(dp), ALLOCATABLE, DIMENSION(:,:) :: &
 	work			 ! working space
     INTEGER, ALLOCATABLE, DIMENSION(:) :: &
         inner_counts,		&! counter for the inner loop on each RHS
@@ -17,11 +17,11 @@ TYPE it_solver_type
         max_kry_dim = 15,	&! maximum dimension of the Krylov subspace before a restart
 	max_restarts = 200	&! maximum number of restarts before calling it quits
     REAL(dp) :: &
-        tol = 1.E-12_DP		 ! tolerance for the iterative solve
+        tol = 1.E-12_dp		 ! tolerance for the iterative solve
     CONTAINS
     PROCEDURE :: &
-        adjust_max_kry_dim	&! sets the maximum dimension of the Krylov subspace before a restart
-        adjust_max_restarts     &! sets the maximum number of restarts before calling it quits
+        adjust_max_kry_dim,	&! sets the maximum dimension of the Krylov subspace before a restart
+        adjust_max_restarts,    &! sets the maximum number of restarts before calling it quits
         adjust_tol,		&! sets the tolerance for *any* iterative solver
 	gmres_begin,		&! allocates the working space for GMRES
 	gmres_end,		&! deallocates the working space for GMRES 
@@ -136,7 +136,7 @@ SUBROUTINE gmres_solve(this, A, b, x, ndimx, ndim, nbnd)
     LOGICAL :: converged_flag			! true = converged, false = not converged   
  
     ! quantities projected into the subspace 
-    COMPLEX(dp) :: cs(this%max_kry_dim), sn(this%max_kry_dim),
+    COMPLEX(dp) :: cs(this%max_kry_dim), sn(this%max_kry_dim)
     COMPLEX(dp) :: s(this%max_kry_dim+1), y(this%max_kry_dim+1)
     COMPLEX(dp) :: h(this%max_kry_dim+1,this%max_kry_dim)
  
