@@ -65,7 +65,10 @@ MODULE tddft_mod
     
       NAMELIST /tddft/ prefix, tmp_dir, verbosity, &
                        nsteps_el, nsteps_ion, &
-                       dt_el, dt_ion, duration
+                       dt_el, dt_ion, duration, &
+		       lcorrect_ehrenfest_forces, lcorrect_moving_ions, &
+		       lscalar_perturbation, lstopping_perturbation, &
+		       lvector_perturbation, lxray_perturbation
     
       IF(ionode .or. my_image_id == 0)THEN 
      

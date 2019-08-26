@@ -1,0 +1,13 @@
+&TDDFT
+prefix = 'pwscf'
+tmp_dir = './scratch/'
+verbosity = 'high'
+dt_el = 1.0
+dt_ion = 1.0
+duration = 100.0
+lscalar_perturbation = .TRUE.
+/
+
+&SCALAR
+dummy=1
+/
