@@ -38,15 +38,15 @@ PROGRAM tddft
 
 #ifndef __BANDS
   IF(nbgrp > 1) &
-    call errore('tddft', 'configure and recompile TDDFT with --enable-band-parallel', 1)
+    CALL errore('tddft', 'configure and recompile TDDFT with --enable-band-parallel', 1)
 #endif
 
-  write(stdout,*)
-  write(stdout,'(5X,''***** SNL-TDDFT git revision '',A,'' *****'')') tddft_git_revision
-  write(stdout,*)
+  WRITE(stdout,*)
+  WRITE(stdout,'(5X,''***** SNL-TDDFT git revision '',A,'' *****'')') tddft_git_revision
+  WRITE(stdout,*)
 
   ! create an instance of the tddft_type class that will contain our calculation
-  allocate(this_calculation)
+  ALLOCATE(this_calculation)
 
   ! read calculation settings from an input file
   CALL this_calculation%read_settings_file()
@@ -65,56 +65,53 @@ PROGRAM tddft
 #endif
 
   ! open the files used in a TDDFT calculation
+  !
 
   ! check to see whether gamma_only is erroneously being flagged...
-  IF(gamma_only) CALL errore('tddft',, 'Cannot run TDDFT with gamma_only == .TRUE.',1)
+  IF(gamma_only) CALL errore('tddft',, 'cannot run TDDFT with gamma_only == .TRUE.',1)
+
+  ! check to see whether wf_collect was used in the SCF
+#ifdef __BANDS
+  IF( nbgrp>1 .AND. (twfcollect==.FALSE.) )&
+    CALL errore('tddft', 'cannot use band-parallelization without wf_collect in SCF', 1)     
+#endif  
+    
+  ! check to see whether noncolin is erroneously being flagged...  
+  IF( noncolin ) CALL errore('tddft', 'non-collinear spin is not yet supported', 1)
+
+  ! pluginization stuff from Davide's code
+  nat_ = nat
+  ntyp_ = ntyp
+  ibrav_ = ibrav
+  assume_isolated_ = 'none'  
+
+  ! allocate TDDFT stuff
+  !
+
+  ! TDDFT setup
+  !
+
+  ! TDDFT summary
+  !
+
+  ! initialize parallelization over bands
+#ifdef __BANDS
+  CALL init_parallel_over_band(inter_bgrp_comm, nbnd)
+#endif  
+
+  ! main TDDFT loop
+  ! 
 
   ! close the files that were opened at the beginning of the TDDFT calculation
+  !
 
+  ! print timings
+  ! 
 
+  CALL environment_end(code)
 
-
-
-!  call tddft_openfil
-!
-!  if (gamma_only) call errore ('tdddft_main', 'Cannot run TDFFT with gamma_only == .true. ', 1)
-!#ifdef __BANDS
-!  if (nbgrp > 1 .and. (twfcollect .eqv. .false.)) &
-!    call errore('tddft_main', 'Cannot use band-parallelization without wf_collect in SCF', 1)
-!#endif
-!  if (noncolin) call errore('tdddft_main', 'non-collinear not supported yet', 1)
-!
-!  nat_ = nat
-!  ntyp_ = ntyp
-!  ibrav_ = ibrav
-!  assume_isolated_ = 'none'
-!  call tddft_allocate()
-!  call tddft_setup()
-!  call tddft_summary()
-!
-!#ifdef __BANDS
-!  call init_parallel_over_band(inter_bgrp_comm, nbnd)
-!#endif
-!
-!  ! calculation
-!  select case (trim(job))
-!  case ('optical')
-!     if (molecule) then
-!        call molecule_optical_absorption
-!     else
-!        call errore('tddft_main', 'solids are not yet implemented', 1)
-!     endif
-!
-!  case default
-!     call errore('tddft_main', 'wrong or undefined job in input', 1)
-!
-!  end select
-!  
-!  ! print timings and stop the code
-!  call tddft_closefil
-!  call print_clock_tddft
-!  call environment_end(code)
-!  call stop_code( .true. )
+  ! 
+  CALL this_calculation%stop_calculation( .TRUE. )
   
 STOP
 

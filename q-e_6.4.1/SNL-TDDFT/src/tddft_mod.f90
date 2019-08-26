@@ -35,6 +35,7 @@ MODULE tddft_mod
         PROCEDURE :: read_settings_file => read_tddft_settings   ! reads the settings file for a TDDFT calculation in from a file
 #ifdef __MPI	
 	PROCEDURE :: broadcast_inputs => broadcast_tddft_inputs  ! broadcasts inputs to all tasks after reading in settings on the IO node
+	PROCEDURE :: stop_calculation => stop_tddft_calculation  ! synchronizes	processes before stopping
 #endif
 
   END TYPE tddft_type
@@ -201,6 +202,30 @@ MODULE tddft_mod
         RETURN
 
     END SUBROUTINE broadcast_tddft_inputs
+
+    SUBROUTINE stop_tddft_calculation(this, lclean_stop)
+        ! 
+	! ... Synchronizes before stopping
+	! 
+	USE mp_global,	ONLY : mp_global_end
+	USE parallel_include
+
+	IMPLICIT NONE
+	! input variables
+	CLASS(tddft_type), INTENT(INOUT) :: this
+	LOGICAL :: lclean_stop
+    
+        CALL mp_global_end()
+
+	IF(lclean_stop)THEN
+	    STOP
+	ELSE
+	    STOP 1
+	ENDIF
+
+	RETURN
+
+    END SUBROUTINE stop_tddft_calculation
 #endif
 
 END MODULE tddft_mod

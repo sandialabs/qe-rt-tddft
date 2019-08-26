@@ -1,5 +1,5 @@
 &TDDFT
-prefix = 'pwscf'
+prefix = 'na2'
 tmp_dir = './scratch/'
 verbosity = 'high'
 dt_el = 1.0
