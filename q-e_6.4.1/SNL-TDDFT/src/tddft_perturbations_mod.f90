@@ -12,6 +12,9 @@ MODULE tddft_perturbations_mod
       INTEGER :: dummy
       CONTAINS
         PROCEDURE :: read_settings_file => read_scalar_settings
+#ifdef __MPI
+	PROCEDURE :: broadcast_inputs => broadcast_scalar_inputs
+#endif __MPI		
       
   END TYPE scalar_perturbation_type
 
@@ -20,6 +23,9 @@ MODULE tddft_perturbations_mod
       INTEGER :: dummy
       CONTAINS
         PROCEDURE :: read_settings_file => read_stopping_settings
+#ifdef __MPI
+	PROCEDURE :: broadcast_inputs => broadcast_stopping_inputs
+#endif		
 	 
   END TYPE stopping_perturbation_type
 
@@ -28,6 +34,9 @@ MODULE tddft_perturbations_mod
       INTEGER :: dummy
       CONTAINS
         PROCEDURE :: read_settings_file => read_vector_settings
+#ifdef __MPI
+	PROCEDURE :: broadcast_inputs => broadcast_vector_inputs
+#endif		
       
   END TYPE vector_perturbation_type
 
@@ -36,6 +45,9 @@ MODULE tddft_perturbations_mod
       INTEGER :: dummy
       CONTAINS 
         PROCEDURE :: read_settings_file => read_xray_settings
+#ifdef __MPI
+	PROCEDURE :: broadcast_inputs => broadcast_xray_inputs
+#endif		
 
   END TYPE xray_perturbation_type
 
@@ -113,5 +125,75 @@ MODULE tddft_perturbations_mod
         this%dummy = dummy
 
     END SUBROUTINE read_xray_settings
+
+#ifdef __MPI
+    SUBROUTINE broadcast_scalar_inputs(this)
+         
+        USE mp,		ONLY : mp_bcast
+	USE mp_world, 	ONLY : world_comm
+
+	IMPLICIT NONE
+	! input variables
+	CLASS(scalar_perturbation_type), INTENT(INOUT) :: this
+	! internal variables
+	INTEGER, parameter :: root = 0
+
+        CALL mp_bcast(this%dummy, root, world_comm)
+
+	RETURN
+
+    END SUBROUTINE broadcast_scalar_inputs
+
+    SUBROUTINE broadcast_stopping_inputs(this)
+         
+        USE mp,		ONLY : mp_bcast
+	USE mp_world, 	ONLY : world_comm
+
+	IMPLICIT NONE
+	! input variables
+	CLASS(stopping_perturbation_type), INTENT(INOUT) :: this
+	! internal variables
+	INTEGER, parameter :: root = 0
+
+        CALL mp_bcast(this%dummy, root, world_comm)
+
+	RETURN
+
+    END SUBROUTINE broadcast_stopping_inputs
+
+    SUBROUTINE broadcast_vector_inputs(this)
+         
+        USE mp,		ONLY : mp_bcast
+	USE mp_world, 	ONLY : world_comm
+
+	IMPLICIT NONE
+	! input variables
+	CLASS(vector_perturbation_type), INTENT(INOUT) :: this
+	! internal variables
+	INTEGER, parameter :: root = 0
+
+        CALL mp_bcast(this%dummy, root, world_comm)
+
+	RETURN
+
+    END SUBROUTINE broadcast_vector_inputs
+
+    SUBROUTINE broadcast_xray_inputs(this)
+         
+        USE mp,		ONLY : mp_bcast
+	USE mp_world, 	ONLY : world_comm
+
+	IMPLICIT NONE
+	! input variables
+	CLASS(xray_perturbation_type), INTENT(INOUT) :: this
+	! internal variables
+	INTEGER, parameter :: root = 0
+
+        CALL mp_bcast(this%dummy, root, world_comm)
+
+	RETURN
+
+    END SUBROUTINE broadcast_xray_inputs
+#endif
 
 END MODULE tddft_perturbations_mod

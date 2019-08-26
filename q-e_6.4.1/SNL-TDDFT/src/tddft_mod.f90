@@ -154,9 +154,11 @@ MODULE tddft_mod
         ENDIF
     
 #ifdef __MPI
-      ! broadcast input variables  
-      CALL this%broadcast_inputs
+        ! broadcast input variables  
+        CALL this%broadcast_inputs
 #endif
+
+        RETURN     
     
     END SUBROUTINE read_tddft_settings
 
@@ -177,6 +179,26 @@ MODULE tddft_mod
 
 	CALL mp_bcast(prefix, root, world_comm)
 	CALL mp_bcast(tmp_dir, root, world_comm)
+	CALL mp_bcast(this%dt_el, root, world_comm)
+	CALL mp_bcast(this%dt_ion, root, world_comm)
+	CALL mp_bcast(this%iverbosity, root, world_comm)
+	CALL mp_bcast(this%lcorrect_ehrenfest_forces, root, world_comm)
+	CALL mp_bcast(this%lcorrect_moving_ions, root, world_comm)
+	CALL mp_bcast(this%lscalar_perturbation, root, world_comm)
+	CALL mp_bcast(this%lstopping_perturbation, root, world_comm)
+	CALL mp_bcast(this%lvector_perturbation, root, world_comm)
+	CALL mp_bcast(this%lxray_perturbation, root, world_comm)
+	CALL mp_bcast(this%nsteps_el, root, world_comm)
+	CALL mp_bcast(this%nsteps_el_per_nsteps_ion, root, world_comm)
+	CALL mp_bcast(this%nsteps_ion, root, world_comm)
+	CALL mp_bcast(this%dt_el, root, world_comm)
+	CALL mp_bcast(this%dt_ion, root, world_comm)
+        IF(ASSOCIATED(this%scalar_perturbation)) CALL this%scalar_perturbation%broadcast_inputs
+        IF(ASSOCIATED(this%stopping_perturbation)) CALL this%stopping_perturbation%broadcast_inputs
+        IF(ASSOCIATED(this%vector_perturbation)) CALL this%vector_perturbation%broadcast_inputs
+        IF(ASSOCIATED(this%xray_perturbation)) CALL this%xray_perturbation%broadcast_inputs
+
+        RETURN
 
     END SUBROUTINE broadcast_tddft_inputs
 #endif
