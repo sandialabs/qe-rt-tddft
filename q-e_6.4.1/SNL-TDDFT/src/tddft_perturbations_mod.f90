@@ -7,44 +7,46 @@ MODULE tddft_perturbations_mod
   ! 
   SAVE
   !
-  PUBLIC :: &
-      read_settings_file_scalar,	&
-      read_settings_file_stopping,      &
-      read_settings_file_vector,        &
-      read_settings_file_xray
-  
-  TYPE scalar_perturbation_type
+  TYPE, PUBLIC :: scalar_perturbation_type
 
       INTEGER :: dummy
+      CONTAINS
+        PROCEDURE :: read_settings_file => read_scalar_settings
       
   END TYPE scalar_perturbation_type
 
   TYPE stopping_perturbation_type
 
       INTEGER :: dummy
-      
+      CONTAINS
+        PROCEDURE :: read_settings_file => read_stopping_settings
+	 
   END TYPE stopping_perturbation_type
 
   TYPE vector_perturbation_type
 
       INTEGER :: dummy
+      CONTAINS
+        PROCEDURE :: read_settings_file => read_vector_settings
       
   END TYPE vector_perturbation_type
 
   TYPE xray_perturbation_type
 
       INTEGER :: dummy
+      CONTAINS 
+        PROCEDURE :: read_settings_file => read_xray_settings
 
   END TYPE xray_perturbation_type
 
   CONTAINS
 
-    SUBROUTINE read_settings_file_scalar(this)
+    SUBROUTINE read_scalar_settings(this)
 
         IMPLICIT NONE
 
         ! input variables
-        TYPE(scalar_perturbation_type), INTENT(INOUT) :: this
+        CLASS(scalar_perturbation_type), INTENT(INOUT) :: this
         ! internal variables
         INTEGER :: dummy
         INTEGER :: ierr
@@ -56,13 +58,13 @@ MODULE tddft_perturbations_mod
 
         this%dummy = dummy
 
-    END SUBROUTINE read_settings_file_scalar
+    END SUBROUTINE read_scalar_settings
 
-    SUBROUTINE read_settings_file_stopping(this)
+    SUBROUTINE read_stopping_settings(this)
 
         IMPLICIT NONE
         ! input variables
-        TYPE(stopping_perturbation_type), INTENT(INOUT) :: this 
+        CLASS(stopping_perturbation_type), INTENT(INOUT) :: this 
         ! internal variables
         INTEGER :: dummy
         INTEGER :: ierr
@@ -74,13 +76,13 @@ MODULE tddft_perturbations_mod
 
         this%dummy = dummy
 
-    END SUBROUTINE read_settings_file_stopping
+    END SUBROUTINE read_stopping_settings
 
-    SUBROUTINE read_settings_file_vector(this)
+    SUBROUTINE read_vector_settings(this)
 
         IMPLICIT NONE
         ! input variables
-        TYPE(vector_perturbation_type), INTENT(INOUT) :: this
+        CLASS(vector_perturbation_type), INTENT(INOUT) :: this
         ! internal variables
         INTEGER :: dummy
         INTEGER :: ierr
@@ -92,13 +94,13 @@ MODULE tddft_perturbations_mod
 
         this%dummy = dummy
 
-    END SUBROUTINE read_settings_file_vector
+    END SUBROUTINE read_vector_settings
 
-    SUBROUTINE read_settings_file_xray(this)
+    SUBROUTINE read_xray_settings(this)
 
         IMPLICIT NONE 
         ! input variables
-        TYPE(xray_perturbation_type), INTENT(INOUT) :: this
+        CLASS(xray_perturbation_type), INTENT(INOUT) :: this
         ! internal variables
         INTEGER :: dummy
         INTEGER :: ierr
@@ -110,6 +112,6 @@ MODULE tddft_perturbations_mod
 
         this%dummy = dummy
 
-    END SUBROUTINE read_settings_file_xray
+    END SUBROUTINE read_xray_settings
 
 END MODULE tddft_perturbations_mod

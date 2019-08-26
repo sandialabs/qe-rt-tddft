@@ -6,14 +6,6 @@ MODULE it_solver_mod
   ! 
   SAVE
   !
-  PUBLIC :: &
-      set_max_kry_dim,     	    &! sets the maximum dimension of the Krylov subspace before a restart
-      set_max_restarts, 	    &! sets the maximum number of restarts before calling it quits
-      set_tol,		    &! sets the tolerance for *any* iterative solver
-      gmres_begin,		    &! allocates the working space for GMRES
-      gmres_end,		    &! deallocates the working space for GMRES 
-      gmres_solve		     ! solves A*x=b
-  	       
   TYPE it_solver_type
   
       COMPLEX(dp), ALLOCATABLE, DIMENSION(:,:) :: &
@@ -28,6 +20,14 @@ MODULE it_solver_mod
       REAL(dp) :: &
   	    tol = 1.E-12_dp          ! tolerance for the iterative solve
       
+      CONTAINS
+        PROCEDURE :: set_max_kry_dim	! sets the maximum dimension of the Krylov subspace before a restart
+	PROCEDURE :: set_max_restarts   ! sets the maximum number of restarts before calling it quits
+	PROCEDURE :: set_tol		! sets the tolerance for *any* iterative solver
+	PROCEDURE :: gmres_begin	! allocates the working space for GMRES
+	PROCEDURE :: gmres_end		! deallocates the working space for GMRES
+	PROCEDURE :: gmres_solve	! solves A*x = b
+       
   END TYPE it_solver_type
 
   CONTAINS
