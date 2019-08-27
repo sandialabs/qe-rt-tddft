@@ -18,16 +18,16 @@ MODULE tddft_mod
       LOGICAL :: &
           lcorrect_ehrenfest_forces,&! flag = .TRUE. => compute the correct Ehrenfest forces (USPP/PAW feature)
           lcorrect_moving_ions,     &! flag = .TRUE. => compute the "gauge" correction for moving ions (USPP/PAW feature)
+          lprojectile_perturbation, &! flag = .TRUE. => applies a perturbation by moving an ion at a fixed velocity
           lscalar_perturbation,     &! flag = .TRUE. => applies a perturbation through a homogeneous scalar potential
-          lstopping_perturbation,   &! flag = .TRUE. => applies a perturbation by moving an ion at a fixed velocity
           lvector_perturbation,     &! flag = .TRUE. => applies a perturbation through a homogeneous vector potential
           lxray_perturbation         ! flag = .TRUE. => applies a perturbation through an inhomogeneous scalar potential
       REAL(dp) :: &
           dt_el,		    &! electronic time step
           dt_ion,                   &! ionic time step
           duration                   ! total duration in attoseconds
+      CLASS(projectile_perturbation_type), POINTER :: projectile_perturbation
       CLASS(scalar_perturbation_type), POINTER :: scalar_perturbation 
-      CLASS(stopping_perturbation_type), POINTER :: stopping_perturbation
       CLASS(vector_perturbation_type), POINTER :: vector_perturbation
       CLASS(xray_perturbation_type), POINTER :: xray_perturbation
 
@@ -35,7 +35,7 @@ MODULE tddft_mod
         PROCEDURE :: read_settings_file => read_tddft_settings   ! reads the settings file for a TDDFT calculation in from a file
 #ifdef __MPI	
 	PROCEDURE :: broadcast_inputs => broadcast_tddft_inputs  ! broadcasts inputs to all tasks after reading in settings on the IO node
-	PROCEDURE :: stop_calculation => stop_tddft_calculation  ! synchronizes	processes before stopping
+	PROCEDURE :: stop_calculation => stop_tddft_calculation  ! synchronizes	processes before stopping   
 #endif
 
   END TYPE tddft_type
@@ -61,8 +61,8 @@ MODULE tddft_mod
         LOGICAL :: &
             lcorrect_ehrenfest_forces,&
             lcorrect_moving_ions,     &
+            lprojectile_perturbation,   &	    
             lscalar_perturbation,     &
-            lstopping_perturbation,   &
             lvector_perturbation,     &
             lxray_perturbation       
         REAL(dp) :: dt_el, dt_ion, duration
@@ -71,7 +71,7 @@ MODULE tddft_mod
                          nsteps_el, nsteps_ion, &
                          dt_el, dt_ion, duration, &
           	       lcorrect_ehrenfest_forces, lcorrect_moving_ions, &
-          	       lscalar_perturbation, lstopping_perturbation, &
+          	       lprojectile_perturbation, lscalar_perturbation, &
           	       lvector_perturbation, lxray_perturbation
     
         IF(ionode .or. my_image_id == 0)THEN 
@@ -89,8 +89,8 @@ MODULE tddft_mod
     
             lcorrect_ehrenfest_forces = .FALSE.
             lcorrect_moving_ions = .FALSE.
+            lprojectile_perturbation = .FALSE.
             lscalar_perturbation = .FALSE.
-            lstopping_perturbation = .FALSE.
             lvector_perturbation = .FALSE.
             lxray_perturbation = .FALSE.
     
@@ -108,8 +108,8 @@ MODULE tddft_mod
     
             this%lcorrect_ehrenfest_forces = lcorrect_ehrenfest_forces
             this%lcorrect_moving_ions = lcorrect_moving_ions
+            this%lprojectile_perturbation = lprojectile_perturbation
             this%lscalar_perturbation = lscalar_perturbation
-            this%lstopping_perturbation = lstopping_perturbation
             this%lvector_perturbation = lvector_perturbation
             this%lxray_perturbation = lxray_perturbation
     
@@ -131,17 +131,17 @@ MODULE tddft_mod
                 CASE DEFAULT
                     CALL errore('read_settings_file', 'verbosity can be ''low'', ''medium'' or ''high''', 1)
             END SELECT
+          
+            IF(this%lprojectile_perturbation)THEN
+                ALLOCATE(this%projectile_perturbation)
+                CALL this%projectile_perturbation%read_settings_file()
+            ENDIF    
     
             IF(this%lscalar_perturbation)THEN
                 ALLOCATE(this%scalar_perturbation)
                 CALL this%scalar_perturbation%read_settings_file()
             ENDIF
-    
-            IF(this%lstopping_perturbation)THEN
-                ALLOCATE(this%stopping_perturbation)
-                CALL this%stopping_perturbation%read_settings_file()
-            ENDIF
-    
+
             IF(this%lvector_perturbation)THEN
                 ALLOCATE(this%vector_perturbation)
                 CALL this%vector_perturbation%read_settings_file()
@@ -185,8 +185,8 @@ MODULE tddft_mod
 	CALL mp_bcast(this%iverbosity, root, world_comm)
 	CALL mp_bcast(this%lcorrect_ehrenfest_forces, root, world_comm)
 	CALL mp_bcast(this%lcorrect_moving_ions, root, world_comm)
+	CALL mp_bcast(this%lprojectile_perturbation, root, world_comm)	
 	CALL mp_bcast(this%lscalar_perturbation, root, world_comm)
-	CALL mp_bcast(this%lstopping_perturbation, root, world_comm)
 	CALL mp_bcast(this%lvector_perturbation, root, world_comm)
 	CALL mp_bcast(this%lxray_perturbation, root, world_comm)
 	CALL mp_bcast(this%nsteps_el, root, world_comm)
@@ -194,8 +194,8 @@ MODULE tddft_mod
 	CALL mp_bcast(this%nsteps_ion, root, world_comm)
 	CALL mp_bcast(this%dt_el, root, world_comm)
 	CALL mp_bcast(this%dt_ion, root, world_comm)
+        IF(ASSOCIATED(this%projectile_perturbation)) CALL this%projectile_perturbation%broadcast_inputs
         IF(ASSOCIATED(this%scalar_perturbation)) CALL this%scalar_perturbation%broadcast_inputs
-        IF(ASSOCIATED(this%stopping_perturbation)) CALL this%stopping_perturbation%broadcast_inputs
         IF(ASSOCIATED(this%vector_perturbation)) CALL this%vector_perturbation%broadcast_inputs
         IF(ASSOCIATED(this%xray_perturbation)) CALL this%xray_perturbation%broadcast_inputs
 
@@ -205,7 +205,7 @@ MODULE tddft_mod
 
     SUBROUTINE stop_tddft_calculation(this, lclean_stop)
         ! 
-	! ... Synchronizes before stopping
+	! ... Synchronizes before stopping  
 	! 
 	USE mp_global,	ONLY : mp_global_end
 	USE parallel_include
