@@ -95,6 +95,7 @@ PROGRAM tddft
 
   ! TDDFT summary
   !
+  CALL this_calculation%print_summary(stdout)
 
   ! initialize parallelization over bands
 #ifdef __BANDS
@@ -110,7 +111,7 @@ PROGRAM tddft
       DO electron_step_counter = 1, this_calculation%nsteps_el_per_nsteps_ion
 
           electron_time = electron_time + this_calculation%dt_el
-	  WRITE(stdout,*) 'electron time: ', electron_time,  this_calculation%scalar_perturbation%scalar_envelope%evaluate(electron_time)
+	  WRITE(stdout,'(5x," electron time = ",F12.4,"   perturbation ",F12.4)') electron_time,  this_calculation%scalar_perturbation%scalar_envelope%evaluate(electron_time)
 
       ENDDO
 

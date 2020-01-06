@@ -24,6 +24,7 @@ MODULE tddft_envelope_mod
       REAL(dp) :: width
 
       CONTAINS
+        PROCEDURE :: print_summary => print_envelope_summary
         PROCEDURE :: evaluate => evaluate_envelope
         PROCEDURE :: linear => linear_envelope
 	PROCEDURE :: gaussian => gaussian_envelope
@@ -34,6 +35,52 @@ MODULE tddft_envelope_mod
   END TYPE tddft_envelope_type
 
   CONTAINS
+
+    SUBROUTINE print_envelope_summary(this, io_unit)
+
+        IMPLICIT NONE
+        ! input variables
+	CLASS(tddft_envelope_type), INTENT(INOUT) :: this
+	INTEGER, INTENT(IN) :: io_unit
+	! internal variables
+	INTEGER :: ierr
+
+        SELECT CASE (this%envelope_index)
+	    CASE(1)
+                WRITE(io_unit,'(5x," Linear ")')
+		WRITE(io_unit,'(5x," Slope                     =",F12.4," (as)^-1")') this%linear_slope
+	    CASE(2)
+                WRITE(io_unit,'(5x," Gaussian ")')
+                WRITE(io_unit,'(5x," Amplitude                 =",F12.4," (as) ")') this%amplitude
+                WRITE(io_unit,'(5x," Delay                     =",F12.4," (as) ")') this%delay    
+                WRITE(io_unit,'(5x," Width                     =",F12.4," (as) ")') this%width
+	    CASE(3)
+                WRITE(io_unit,'(5x," Integral of a Gaussian ")')
+                WRITE(io_unit,'(5x," Amplitude                 =",F12.4," (as) ")') this%amplitude
+                WRITE(io_unit,'(5x," Delay                     =",F12.4," (as) ")') this%delay    
+                WRITE(io_unit,'(5x," Width                     =",F12.4," (as) ")') this%width
+	    CASE(4)
+                WRITE(io_unit,'(5x," Derivative of a Gaussian ")')
+                WRITE(io_unit,'(5x," Amplitude                 =",F12.4," (as) ")') this%amplitude
+                WRITE(io_unit,'(5x," Delay                     =",F12.4," (as) ")') this%delay    
+                WRITE(io_unit,'(5x," Width                     =",F12.4," (as) ")') this%width
+	    CASE(5)
+                WRITE(io_unit,'(5x," Pure cosine ")')
+                WRITE(io_unit,'(5x," Amplitude                 =",F12.4," (unitless) ")') this%amplitude
+                WRITE(io_unit,'(5x," Carrier frequency         =",F12.4," (eV) ")') this%carrier_frequency  
+	    CASE(6)
+                WRITE(io_unit,'(5x," Cosine squared envelope plus carrier ")')
+                WRITE(io_unit,'(5x," Amplitude                 =",F12.4," (unitless) ")') this%amplitude
+                WRITE(io_unit,'(5x," Carrier frequency         =",F12.4," (eV) ")') this%carrier_frequency
+		WRITE(io_unit,'(5x," Width                     =",F12.4," (as) ")') this%width
+	    CASE DEFAULT
+	        CALL errore('print_envelope_summary', 'envelope index without implementation', ierr)
+	END SELECT
+	WRITE(io_unit,'(5x," ")')
+
+	RETURN 
+
+    END SUBROUTINE print_envelope_summary
 
     FUNCTION evaluate_envelope(this, time) RESULT(envelope_value)
 
@@ -47,20 +94,20 @@ MODULE tddft_envelope_mod
         INTEGER :: ierr
 
 	SELECT CASE (this%envelope_index)
-	   CASE(1)
-               envelope_value = this%linear(time)
-	   CASE(2)
-               envelope_value = this%gaussian(time)
-	   CASE(3)
-               envelope_value = this%integral_gaussian(time)
-	   CASE(4)
-               envelope_value = this%derivative_gaussian(time)
-	   CASE(5)
-               envelope_value = this%pure_cosine(time)
-	   CASE(6)
-               envelope_value = this%cosine_squared_times_carrier(time)
-	   CASE DEFAULT
-	       CALL errore('evaluate_envelope', 'envelope index without implementation', ierr)
+	    CASE(1)
+                envelope_value = this%linear(time)
+	    CASE(2)
+                envelope_value = this%gaussian(time)
+	    CASE(3)
+                envelope_value = this%integral_gaussian(time)
+	    CASE(4)
+                envelope_value = this%derivative_gaussian(time)
+	    CASE(5)
+                envelope_value = this%pure_cosine(time)
+	    CASE(6)
+                envelope_value = this%cosine_squared_times_carrier(time)
+	    CASE DEFAULT
+	        CALL errore('evaluate_envelope', 'envelope index without implementation', ierr)
         END SELECT
 
     END FUNCTION evaluate_envelope

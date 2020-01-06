@@ -11,28 +11,29 @@ MODULE tddft_mod
   TYPE, PUBLIC :: tddft_type
 
       INTEGER :: &
-          iverbosity,		    &! integer indicating the level of verbosity
-          nsteps_el,          	    &! total number of electronic steps
-          nsteps_el_per_nsteps_ion, &! number of electronic steps per ionic steps
-          nsteps_ion		     ! total number of ionic steps
+          iverbosity,		    &  ! integer indicating the level of verbosity
+          nsteps_el,          	    &  ! total number of electronic steps
+          nsteps_el_per_nsteps_ion, &  ! number of electronic steps per ionic steps
+          nsteps_ion		       ! total number of ionic steps
       LOGICAL :: &
-          lcorrect_ehrenfest_forces,&! flag = .TRUE. => compute the correct Ehrenfest forces (USPP/PAW feature)
-          lcorrect_moving_ions,     &! flag = .TRUE. => compute the "gauge" correction for moving ions (USPP/PAW feature)
-          lprojectile_perturbation, &! flag = .TRUE. => applies a perturbation by moving an ion at a fixed velocity
-          lscalar_perturbation,     &! flag = .TRUE. => applies a perturbation through a homogeneous scalar potential
-          lvector_perturbation,     &! flag = .TRUE. => applies a perturbation through a homogeneous vector potential
-          lxray_perturbation         ! flag = .TRUE. => applies a perturbation through an inhomogeneous scalar potential
+          lcorrect_ehrenfest_forces,&  ! flag = .TRUE. => compute the correct Ehrenfest forces (USPP/PAW feature)
+          lcorrect_moving_ions,     &  ! flag = .TRUE. => compute the "gauge" correction for moving ions (USPP/PAW feature)
+          lprojectile_perturbation, &  ! flag = .TRUE. => applies a perturbation by moving an ion at a fixed velocity
+          lscalar_perturbation,     &  ! flag = .TRUE. => applies a perturbation through a homogeneous scalar potential
+          lvector_perturbation,     &  ! flag = .TRUE. => applies a perturbation through a homogeneous vector potential
+          lxray_perturbation           ! flag = .TRUE. => applies a perturbation through an inhomogeneous scalar potential
       REAL(dp) :: &
-          dt_el,		    &! electronic time step
-          dt_ion,                   &! ionic time step
-          duration                   ! total duration in attoseconds
+          dt_el,		    &  ! electronic time step
+          dt_ion,                   &  ! ionic time step
+          duration                     ! total duration in attoseconds
       CLASS(projectile_perturbation_type), POINTER :: projectile_perturbation
       CLASS(scalar_perturbation_type), POINTER :: scalar_perturbation 
       CLASS(vector_perturbation_type), POINTER :: vector_perturbation
       CLASS(xray_perturbation_type), POINTER :: xray_perturbation
 
       CONTAINS
-        PROCEDURE :: read_settings_file => read_tddft_settings   ! reads the settings file for a TDDFT calculation in from a file
+        PROCEDURE :: read_settings_file => read_tddft_settings  ! reads the settings file for a TDDFT calculation in from a file
+	PROCEDURE :: print_summary => print_tddft_summary  ! prints out	information about this calculation on stdout 
 #ifdef __MPI	
 	PROCEDURE :: broadcast_inputs => broadcast_tddft_inputs  ! broadcasts inputs to all tasks after reading in settings on the IO node
 	PROCEDURE :: stop_calculation => stop_tddft_calculation  ! synchronizes	processes before stopping   
@@ -41,6 +42,48 @@ MODULE tddft_mod
   END TYPE tddft_type
 
   CONTAINS 
+
+    SUBROUTINE print_tddft_summary(this, io_unit)
+        ! 
+	! ... Prints a summary of the settings in this instance to the io_unit
+	!     passed as an argument
+	! 
+
+	IMPLICIT NONE
+        ! input variables
+	CLASS(tddft_type), INTENT(INOUT) :: this
+	INTEGER :: io_unit
+
+	WRITE(io_unit,'(5x,"Summary of TDDFT calculation")')
+	WRITE(io_unit,'(5x,"----------------------------")')
+        WRITE(io_unit,'(5x,"Duration                   = ",F12.4," as ",/)') this%duration	
+
+	WRITE(io_unit,'(5x,"Electronic time step       = ",F12.4," as ")') this%dt_el
+	WRITE(io_unit,'(5x,"Total electronic steps     = ",I12,/)') this%nsteps_el
+
+	WRITE(io_unit,'(5x,"Ionic time step            = ",F12.4," as ")') this%dt_ion
+	WRITE(io_unit,'(5x,"Total ionic steps          = ",I12)') this%nsteps_ion
+	WRITE(io_unit,'(5x,"Electron-ion step ratio    = ",I12,/)') this%nsteps_el_per_nsteps_ion
+
+	IF ( this%lprojectile_perturbation ) THEN
+	    CALL this%projectile_perturbation%print_summary(io_unit)	   
+	ENDIF
+
+	IF ( this%lscalar_perturbation ) THEN
+	    CALL this%scalar_perturbation%print_summary(io_unit)	   
+	ENDIF
+
+        IF ( this%lvector_perturbation ) THEN
+	    CALL this%vector_perturbation%print_summary(io_unit)	   
+	ENDIF
+
+        IF ( this%lxray_perturbation ) THEN
+	    CALL this%xray_perturbation%print_summary(io_unit)	   
+        ENDIF
+
+	RETURN
+ 
+    END SUBROUTINE print_tddft_summary
 
     SUBROUTINE read_tddft_settings(this)
         !

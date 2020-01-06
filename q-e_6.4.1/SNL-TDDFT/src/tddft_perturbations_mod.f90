@@ -13,10 +13,11 @@ MODULE tddft_perturbations_mod
 
       CHARACTER(len=1) :: projectile_direction          ! direction of motion of the projectile, 'a', 'b', 'c', or 'r' = a lattice vector or a random vector
       INTEGER :: projectile_index                       ! the number of the atom that is designated as projectile
-      REAL(dp) :: projectile_kinetic_energy             ! kinetic energy of the projectile atom in Rydberg units
+      REAL(dp) :: projectile_kinetic_energy             ! kinetic energy of the projectile in units of eV
       TYPE(tddft_envelope_type) :: projectile_envelope  ! defines the time-dependence of the motion of the projectile
 
       CONTAINS
+        PROCEDURE :: print_summary => print_projectile_summary
         PROCEDURE :: read_settings_file => read_projectile_settings
 #ifdef __MPI
 	PROCEDURE :: broadcast_inputs => broadcast_projectile_inputs
@@ -26,10 +27,11 @@ MODULE tddft_perturbations_mod
 
   TYPE, PUBLIC :: scalar_perturbation_type
 
-      REAL(dp) :: efield_strength(3)                    ! electric field strength in Rydberg units (energy / length)
+      REAL(dp) :: efield_strength(3)                    ! strength in units of eV/Angstrom
       TYPE(tddft_envelope_type) :: scalar_envelope      ! defines the time-dependence of the scalar kick
 
       CONTAINS
+        PROCEDURE :: print_summary => print_scalar_summary
         PROCEDURE :: read_settings_file => read_scalar_settings
 #ifdef __MPI
 	PROCEDURE :: broadcast_inputs => broadcast_scalar_inputs
@@ -39,10 +41,11 @@ MODULE tddft_perturbations_mod
 
   TYPE vector_perturbation_type
 
-      REAL(dp) :: afield_strength(3)                    ! vector potential strength in Rydberg units (energy time / length)
+      REAL(dp) :: afield_strength(3)                    ! strength in units of eV/Angstrom
       TYPE(tddft_envelope_type) :: vector_envelope      ! defines the time-dependence of the vector kick
 
       CONTAINS
+        PROCEDURE :: print_summary => print_vector_summary
         PROCEDURE :: read_settings_file => read_vector_settings
 #ifdef __MPI
 	PROCEDURE :: broadcast_inputs => broadcast_vector_inputs
@@ -54,10 +57,11 @@ MODULE tddft_perturbations_mod
 
       CHARACTER(len=1) :: cos_or_sin                    ! character indicating whether the cosine or sine part of exp(i*q*r) is used as a perturbation
       INTEGER :: xray_pert(3)                           ! integer indices corresponding to q in a basis of reciprocal lattice vectors
-      REAL(dp) :: xray_strength
+      REAL(dp) :: xray_strength                         ! strength in units of eV
       TYPE(tddft_envelope_type) :: xray_envelope        ! defines the time-dependence of the x-ray kick
       
       CONTAINS 
+        PROCEDURE :: print_summary => print_xray_summary
         PROCEDURE :: read_settings_file => read_xray_settings
 #ifdef __MPI
 	PROCEDURE :: broadcast_inputs => broadcast_xray_inputs
@@ -66,6 +70,26 @@ MODULE tddft_perturbations_mod
   END TYPE xray_perturbation_type
 
   CONTAINS
+
+    SUBROUTINE print_projectile_summary(this, io_unit) 
+        !
+	! ... Prints a summary of the settings in this instance of projectile perturbation
+        !
+        IMPLICIT NONE
+	! input variables
+	CLASS(projectile_perturbation_type), INTENT(INOUT) :: this
+	INTEGER, INTENT(IN) :: io_unit
+
+	WRITE(io_unit,'(5x,"Projectile perturbation active")')
+	WRITE(io_unit,'(5x,"Direction                  =",A)') this%projectile_direction
+	WRITE(io_unit,'(5x,"Index                      =",I12)') this%projectile_index
+	WRITE(io_unit,'(5x,"Kinetic energy             =",F12.4, " eV ")') this%projectile_kinetic_energy
+	WRITE(io_unit,'(5x,"Envelope")')
+	CALL this%projectile_envelope%print_summary(io_unit)
+
+        RETURN 
+
+    END SUBROUTINE print_projectile_summary
 
     SUBROUTINE read_projectile_settings(this)
 
@@ -89,7 +113,6 @@ MODULE tddft_perturbations_mod
         ! set default values
 	projectile_direction = 'r'
 	projectile_index = 1
-	projectile_kinetic_energy = 1.0_dp	! note: add conversion for units
 
         ! default values for the envelope variables
 	envelope_index = 0
@@ -116,6 +139,24 @@ MODULE tddft_perturbations_mod
 	this%projectile_envelope%width = width
 
     END SUBROUTINE read_projectile_settings
+
+    SUBROUTINE print_scalar_summary(this, io_unit) 
+        !
+	! ... Prints a summary of the settings in this instance of scalar perturbation
+        !
+        IMPLICIT NONE
+	! input variables
+	CLASS(scalar_perturbation_type), INTENT(INOUT) :: this
+	INTEGER, INTENT(IN) :: io_unit
+
+	WRITE(io_unit,'(5x,"Scalar perturbation active")')
+	WRITE(io_unit,'(5x,"E-field strength           =",3F12.4," eV/A ")') this%efield_strength(1:3)
+	WRITE(io_unit,'(5x,"Envelope")')
+	CALL this%scalar_envelope%print_summary(io_unit)
+
+        RETURN 
+
+    END SUBROUTINE print_scalar_summary
 
     SUBROUTINE read_scalar_settings(this)
 
@@ -162,6 +203,21 @@ MODULE tddft_perturbations_mod
 
     END SUBROUTINE read_scalar_settings
 
+    SUBROUTINE print_vector_summary(this, io_unit) 
+        !
+	! ... Prints a summary of the settings in this instance of vector perturbation
+        !
+        IMPLICIT NONE
+	! input variables
+	CLASS(vector_perturbation_type), INTENT(INOUT) :: this
+	INTEGER, INTENT(IN) :: io_unit
+
+	WRITE(io_unit,'(5x,"Vector perturbation active")')
+
+        RETURN 
+
+    END SUBROUTINE print_vector_summary
+
     SUBROUTINE read_vector_settings(this)
 
         IMPLICIT NONE
@@ -205,6 +261,21 @@ MODULE tddft_perturbations_mod
 	this%vector_envelope%width = width
 
     END SUBROUTINE read_vector_settings
+
+    SUBROUTINE print_xray_summary(this, io_unit) 
+        !
+	! ... Prints a summary of the settings in this instance of xray perturbation
+        !
+        IMPLICIT NONE
+	! input variables
+	CLASS(xray_perturbation_type), INTENT(INOUT) :: this
+	INTEGER, INTENT(IN) :: io_unit
+
+	WRITE(io_unit,'(5x,"X-ray perturbation active")')
+
+        RETURN 
+
+    END SUBROUTINE print_xray_summary
 
     SUBROUTINE read_xray_settings(this)
 
