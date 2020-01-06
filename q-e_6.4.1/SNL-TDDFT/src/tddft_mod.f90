@@ -95,17 +95,17 @@ MODULE tddft_mod
             lxray_perturbation = .FALSE.
     
             ! default propagation is one step that is 1 as long
-            dt_el = 1.0_dp
-            dt_ion = 1.0_dp
+            dt_el = 0.0_dp
+            dt_ion = 0.0_dp
             duration = 1.0_dp
             nsteps_el = 1
             nsteps_ion = 1
             nsteps_el_per_nsteps_ion = 1
-     
+           
             ! read tddft namelist from the input file    
             READ( 5, tddft, err = 200, iostat = ierr )
-200 CALL errore('read_settings_file', 'reading tddft namelist', ierr)
-    
+200 CALL errore('read_tddft_settings', 'reading tddft namelist', ierr)
+
             this%lcorrect_ehrenfest_forces = lcorrect_ehrenfest_forces
             this%lcorrect_moving_ions = lcorrect_moving_ions
             this%lprojectile_perturbation = lprojectile_perturbation
@@ -113,23 +113,40 @@ MODULE tddft_mod
             this%lvector_perturbation = lvector_perturbation
             this%lxray_perturbation = lxray_perturbation
     
-            ! TODO: sanitize this, someday
-            this%nsteps_el = CEILING(duration/dt_el)
-            this%dt_el = duration/nsteps_el
-            this%nsteps_ion = CEILING(duration/dt_ion)
-            this%dt_ion = duration/nsteps_ion
+            ! simulation duration is set by the specified duration
+	    this%duration = duration
+	    IF(dt_ion == 0.0_dp)THEN  ! if the ionic time step isn't set, then set the number of steps...
+                this%nsteps_ion = nsteps_ion
+		this%dt_ion = this%duration/this%nsteps_ion  ! ...and use that to compute the ionic time step
+            ELSE  ! otherwise set the ionic time step and...
+	        this%dt_ion = dt_ion
+		this%nsteps_ion = CEILING(this%duration/this%dt_ion)  ! ...use it to compute the number of ionic time steps
+	    ENDIF
+
+            IF(dt_el == 0.0_dp)THEN  ! if the electronic time step isn't set, then set the number of steps...
+	        this%nsteps_el = nsteps_el
+		this%dt_el = this%duration/this%nsteps_el  ! ...and use it to compute the number of electronic time steps
+	    ELSE  ! otherwise set the electronic time step and...
+	        this%dt_el = dt_el
+		this%nsteps_el = CEILING(this%duration/this%dt_el)  ! ...use it to compute the number of electronic time steps
+	    ENDIF
+
             this%nsteps_el_per_nsteps_ion = nsteps_el/nsteps_ion
-    
+   
             ! set the integer verbosity flag
             SELECT CASE (verbosity)
+	        CASE('minimal')
+		    this%iverbosity = -1
                 CASE('low')
-                    this%iverbosity = 1
+                    this%iverbosity = 0
                 CASE('medium')
-                    this%iverbosity = 11
+                    this%iverbosity = 1
                 CASE('high')
-                    this%iverbosity = 21
+                    this%iverbosity = 2
+		CASE('debug')
+		    this%iverbosity = 3
                 CASE DEFAULT
-                    CALL errore('read_settings_file', 'verbosity can be ''low'', ''medium'' or ''high''', 1)
+                    CALL errore('read_tddft_settings', 'verbosity can be ''minimal'', ''low'', ''medium'', ''high'', or ''debug''', 1)
             END SELECT
           
             IF(this%lprojectile_perturbation)THEN

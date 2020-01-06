@@ -27,6 +27,8 @@ PROGRAM tddft
   LOGICAL, EXTERNAL   		:: check_para_diag
   CLASS(tddft_type), POINTER    :: this_calculation
   !------------------------------------------------------------------------
+  INTEGER :: electron_step_counter, ion_step_counter
+  REAL(dp) :: electron_time, ion_time
 
   ! initialization
 #ifdef __MPI
@@ -101,6 +103,20 @@ PROGRAM tddft
 
   ! main TDDFT loop
   ! 
+  electron_time = 0.0_dp
+  ion_time = 0.0_dp
+  DO ion_step_counter = 1, this_calculation%nsteps_ion
+ 
+      DO electron_step_counter = 1, this_calculation%nsteps_el_per_nsteps_ion
+
+          electron_time = electron_time + this_calculation%dt_el
+	  WRITE(stdout,*) 'electron time: ', electron_time,  this_calculation%scalar_perturbation%scalar_envelope%evaluate(electron_time)
+
+      ENDDO
+
+      ion_time = ion_time + this_calculation%dt_ion
+
+  ENDDO
 
   ! close the files that were opened at the beginning of the TDDFT calculation
   !

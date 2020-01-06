@@ -158,7 +158,7 @@ MODULE it_solver_mod
       DO irhs = 1, this%number_rhs ! loop over orbitals/bands
      
           this%inner_counts(irhs) = 0
-  	this%outer_counts(irhs) = 0
+  	  this%outer_counts(irhs) = 0
    
           ! compute the norm of the RHS for the current orbital/band
           normb = DBLE(zdotc(ndim, b(1,irhs), 1, b(1,irhs), 1))
