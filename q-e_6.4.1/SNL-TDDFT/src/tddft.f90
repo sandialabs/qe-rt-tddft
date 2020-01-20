@@ -54,12 +54,14 @@ PROGRAM tddft
   CALL this_calculation%read_settings_file()
 
   ! set the IO level
+  ! open_buffer will connect specified units to files for direct I/O access
   io_level = 1
 
   ! read the initial Kohn-Sham orbitals from a file, tmp_dir/prefix+postfix
   CALL read_file()
   
   ! set use_para_diag in parallel runs
+  ! this probably isn't strictly necessary because TDDFT doesn't involve diagonalization...
 #ifdef __MPI
   use_para_diag = check_para_diag(nbnd)
 #else
@@ -67,7 +69,7 @@ PROGRAM tddft
 #endif
 
   ! open the files used in a TDDFT calculation
-  !
+  CALL this_calculation%open_files() 
 
   ! check to see whether gamma_only is erroneously being flagged...
   IF(gamma_only) CALL errore('tddft',, 'cannot run TDDFT with gamma_only == .TRUE.',1)
@@ -82,6 +84,7 @@ PROGRAM tddft
   IF( noncolin ) CALL errore('tddft', 'non-collinear spin is not yet supported', 1)
 
   ! pluginization stuff from Davide's code
+  ! it is entirely possible that we don't need any of this, yet
   nat_ = nat
   ntyp_ = ntyp
   ibrav_ = ibrav
@@ -120,14 +123,14 @@ PROGRAM tddft
   ENDDO
 
   ! close the files that were opened at the beginning of the TDDFT calculation
-  !
+  CALL this_calculation%close_files()
 
   ! print timings
   ! 
 
   CALL environment_end(code)
 
-  ! 
+  ! synchronize before stopping... 
   CALL this_calculation%stop_calculation( .TRUE. )
   
 STOP

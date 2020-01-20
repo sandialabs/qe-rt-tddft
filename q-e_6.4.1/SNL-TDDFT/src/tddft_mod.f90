@@ -11,6 +11,7 @@ MODULE tddft_mod
   TYPE, PUBLIC :: tddft_type
 
       INTEGER :: &
+          iuntdorbs = 42,           &  ! fixed unit of the file associated with the time-dependent orbitals
           iverbosity,		    &  ! integer indicating the level of verbosity
           nsteps_el,          	    &  ! total number of electronic steps
           nsteps_el_per_nsteps_ion, &  ! number of electronic steps per ionic steps
@@ -38,6 +39,8 @@ MODULE tddft_mod
 	PROCEDURE :: broadcast_inputs => broadcast_tddft_inputs  ! broadcasts inputs to all tasks after reading in settings on the IO node
 	PROCEDURE :: stop_calculation => stop_tddft_calculation  ! synchronizes	processes before stopping   
 #endif
+	PROCEDURE :: open_files => open_tddft_files
+	PROCEDURE :: close_files => close_tddft_files
 
   END TYPE tddft_type
 
@@ -48,7 +51,6 @@ MODULE tddft_mod
 	! ... Prints a summary of the settings in this instance to the io_unit
 	!     passed as an argument
 	! 
-
 	IMPLICIT NONE
         ! input variables
 	CLASS(tddft_type), INTENT(INOUT) :: this
@@ -144,7 +146,7 @@ MODULE tddft_mod
             nsteps_el = 1
             nsteps_ion = 1
             nsteps_el_per_nsteps_ion = 1
-           
+          	    	   
             ! read tddft namelist from the input file    
             READ( 5, tddft, err = 200, iostat = ierr )
 200 CALL errore('read_tddft_settings', 'reading tddft namelist', ierr)
@@ -287,5 +289,45 @@ MODULE tddft_mod
 
     END SUBROUTINE stop_tddft_calculation
 #endif
+
+    SUBROUTINE open_tddft_files(this)
+        !
+        ! ... Open big files for TDDFT
+	! 
+        USE wvfct,  ONLY : nbnd, npwx
+	USE noncollin_module, ONLY : npol
+	USE io_files,  ONLY : iunwfc, nwordwfc	
+	USE buffers, ONLY : open_buffer
+	USE control_flags, ONLY : io_level
+
+        IMPLICIT NONE
+	! input variable
+	CLASS(tddft_type), INTENT(INOUT) :: this
+	! internal variable
+	LOGICAL :: extant
+
+        ! record length (in real words) of the file containing the KS orbitals
+	! io_level is set to 1 in tddft.f90, but you could change this in principle
+        nwordwfc = nbnd*npwx*npol
+	CALL open_buffer(iunwfc, 'wfc', nwordwfc, io_level, extant)
+        CALL open_buffer(this%iuntdorbs, 'tddft', nwordwfc, io_level, extant) 
+
+    END SUBROUTINE open_tddft_files
+    
+    SUBROUTINE close_tddft_files(this)
+        ! 
+	! ... Close big files for TDDFT
+	!
+	USE io_files,  ONLY : iunwfc
+	USE buffers,  ONLY : close_buffer
+
+	IMPLICIT NONE
+	! input variable
+	CLASS(tddft_type), INTENT(INOUT) :: this
+
+	CALL close_buffer(iunwfc, 'keep')
+	CALL close_buffer(this%iuntdorbs, 'keep')
+    
+    END SUBROUTINE close_tddft_files 
 
 END MODULE tddft_mod
