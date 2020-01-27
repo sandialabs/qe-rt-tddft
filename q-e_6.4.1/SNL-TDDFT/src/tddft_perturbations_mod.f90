@@ -20,7 +20,7 @@ MODULE tddft_perturbations_mod
         PROCEDURE :: print_summary => print_projectile_summary
         PROCEDURE :: read_settings_file => read_projectile_settings
 #ifdef __MPI
-	PROCEDURE :: broadcast_inputs => broadcast_projectile_inputs
+	PROCEDURE :: broadcast_settings => broadcast_projectile_settings
 #endif		
 	 
   END TYPE projectile_perturbation_type
@@ -34,7 +34,7 @@ MODULE tddft_perturbations_mod
         PROCEDURE :: print_summary => print_scalar_summary
         PROCEDURE :: read_settings_file => read_scalar_settings
 #ifdef __MPI
-	PROCEDURE :: broadcast_inputs => broadcast_scalar_inputs
+	PROCEDURE :: broadcast_settings => broadcast_scalar_settings
 #endif __MPI		
       
   END TYPE scalar_perturbation_type
@@ -48,7 +48,7 @@ MODULE tddft_perturbations_mod
         PROCEDURE :: print_summary => print_vector_summary
         PROCEDURE :: read_settings_file => read_vector_settings
 #ifdef __MPI
-	PROCEDURE :: broadcast_inputs => broadcast_vector_inputs
+	PROCEDURE :: broadcast_settings => broadcast_vector_settings
 #endif		
       
   END TYPE vector_perturbation_type
@@ -64,7 +64,7 @@ MODULE tddft_perturbations_mod
         PROCEDURE :: print_summary => print_xray_summary
         PROCEDURE :: read_settings_file => read_xray_settings
 #ifdef __MPI
-	PROCEDURE :: broadcast_inputs => broadcast_xray_inputs
+	PROCEDURE :: broadcast_settings => broadcast_xray_settings
 #endif		
 
   END TYPE xray_perturbation_type
@@ -321,7 +321,7 @@ MODULE tddft_perturbations_mod
 
 #ifdef __MPI
 
-    SUBROUTINE broadcast_projectile_inputs(this)
+    SUBROUTINE broadcast_projectile_settings(this)
          
         USE mp,		ONLY : mp_bcast
 	USE mp_world, 	ONLY : world_comm
@@ -344,9 +344,9 @@ MODULE tddft_perturbations_mod
 
 	RETURN
 
-    END SUBROUTINE broadcast_projectile_inputs
+    END SUBROUTINE broadcast_projectile_settings
 
-    SUBROUTINE broadcast_scalar_inputs(this)
+    SUBROUTINE broadcast_scalar_settings(this)
          
         USE mp,		ONLY : mp_bcast
 	USE mp_world, 	ONLY : world_comm
@@ -367,9 +367,9 @@ MODULE tddft_perturbations_mod
 
 	RETURN
 
-    END SUBROUTINE broadcast_scalar_inputs
+    END SUBROUTINE broadcast_scalar_settings
 
-    SUBROUTINE broadcast_vector_inputs(this)
+    SUBROUTINE broadcast_vector_settings(this)
          
         USE mp,		ONLY : mp_bcast
 	USE mp_world, 	ONLY : world_comm
@@ -390,9 +390,9 @@ MODULE tddft_perturbations_mod
 
 	RETURN
 
-    END SUBROUTINE broadcast_vector_inputs
+    END SUBROUTINE broadcast_vector_settings
 
-    SUBROUTINE broadcast_xray_inputs(this)
+    SUBROUTINE broadcast_xray_settings(this)
          
         USE mp,		ONLY : mp_bcast
 	USE mp_world, 	ONLY : world_comm
@@ -415,7 +415,7 @@ MODULE tddft_perturbations_mod
 
 	RETURN
 
-    END SUBROUTINE broadcast_xray_inputs
+    END SUBROUTINE broadcast_xray_settings
 #endif
 
 END MODULE tddft_perturbations_mod

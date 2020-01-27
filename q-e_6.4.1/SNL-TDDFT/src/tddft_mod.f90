@@ -3,6 +3,7 @@ MODULE tddft_mod
   ! ... This module contains the variables used for TDDFT calculations
   !
   USE kinds,                   ONLY : dp
+  USE propagator_mod
   USE tddft_perturbations_mod 
   IMPLICIT NONE
   ! 
@@ -31,12 +32,13 @@ MODULE tddft_mod
       CLASS(scalar_perturbation_type), POINTER :: scalar_perturbation 
       CLASS(vector_perturbation_type), POINTER :: vector_perturbation
       CLASS(xray_perturbation_type), POINTER :: xray_perturbation
+      CLASS(propagator_type), POINTER :: propagator 
 
       CONTAINS
         PROCEDURE :: read_settings_file => read_tddft_settings  ! reads the settings file for a TDDFT calculation in from a file
 	PROCEDURE :: print_summary => print_tddft_summary  ! prints out	information about this calculation on stdout 
 #ifdef __MPI	
-	PROCEDURE :: broadcast_inputs => broadcast_tddft_inputs  ! broadcasts inputs to all tasks after reading in settings on the IO node
+	PROCEDURE :: broadcast_settings => broadcast_tddft_settings  ! broadcasts settings to all tasks after reading in settings on the IO node
 	PROCEDURE :: stop_calculation => stop_tddft_calculation  ! synchronizes	processes before stopping   
 #endif
 	PROCEDURE :: open_files => open_tddft_files
@@ -83,6 +85,8 @@ MODULE tddft_mod
 	    CALL this%xray_perturbation%print_summary(io_unit)	   
         ENDIF
 
+	CALL this%propagator%print_summary(io_unit)
+
 	RETURN
  
     END SUBROUTINE print_tddft_summary
@@ -115,9 +119,9 @@ MODULE tddft_mod
         NAMELIST /tddft/ prefix, tmp_dir, verbosity, &
                          nsteps_el, nsteps_ion, &
                          dt_el, dt_ion, duration, &
-          	       lcorrect_ehrenfest_forces, lcorrect_moving_ions, &
-          	       lprojectile_perturbation, lscalar_perturbation, &
-          	       lvector_perturbation, lxray_perturbation
+          	         lcorrect_ehrenfest_forces, lcorrect_moving_ions, &
+          	         lprojectile_perturbation, lscalar_perturbation, &
+          	         lvector_perturbation, lxray_perturbation
     
         IF(ionode .or. my_image_id == 0)THEN 
      
@@ -213,12 +217,15 @@ MODULE tddft_mod
                 ALLOCATE(this%xray_perturbation)
                 CALL this%xray_perturbation%read_settings_file()
             ENDIF
+    
+            ALLOCATE(this%propagator) 
+            CALL this%propagator%read_settings_file()
      
         ENDIF
     
 #ifdef __MPI
         ! broadcast input variables  
-        CALL this%broadcast_inputs
+        CALL this%broadcast_settings
 #endif
 
         RETURN     
@@ -226,7 +233,7 @@ MODULE tddft_mod
     END SUBROUTINE read_tddft_settings
 
 #ifdef __MPI
-    SUBROUTINE broadcast_tddft_inputs(this)
+    SUBROUTINE broadcast_tddft_settings(this)
         !
 	! ... Broadcast input read in on IO node to all nodes
 	! 
@@ -256,14 +263,15 @@ MODULE tddft_mod
 	CALL mp_bcast(this%nsteps_ion, root, world_comm)
 	CALL mp_bcast(this%dt_el, root, world_comm)
 	CALL mp_bcast(this%dt_ion, root, world_comm)
-        IF(ASSOCIATED(this%projectile_perturbation)) CALL this%projectile_perturbation%broadcast_inputs
-        IF(ASSOCIATED(this%scalar_perturbation)) CALL this%scalar_perturbation%broadcast_inputs
-        IF(ASSOCIATED(this%vector_perturbation)) CALL this%vector_perturbation%broadcast_inputs
-        IF(ASSOCIATED(this%xray_perturbation)) CALL this%xray_perturbation%broadcast_inputs
+        IF(ASSOCIATED(this%projectile_perturbation)) CALL this%projectile_perturbation%broadcast_settings
+        IF(ASSOCIATED(this%scalar_perturbation)) CALL this%scalar_perturbation%broadcast_settings
+        IF(ASSOCIATED(this%vector_perturbation)) CALL this%vector_perturbation%broadcast_settings
+        IF(ASSOCIATED(this%xray_perturbation)) CALL this%xray_perturbation%broadcast_settings
+        IF(ASSOCIATED(this%propagator)) CALL this%propagator%broadcast_settings
 
         RETURN
 
-    END SUBROUTINE broadcast_tddft_inputs
+    END SUBROUTINE broadcast_tddft_settings
 
     SUBROUTINE stop_tddft_calculation(this, lclean_stop)
         ! 

@@ -7,81 +7,81 @@ MODULE propagator_mod
   ! 
   SAVE
   ! 
-  PUBLIC :: &
-      set_dt_el,                    &! sets the size of the time step (attoseconds)
-      set_implicit_flag,            &! sets the flag that indicates we're using an implicit solver
-      set_nstages, 		    &! sets the number of stages
-      electron_step		     ! advances the electrons by a single time step
-  
-  TYPE propagator_type
-      INTEGER :: &
-          nstages 		     ! number of stages in the time integrator
-      LOGICAL :: &
-          implicit_flag	             ! logical flag for implicit solvers (.TRUE.=>implicit, .FALSE.=>explicit)   
-      REAL(dp) :: &
-          dt_el                      ! the time step associated with the electrons   
-      TYPE(it_solver_type), POINTER :: &
-          implicit_solver	     ! used for implicit time stepping (e.g., Crank-Nicolson) 
+  TYPE, PUBLIC :: propagator_type
+     
+      INTEGER :: nstages                  ! number of stages in the time integrator
+      LOGICAL :: limplicit                ! logical flag for implicit solvers (.TRUE.=>implicit, .FALSE.=>explicit)   
+      REAL(dp) :: dt                      ! the time step by which the propagator increments
+      TYPE(it_solver_type), POINTER :: &  ! the object that actually does linear algebra
+          implicit_solver          
+
+      CONTAINS
+        PROCEDURE :: read_settings_file => read_propagator_settings
+	PROCEDURE :: print_summary => print_propagator_summary
+	PROCEDURE :: broadcast_settings => broadcast_propagator_settings
+	PROCEDURE :: propagate => propagator_propagate
 
   END TYPE propagator_type
 
-CONTAINS
+  CONTAINS
 
-SUBROUTINE set_dt_el(this, dt_el)
-    ! 
-    ! ... interface for setting the size of the electronic time step (in attoseconds)
-    ! 
-    IMPLICIT NONE
-    ! input variables
-    CLASS(propagator_type), INTENT(INOUT) :: this
-    REAL(dp), INTENT(IN) :: dt_el
+    SUBROUTINE read_propagator_settings(this)
+        ! 
+	! ... Reads in the namelist associated with the propagator
+	! 
+        IMPLICIT NONE
+	! input variable
+	CLASS(propagator_type), INTENT(INOUT) :: this 
 
-    this%dt_el = dt_el
+        RETURN
 
-    RETURN
+    END SUBROUTINE read_propagator_settings
 
-END SUBROUTINE set_dt_el
+    SUBROUTINE print_propagator_summary(this, io_unit)
+        ! 
+	! ... Prints a summary of the propagator's settings
+	! 
+	IMPLICIT NONE
+	! input variables
+	CLASS(propagator_type), INTENT(INOUT) :: this
+	INTEGER, INTENT(IN) :: io_unit
 
-SUBROUTINE set_implicit_flag(this, implicit_flag)
-    !
-    ! ... interface for setting the implicit propagation flag's value
-    !
-    IMPLICIT NONE
-    ! input variables
-    CLASS(propagator_type), INTENT(INOUT) :: this
-    LOGICAL :: implicit_flag
-   
-    this%implicit_flag = implicit_flag
+	WRITE(io_unit,'(5x,"Summary!")')
 
-    RETURN
+        RETURN
 
-END SUBROUTINE set_implicit_flag
+    END SUBROUTINE print_propagator_summary
 
-SUBROUTINE set_nstages(this, nstages)
-    !
-    ! ... interface for setting the number of stages for a propagator
-    ! 
-    IMPLICIT NONE
-    ! input variables
-    CLASS(propagator_type), INTENT(INOUT) :: this
-    INTEGER :: nstages
+#ifdef __MPI
+    SUBROUTINE broadcast_propagator_settings(this)
+        ! 
+	! ... Broadcast input read in on IO node to all nodes
+	!   
+	USE mp,          ONLY : mp_bcast
+	USE mp_world,    ONLY : world_comm 
 
-    this%nstages = nstages
-  
-    RETURN
+	IMPLICIT NONE
+	! input variable
+	CLASS(propagator_type), INTENT(INOUT) :: this
 
-END SUBROUTINE set_nstages
+        RETURN
 
-SUBROUTINE electron_step(this)
-    ! 
-    ! ... interface for marching the electrons forward by one step
-    ! 
-    IMPLICIT NONE
-    ! input variables
-    CLASS(propagator_type), INTENT(INOUT) :: this
+    END SUBROUTINE broadcast_propagator_settings
+#endif
 
-    RETURN
+    SUBROUTINE propagator_propagate(this, io_unit)
+        ! 
+        ! ... interface for marching the electrons forward by one step
+        ! 
+        IMPLICIT NONE
+        ! input variables
+        CLASS(propagator_type), INTENT(INOUT) :: this
+	INTEGER :: io_unit
 
-END SUBROUTINE electron_step
+        WRITE(io_unit,'(6x,"step")')
+
+        RETURN
+
+    END SUBROUTINE propagator_propagate
 
 END MODULE propagator_mod

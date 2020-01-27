@@ -15,7 +15,7 @@ MODULE it_solver_mod
           outer_counts             ! counter for the outer loop on each RHS  
       INTEGER :: &
    	    number_rhs,             &! number of right hand sides (RHS), almost certainly the number of orbitals per k-point
-          max_kry_dim = 15,	    &! maximum dimension of the Krylov subspace before a restart
+            max_kry_dim = 15,	    &! maximum dimension of the Krylov subspace before a restart
   	    max_restarts = 200	     ! maximum number of restarts before calling it quits
       REAL(dp) :: &
   	    tol = 1.E-12_dp          ! tolerance for the iterative solve
