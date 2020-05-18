@@ -1,9 +1,16 @@
+! Copyright 2020 National Technology & Engineering Solutions of Sandia, LLC (NTESS).
+! Under the terms of Contract DE-NA0003525 with NTESS, the U.S. Government retains certain rights in this software.
+! This file is distributed under the terms of the
+! GNU General Public License. See the file `License'
+! in the root directory of the present distribution,
+! or http://www.gnu.org/copyleft/gpl.txt .
+
 PROGRAM tddft
 
   USE kinds,           ONLY : DP
   USE io_global,       ONLY : stdout, meta_ionode, meta_ionode_id
   USE mp,              ONLY : mp_bcast
-!  USE check_stop,      ONLY : check_stop_init
+  !  USE check_stop,      ONLY : check_stop_init
   USE control_flags,   ONLY : io_level, gamma_only, use_para_diag
   USE mp_global,       ONLY : mp_startup
   USE mp_bands,        ONLY : nbgrp
@@ -20,7 +27,7 @@ PROGRAM tddft
   USE cell_base,        ONLY : ibrav
   USE tddft_mod
   USE tddft_version
-  USE iotk_module  
+  USE iotk_module
   !------------------------------------------------------------------------
   IMPLICIT NONE
   CHARACTER (LEN=9)   		:: code = 'TDDFT'
@@ -33,14 +40,14 @@ PROGRAM tddft
   ! initialization
 #ifdef __MPI
   CALL mp_startup(start_images=.true.)
-#else
+  #else
   CALL mp_startup(start_images=.false.)
 #endif
   CALL environment_start(code)
 
 #ifndef __BANDS
   IF(nbgrp > 1) &
-    CALL errore('tddft', 'configure and recompile TDDFT with --enable-band-parallel', 1)
+  CALL errore('tddft', 'configure and recompile TDDFT with --enable-band-parallel', 1)
 #endif
 
   WRITE(stdout,*)
@@ -59,7 +66,7 @@ PROGRAM tddft
 
   ! read the initial Kohn-Sham orbitals from a file, tmp_dir/prefix+postfix
   CALL read_file()
-  
+
   ! set use_para_diag in parallel runs
   ! this probably isn't strictly necessary because TDDFT doesn't involve diagonalization...
 #ifdef __MPI
@@ -69,7 +76,7 @@ PROGRAM tddft
 #endif
 
   ! open the files used in a TDDFT calculation
-  CALL this_calculation%open_files() 
+  CALL this_calculation%open_files()
 
   ! check to see whether gamma_only is erroneously being flagged...
   IF(gamma_only) CALL errore('tddft',, 'cannot run TDDFT with gamma_only == .TRUE.',1)
@@ -77,10 +84,10 @@ PROGRAM tddft
   ! check to see whether wf_collect was used in the SCF
 #ifdef __BANDS
   IF( nbgrp>1 .AND. (twfcollect==.FALSE.) )&
-    CALL errore('tddft', 'cannot use band-parallelization without wf_collect in SCF', 1)     
-#endif  
-    
-  ! check to see whether noncolin is erroneously being flagged...  
+  CALL errore('tddft', 'cannot use band-parallelization without wf_collect in SCF', 1)
+#endif
+
+  ! check to see whether noncolin is erroneously being flagged...
   IF( noncolin ) CALL errore('tddft', 'non-collinear spin is not yet supported', 1)
 
   ! pluginization stuff from Davide's code
@@ -88,7 +95,7 @@ PROGRAM tddft
   nat_ = nat
   ntyp_ = ntyp
   ibrav_ = ibrav
-  assume_isolated_ = 'none'  
+  assume_isolated_ = 'none'
 
   ! allocate TDDFT stuff
   !
@@ -103,23 +110,23 @@ PROGRAM tddft
   ! initialize parallelization over bands
 #ifdef __BANDS
   CALL init_parallel_over_band(inter_bgrp_comm, nbnd)
-#endif  
+#endif
 
   ! main TDDFT loop
-  ! 
+  !
   electron_time = 0.0_dp
   ion_time = 0.0_dp
   DO ion_step_counter = 1, this_calculation%nsteps_ion
- 
-      DO electron_step_counter = 1, this_calculation%nsteps_el_per_nsteps_ion
 
-          electron_time = electron_time + this_calculation%dt_el
-	  CALL this_calculation%propagator%propagate(stdout)
-	  WRITE(stdout,'(5x," electron time = ",F12.4,"   perturbation ",F12.4)') electron_time,  this_calculation%scalar_perturbation%scalar_envelope%evaluate(electron_time)
+    DO electron_step_counter = 1, this_calculation%nsteps_el_per_nsteps_ion
 
-      ENDDO
+      electron_time = electron_time + this_calculation%dt_el
+      CALL this_calculation%propagator%propagate(stdout)
+      WRITE(stdout,'(5x," electron time = ",F12.4,"   perturbation ",F12.4)') electron_time,  this_calculation%scalar_perturbation%scalar_envelope%evaluate(electron_time)
 
-      ion_time = ion_time + this_calculation%dt_ion
+    ENDDO
+
+    ion_time = ion_time + this_calculation%dt_ion
 
   ENDDO
 
@@ -127,13 +134,13 @@ PROGRAM tddft
   CALL this_calculation%close_files()
 
   ! print timings
-  ! 
+  !
 
   CALL environment_end(code)
 
-  ! synchronize before stopping... 
+  ! synchronize before stopping...
   CALL this_calculation%stop_calculation( .TRUE. )
-  
-STOP
+
+  STOP
 
 END PROGRAM tddft
