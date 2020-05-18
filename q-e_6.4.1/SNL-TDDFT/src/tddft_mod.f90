@@ -32,7 +32,7 @@ MODULE tddft_mod
     lvector_perturbation,     &  ! flag = .TRUE. => applies a perturbation through a homogeneous vector potential
     lxray_perturbation           ! flag = .TRUE. => applies a perturbation through an inhomogeneous scalar potential
     REAL(dp) :: &
-    dt_el,		    &  ! electronic time step
+    dt_el,                    &  ! electronic time step
     dt_ion,                   &  ! ionic time step
     duration                     ! total duration in attoseconds
     CLASS(projectile_perturbation_type), POINTER :: projectile_perturbation
@@ -44,10 +44,10 @@ MODULE tddft_mod
   CONTAINS
     PROCEDURE :: read_settings_file => read_tddft_settings  ! reads the settings file for a TDDFT calculation in from a file
     PROCEDURE :: print_summary => print_tddft_summary  ! prints out	information about this calculation on stdout
-    #ifdef __MPI
+#ifdef __MPI
     PROCEDURE :: broadcast_settings => broadcast_tddft_settings  ! broadcasts settings to all tasks after reading in settings on the IO node
     PROCEDURE :: stop_calculation => stop_tddft_calculation  ! synchronizes	processes before stopping
-    #endif
+#endif
     PROCEDURE :: open_files => open_tddft_files
     PROCEDURE :: close_files => close_tddft_files
 
@@ -230,16 +230,16 @@ CONTAINS
 
     ENDIF
 
-    #ifdef __MPI
+#ifdef __MPI
     ! broadcast input variables
     CALL this%broadcast_settings
-    #endif
+#endif
 
     RETURN
 
   END SUBROUTINE read_tddft_settings
 
-  #ifdef __MPI
+#ifdef __MPI
   SUBROUTINE broadcast_tddft_settings(this)
     !
     ! ... Broadcast input read in on IO node to all nodes
@@ -303,7 +303,7 @@ CONTAINS
     RETURN
 
   END SUBROUTINE stop_tddft_calculation
-  #endif
+#endif
 
   SUBROUTINE open_tddft_files(this)
     !

@@ -54,9 +54,9 @@ MODULE tddft_perturbations_mod
   CONTAINS
     PROCEDURE :: print_summary => print_vector_summary
     PROCEDURE :: read_settings_file => read_vector_settings
-    #ifdef __MPI
+#ifdef __MPI
     PROCEDURE :: broadcast_settings => broadcast_vector_settings
-    #endif
+#endif
 
   END TYPE vector_perturbation_type
 
@@ -326,7 +326,7 @@ CONTAINS
 
   END SUBROUTINE read_xray_settings
 
-  #ifdef __MPI
+#ifdef __MPI
 
   SUBROUTINE broadcast_projectile_settings(this)
 
@@ -423,6 +423,6 @@ CONTAINS
     RETURN
 
   END SUBROUTINE broadcast_xray_settings
-  #endif
+#endif
 
 END MODULE tddft_perturbations_mod

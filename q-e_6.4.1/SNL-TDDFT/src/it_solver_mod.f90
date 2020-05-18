@@ -169,9 +169,9 @@ CONTAINS
 
       ! compute the norm of the RHS for the current orbital/band
       normb = DBLE(zdotc(ndim, b(1,irhs), 1, b(1,irhs), 1))
-      #ifdef __MPI
+#ifdef __MPI
       CALL mp_sum(normb, intra_pool_comm)
-      #endif
+#endif
       normb = DSQRT(normb)
       tolb = normb*this%tol
 
@@ -186,9 +186,9 @@ CONTAINS
 
       ! compute the norm of the residual
       normr = DBLE(zdotc(ndim, this%work(:,1), 1, this%work(:,1), 1))
-      #ifdef __MPI
+#ifdef __MPI
       CALL mp_sum(normr, intra_pool_comm)
-      #endif
+#endif
       normr = DSQRT(normr)
 
       IF(normr<tolb)THEN
@@ -219,9 +219,9 @@ CONTAINS
           CALL zscal(ndim, -1.0_dp, this%work(:,1), 1)
           ! compute the norm of the residual
           normr = DBLE(zdotc(ndim, this%work(:,1), 1, this%work(:,1), 1))
-          #ifdef __MPI
+#ifdef __MPI
           CALL mp_sum(normr, intra_pool_comm)
-          #endif
+#endif
           normr = DSQRT(normr)
           s(1) = normr
           ! for starting the next inner loop...
@@ -237,9 +237,9 @@ CONTAINS
           DO k = 1, inner
 
             tmp = zdotc(ndim, this%work(:,2+k), 1, this%work(:,2), 1)
-            #ifdef __MPI
+#ifdef __MPI
             CALL mp_sum(tmp, intra_pool_comm)
-            #endif
+#endif
             h(k,inner) = tmp
             ! w = w-h*v
             CALL zaxpy(ndim, -h(k,inner), this%work(:,2+k), 1, this%work(:,2), 1)
@@ -248,9 +248,9 @@ CONTAINS
 
           ! compute the last Hessenberg entry
           tmp = zdotc(ndim, this%work(:,2), 1, this%work(:,2), 1)
-          #ifdef __MPI
+#ifdef __MPI
           CALL mp_sum(tmp, intra_pool_comm)
-          #endif
+#endif
           h(inner+1,inner) = SQRT(tmp)
 
           this%work(:,3+inner) = this%work(:,2)/h(inner+1,inner)
@@ -291,9 +291,9 @@ CONTAINS
         CALL zaxpy(ndim, -1.0_dp, b(1,irhs), 1, this%work(:,1), 1)
         CALL zscal(ndim, -1.0_dp, this%work(:,1), 1)
         normr = DBLE(zdotc(ndim, this%work(:,1), 1, this%work(:,1), 1))
-        #ifdef __MPI
+#ifdef __MPI
         CALL mp_sum(normr, intra_pool_comm)
-        #endif
+#endif
         normr = DSQRT(normr)
         s(this%max_kry_dim+1) = normr
 
