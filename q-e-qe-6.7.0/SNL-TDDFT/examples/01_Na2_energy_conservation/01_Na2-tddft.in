@@ -1,0 +1,17 @@
+&TDDFT
+prefix = 'na2'
+tmp_dir = './scratch/'
+verbosity = 'high'
+dt_el = 1.0
+dt_ion = 1.0
+duration = 100.0
+lscalar_perturbation = .TRUE.
+/
+
+&SCALAR
+efield_strength = 1.0
+envelope_index = 2
+amplitude = 1.0
+delay = 50.0
+width = 10.0
+/

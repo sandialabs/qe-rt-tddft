@@ -2,6 +2,8 @@
 
 Real-time TDDFT in Quantum Espresso.
 
-## 2019 August 21
-Starting a new repository to work on my own implementation of RT-TDDFT in Quantum Espresso, starting at v6.4.1.
-Compatibility with Quantum Ristretto is also a goal.
+## 2021 February 26
+Getting back into the QE repository, working on a Sandia-local implementation of RT-TDDFT in Quantum Espresso.
+We are now starting at v6.7.0.
+At this point, we're mining a bunch of stuff from prior implementations w/other groups.
+The hope is to have a code with a fixed structure that implements Ehrenfest, conductivity, and DSF calculations in real-time.
