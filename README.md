@@ -1,4 +1,4 @@
-# qe-tddft
+# qe-rt-tddft
 
 Real-time TDDFT in Quantum Espresso.
 
