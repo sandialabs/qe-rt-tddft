@@ -1739,11 +1739,11 @@ fi
 # Extract version
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking Quantum-Espresso version" >&5
 $as_echo_n "checking Quantum-Espresso version... " >&6; }
-version=`grep version_number ${qe_source}/Modules/version.f90 | cut -d\' -f2`
+version=`grep version_number ${qe_source}/include/qe_version.h | cut -d\' -f2`
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $version" >&5
 $as_echo "$version" >&6; }
 case $version in
-  6.4.1   ) ;;
+  6.7MaX  ) ;;
   *) as_fn_error $? "Cannot compile against this version of Quantum-Espresso" "$LINENO" 5 ;;
 esac
 

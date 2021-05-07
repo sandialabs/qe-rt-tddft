@@ -40,7 +40,7 @@ PROGRAM tddft
   ! initialization
 #ifdef __MPI
   CALL mp_startup(start_images=.true.)
-  #else
+#else
   CALL mp_startup(start_images=.false.)
 #endif
   CALL environment_start(code)
