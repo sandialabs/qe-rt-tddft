@@ -5,7 +5,7 @@
 export LC_ALL=C
 
 QE_SOURCE=/pscratch/adbacze/Repos/qe-tddft/q-e-qe-6.7.0
-DEPENDS="${QE_SOURCE}/include ${QE_SOURCE}/iotk/src
+DEPENDS="${QE_SOURCE}/include ${QE_SOURCE}/upflib 
          ${QE_SOURCE}/Modules ${QE_SOURCE}/PW/src
          ${QE_SOURCE}/FFTXlib ${QE_SOURCE}/UtilXlib"
 

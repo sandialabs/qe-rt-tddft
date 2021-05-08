@@ -27,7 +27,6 @@ PROGRAM tddft
   USE cell_base,        ONLY : ibrav
   USE tddft_mod
   USE tddft_version
-  USE iotk_module
   !------------------------------------------------------------------------
   IMPLICIT NONE
   CHARACTER (LEN=9)   		:: code = 'TDDFT'

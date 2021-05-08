@@ -13,6 +13,6 @@ MODULE tddft_version
   !
   SAVE
   !
-  CHARACTER (LEN=40) :: tddft_git_revision = "f18bd1d983fd3bde14c46c1a244b6d286a9b4430"
+  CHARACTER (LEN=40) :: tddft_git_revision = "c19bfdeba3c58915e176e0ae8d736ee242f7f949"
   !
 END MODULE tddft_version

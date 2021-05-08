@@ -1,23 +1,23 @@
 # Makefile for SNL-TDDFT
 
-QE_SOURCE=/gscratch/adbacze/repos/qe-tddft/q-e_6.4.1
+QE_SOURCE=/pscratch/adbacze/Repos/qe-tddft/q-e-qe-6.7.0
 include $(QE_SOURCE)/make.inc
 DFLAGS += 
 
 # location of needed modules
-MODFLAGS = $(MOD_FLAG)$(QE_SOURCE)/iotk/src $(MOD_FLAG)$(QE_SOURCE)/Modules \
+MODFLAGS = $(MOD_FLAG)$(QE_SOURCE)/Modules \
            $(MOD_FLAG)$(QE_SOURCE)/FFTXlib $(MOD_FLAG)$(QE_SOURCE)/LAXlib \
-           $(MOD_FLAG)$(QE_SOURCE)/KS_Solvers/CG $(MOD_FLAG)$(QE_SOURCE)/KS_Solvers/Davidson \
+           $(MOD_FLAG)$(QE_SOURCE)/KS_Solvers/CG $(MOD_FLAG)$(QE_SOURCE)/KS_Solvers/Davidson $(MOD_FLAG)$(QE_SOURCE)/KS_Solvers/DENSE \
            $(MOD_FLAG)$(QE_SOURCE)/PW/src \
            $(MOD_FLAG)$(QE_SOURCE)/UtilXlib $(MOD_FLAG).
 
-TDDFT_OBJS = tddft_version.o it_solver_mod.o propagator_mod.o \
-             tddft_envelope_mod.o tddft_perturbations_mod.o \
-             tddft_mod.o tddft.o 
+TDDFT_OBJS = tddft_version.o it_solver_mod.o propagator_mod.o tddft_envelope_mod.o \
+             tddft_perturbations_mod.o tddft_mod.o tddft.o 
 
-LIBOBJS = $(QE_SOURCE)/clib/clib.a $(QE_SOURCE)/iotk/src/libiotk.a
+LIBOBJS = $(QE_SOURCE)/clib/clib.a $(QE_SOURCE)/upflib/libupf.a
 QEMODS = $(QE_SOURCE)/Modules/libqemod.a \
          $(QE_SOURCE)/KS_Solvers/Davidson/libdavid.a \
+         $(QE_SOURCE)/KS_Solvers/DENSE/libdense.a \
          $(QE_SOURCE)/KS_Solvers/CG/libcg.a \
          $(QE_SOURCE)/KS_Solvers/PPCG/libppcg.a \
          $(QE_SOURCE)/FFTXlib/libqefft.a \
