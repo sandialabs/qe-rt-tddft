@@ -96,7 +96,7 @@ CONTAINS
     INTEGER :: ierr
 
     ! allocate the working space
-    ALLOCATE(this%work(ndimx,3+this%max_kry_dim), stat=ierr)
+    ALLOCATE(this%work(ndimx, 3+this%max_kry_dim), stat=ierr)
     ! for GMRES, the working space is laid out as follows
     !    1st column = residual
     !    2nd column = w
@@ -137,8 +137,8 @@ CONTAINS
     INTEGER, INTENT(IN) :: ndim			! the actual dimension of the vectors
     INTEGER, INTENT(IN) :: nbnd			! the number of bands
     EXTERNAL :: A 				! the subroutine that computes A*x
-    COMPLEX(dp), INTENT(IN) :: b(ndimx,nbnd)	! the matrix of right hand sides (each column is an orbital/band)
-    COMPLEX(dp), INTENT(INOUT) :: x(ndimx,nbnd) ! the matrix of solution vectors (each column is an orbital/band)
+    COMPLEX(dp), INTENT(IN) :: b(ndimx, nbnd)	! the matrix of right hand sides (each column is an orbital/band)
+    COMPLEX(dp), INTENT(INOUT) :: x(ndimx, nbnd) ! the matrix of solution vectors (each column is an orbital/band)
     ! internal variables
     COMPLEX(dp), EXTERNAL :: zdotc
     COMPLEX(dp) :: tmp
@@ -150,7 +150,7 @@ CONTAINS
     ! quantities projected into the subspace
     COMPLEX(dp) :: cs(this%max_kry_dim), sn(this%max_kry_dim)
     COMPLEX(dp) :: s(this%max_kry_dim+1), y(this%max_kry_dim+1)
-    COMPLEX(dp) :: h(this%max_kry_dim+1,this%max_kry_dim)
+    COMPLEX(dp) :: h(this%max_kry_dim+1, this%max_kry_dim)
 
 
     converged_flag = .FALSE.	! of course, we haven't converged yet

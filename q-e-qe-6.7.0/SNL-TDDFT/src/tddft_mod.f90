@@ -21,6 +21,7 @@ MODULE tddft_mod
     INTEGER :: &
     iuntdorbs = 42,           &  ! fixed unit of the file associated with the time-dependent orbitals
     iverbosity,		    &  ! integer indicating the level of verbosity
+    nbands_occupied_max,		& ! integer indicating the largest number of occupied bands at any given k point
     nsteps_el,          	    &  ! total number of electronic steps
     nsteps_el_per_nsteps_ion, &  ! number of electronic steps per ionic steps
     nsteps_ion		       ! total number of ionic steps
@@ -32,6 +33,7 @@ MODULE tddft_mod
     lvector_perturbation,     &  ! flag = .TRUE. => applies a perturbation through a homogeneous vector potential
     lxray_perturbation           ! flag = .TRUE. => applies a perturbation through an inhomogeneous scalar potential
     REAL(dp) :: &
+    band_threshold,           &  ! threshold for considering a band as occupied
     dt_el,                    &  ! electronic time step
     dt_ion,                   &  ! ionic time step
     duration                     ! total duration in attoseconds
@@ -41,63 +43,23 @@ MODULE tddft_mod
     CLASS(xray_perturbation_type), POINTER :: xray_perturbation
     CLASS(propagator_type), POINTER :: propagator
 
+    INTEGER, ALLOCATABLE :: nbands_occupied(:)	! array consisting of the number of occupied bands at each k point
+
   CONTAINS
     PROCEDURE :: read_settings_file => read_tddft_settings  ! reads the settings file for a TDDFT calculation in from a file
-    PROCEDURE :: print_summary => print_tddft_summary  ! prints out	information about this calculation on stdout
+    PROCEDURE :: print_summary => print_tddft_summary  ! prints out information about this calculation on stdout
+    PROCEDURE :: perfunctory_business => perfunctory_tddft_business ! sets things up so the rest of the code doesn't throw a fit
+    PROCEDURE :: initialize_calculation => initialize_tddft_calculation ! initializes various quantities before heading into the main loop
 #ifdef __MPI
     PROCEDURE :: broadcast_settings => broadcast_tddft_settings  ! broadcasts settings to all tasks after reading in settings on the IO node
-    PROCEDURE :: stop_calculation => stop_tddft_calculation  ! synchronizes	processes before stopping
+    PROCEDURE :: stop_calculation => stop_tddft_calculation  ! synchronizes processes before stopping
 #endif
-    PROCEDURE :: open_files => open_tddft_files
-    PROCEDURE :: perfunctory_business => perfunctory_tddft_business
-    PROCEDURE :: close_files => close_tddft_files
+    PROCEDURE :: open_files => open_tddft_files ! opens file containing the Kohn-Sham orbitals
+    PROCEDURE :: close_files => close_tddft_files ! closes file containing the Kohn-Sham orbitals
 
   END TYPE tddft_type
 
 CONTAINS
-
-  SUBROUTINE print_tddft_summary(this, io_unit)
-    !
-    ! ... Prints a summary of the settings in this instance to the io_unit
-    !     passed as an argument
-    !
-    IMPLICIT NONE
-    ! input variables
-    CLASS(tddft_type), INTENT(INOUT) :: this
-    INTEGER :: io_unit
-
-    WRITE(io_unit,'(5x,"Summary of TDDFT calculation")')
-    WRITE(io_unit,'(5x,"----------------------------")')
-    WRITE(io_unit,'(5x,"Duration                   = ",F12.4," as ",/)') this%duration
-
-    WRITE(io_unit,'(5x,"Electronic time step       = ",F12.4," as ")') this%dt_el
-    WRITE(io_unit,'(5x,"Total electronic steps     = ",I12,/)') this%nsteps_el
-
-    WRITE(io_unit,'(5x,"Ionic time step            = ",F12.4," as ")') this%dt_ion
-    WRITE(io_unit,'(5x,"Total ionic steps          = ",I12)') this%nsteps_ion
-    WRITE(io_unit,'(5x,"Electron-ion step ratio    = ",I12,/)') this%nsteps_el_per_nsteps_ion
-
-    IF ( this%lprojectile_perturbation ) THEN
-      CALL this%projectile_perturbation%print_summary(io_unit)
-    ENDIF
-
-    IF ( this%lscalar_perturbation ) THEN
-      CALL this%scalar_perturbation%print_summary(io_unit)
-    ENDIF
-
-    IF ( this%lvector_perturbation ) THEN
-      CALL this%vector_perturbation%print_summary(io_unit)
-    ENDIF
-
-    IF ( this%lxray_perturbation ) THEN
-      CALL this%xray_perturbation%print_summary(io_unit)
-    ENDIF
-
-    CALL this%propagator%print_summary(io_unit)
-
-    RETURN
-
-  END SUBROUTINE print_tddft_summary
 
   SUBROUTINE read_tddft_settings(this)
     !
@@ -122,10 +84,11 @@ CONTAINS
     lscalar_perturbation,     &
     lvector_perturbation,     &
     lxray_perturbation
-    REAL(dp) :: dt_el, dt_ion, duration
+    REAL(dp) :: band_threshold, dt_el, dt_ion, duration
 
     NAMELIST /tddft/ prefix, tmp_dir, verbosity, &
     nsteps_el, nsteps_ion, &
+    band_threshold, &
     dt_el, dt_ion, duration, &
     lcorrect_ehrenfest_forces, lcorrect_moving_ions, &
     lprojectile_perturbation, lscalar_perturbation, &
@@ -151,6 +114,9 @@ CONTAINS
       lvector_perturbation = .FALSE.
       lxray_perturbation = .FALSE.
 
+      ! default band threshold is the usual rule from Mike Desjarlais
+      band_threshold = 1.0e-5_dp
+
       ! default propagation is one step that is 1 as long
       dt_el = 0.0_dp
       dt_ion = 0.0_dp
@@ -169,6 +135,8 @@ CONTAINS
       this%lscalar_perturbation = lscalar_perturbation
       this%lvector_perturbation = lvector_perturbation
       this%lxray_perturbation = lxray_perturbation
+
+      this%band_threshold = band_threshold
 
       ! simulation duration is set by the specified duration
       this%duration = duration
@@ -240,6 +208,130 @@ CONTAINS
 
   END SUBROUTINE read_tddft_settings
 
+  SUBROUTINE print_tddft_summary(this, io_unit)
+    !
+    ! ... Prints a summary of the settings in this instance to the io_unit
+    !     passed as an argument
+    !
+    IMPLICIT NONE
+    ! input variables
+    CLASS(tddft_type), INTENT(INOUT) :: this
+    INTEGER :: io_unit
+
+    WRITE(io_unit,'(5x,"Summary of TDDFT calculation")')
+    WRITE(io_unit,'(5x,"----------------------------")')
+    WRITE(io_unit,'(5x,"Duration                   = ",F12.4," as ",/)') this%duration
+
+    WRITE(io_unit,'(5x,"Electronic time step       = ",F12.4," as ")') this%dt_el
+    WRITE(io_unit,'(5x,"Total electronic steps     = ",I12,/)') this%nsteps_el
+
+    WRITE(io_unit,'(5x,"Ionic time step            = ",F12.4," as ")') this%dt_ion
+    WRITE(io_unit,'(5x,"Total ionic steps          = ",I12)') this%nsteps_ion
+    WRITE(io_unit,'(5x,"Electron-ion step ratio    = ",I12,/)') this%nsteps_el_per_nsteps_ion
+
+    IF ( this%lprojectile_perturbation ) THEN
+      CALL this%projectile_perturbation%print_summary(io_unit)
+    ENDIF
+
+    IF ( this%lscalar_perturbation ) THEN
+      CALL this%scalar_perturbation%print_summary(io_unit)
+    ENDIF
+
+    IF ( this%lvector_perturbation ) THEN
+      CALL this%vector_perturbation%print_summary(io_unit)
+    ENDIF
+
+    IF ( this%lxray_perturbation ) THEN
+      CALL this%xray_perturbation%print_summary(io_unit)
+    ENDIF
+
+    CALL this%propagator%print_summary(io_unit)
+
+    RETURN
+
+  END SUBROUTINE print_tddft_summary
+
+  SUBROUTINE perfunctory_tddft_business(this)
+    !
+    ! ... Conducts business that might not be needed for TDDFT, per se, but *is* needed for the rest of QE to be happy
+    ! 
+    USE klist,  ONLY : nkstot
+    USE wvfct,  ONLY : btype, nbndx
+     
+    IMPLICIT NONE
+    ! input variable
+    CLASS(tddft_type), INTENT(INOUT) :: this
+    ! internal variables
+    INTEGER :: ierr   ! error flag  
+
+    ! btype is allocated because sum_band needs it...
+    ! really, it is used in diagonalization routines for determining which bands need to be fully converged 
+    ! but sum_bands will be mad at us if this isn't allocated and we need it for constructing charge densities
+    ALLOCATE(btype(nbndx, nkstot), stat=ierr)
+    IF(ierr/=0) CALL errore('perfunctory_tddft_business','error allocating btype',ierr)
+
+  END SUBROUTINE perfunctory_tddft_business
+
+  SUBROUTINE initialize_tddft_calculation(this)
+    ! 
+    ! ...Initializes all of the necessary (non-perfunctory) quantities before entering the main loop
+    ! 
+    USE constants,      ONLY : rytoev
+    USE dfunct,         ONLY : newd
+    USE fft_base,       ONLY : dfftp
+    USE gvecs,          ONLY : doublegrid
+    USE klist,          ONLY : nks, wk
+    USE lsda_mod,       ONLY : nspin
+    USE scf,            ONLY : v, vrs, vltot, kedtau
+    USE wvfct,          ONLY : nbnd, et, wg  
+
+    IMPLICIT NONE
+    ! input variables
+    CLASS(tddft_type), INTENT(INOUT) :: this
+    ! internal
+    INTEGER :: band_counter, kpt_counter
+    INTEGER :: ierr   ! error flag
+
+    ! start the clock on initialization
+    CALL start_clock('initialize_tddft_calculation')
+
+    ! initialize pseudopotentials/projectors, compute the total local potential, compute the D term from both
+    CALL init_us_1
+    CALL init_at_1
+    CALL setlocal
+    CALL set_vrs(vrs, vltot, v%of_r, kedtau, v%kin_r, dfftp%nnr, nspin, doublegrid)
+    CALL newd
+    
+    ! Davide Ceresoli's CE-TDDFT code issues a bunch of warnings at this stage...might be good, someday
+
+    ! allocate an array for tracking the number of occupied bands
+    ALLOCATE(this%nbands_occupied(nks), stat=ierr)
+    IF(ierr/=0) CALL errore('perfunctory_tddft_business','error allocating btype',ierr)
+    this%nbands_occupied(:) = 0
+    this%nbands_occupied_max = 0
+    ! loop over each k point and evaluate the number of occupied bands
+    DO kpt_counter = 1, nks
+       ! loop over each band
+       DO band_counter = 1, nbnd
+          ! make sure that the k point that we're on is actually contributing to the density...
+          IF(wk(kpt_counter) > 0.d0)THEN
+             ! check the Fermi-Dirac weight, or at least something like it...
+             IF(wg(band_counter, kpt_counter)/wk(kpt_counter) > this%band_threshold) this%nbands_occupied(kpt_counter) = band_counter
+          ENDIF
+       ENDDO
+       ! if this is the largest number of occupied bands, so far, then update the maximum number of occupied bands
+       IF(this%nbands_occupied(kpt_counter) > this%nbands_occupied_max) this%nbands_occupied_max = this%nbands_occupied(kpt_counter)
+    ENDDO
+
+    ! Davide Ceresoli's CE-TDDFT code computes alpha_pv here, used for shifting bands... I don't think we need it  
+
+    !CALL update_hamiltonian(-1)
+
+    ! stop the clock on initialization
+    CALL stop_clock('initialize_tddft_calculation')
+
+  END SUBROUTINE initialize_tddft_calculation
+
 #ifdef __MPI
   SUBROUTINE broadcast_tddft_settings(this)
     !
@@ -257,6 +349,7 @@ CONTAINS
 
     CALL mp_bcast(prefix, root, world_comm)
     CALL mp_bcast(tmp_dir, root, world_comm)
+    CALL mp_bcast(this%band_threshold, root, world_comm)
     CALL mp_bcast(this%dt_el, root, world_comm)
     CALL mp_bcast(this%dt_ion, root, world_comm)
     CALL mp_bcast(this%iverbosity, root, world_comm)
@@ -329,27 +422,6 @@ CONTAINS
     CALL open_buffer(this%iuntdorbs, 'tddft', nwordwfc, io_level, extant)
 
   END SUBROUTINE open_tddft_files
-
-  SUBROUTINE perfunctory_tddft_business(this)
-    !
-    ! ... Conducts business that might not be needed for TDDFT, per se, but *is* needed for the rest of QE to be happy
-    ! 
-    USE klist,  ONLY : nkstot
-    USE wvfct,  ONLY : btype, nbndx
-     
-    IMPLICIT NONE
-    ! input variable
-    CLASS(tddft_type), INTENT(INOUT) :: this
-    ! internal variables
-    INTEGER :: ierr	! error flag  
-
-    ! btype is allocated because sum_band needs it...
-    ! really, it is used in diagonalization routines for determining which bands need to be fully converged 
-    ! but sum_bands will be mad at us if this isn't allocated and we need it for constructing charge densities
-    ALLOCATE(btype(nbndx,nkstot), stat=ierr)
-    IF(ierr/=0) CALL errore('perfunctory_business','error allocating btype',ierr)
-
-  END SUBROUTINE perfunctory_tddft_business
 
   SUBROUTINE close_tddft_files(this)
     !

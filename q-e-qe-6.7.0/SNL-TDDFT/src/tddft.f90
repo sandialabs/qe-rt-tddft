@@ -92,11 +92,10 @@ PROGRAM tddft
   ! do things to keep the code from crashing
   CALL this_calculation%perfunctory_business()
 
-  ! TDDFT setup
-  !
-
-  ! TDDFT summary
-  !
+  ! set everything up before heading into the main TDDFT loop
+  CALL this_calculation%initialize_calculation()
+ 
+  ! print summary
   CALL this_calculation%print_summary(stdout)
 
   ! initialize parallelization over bands
@@ -105,7 +104,6 @@ PROGRAM tddft
 #endif
 
   ! main TDDFT loop
-  !
   electron_time = 0.0_dp
   ion_time = 0.0_dp
   DO ion_step_counter = 1, this_calculation%nsteps_ion
