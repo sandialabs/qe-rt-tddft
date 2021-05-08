@@ -49,6 +49,7 @@ MODULE tddft_mod
     PROCEDURE :: stop_calculation => stop_tddft_calculation  ! synchronizes	processes before stopping
 #endif
     PROCEDURE :: open_files => open_tddft_files
+    PROCEDURE :: perfunctory_business => perfunctory_tddft_business
     PROCEDURE :: close_files => close_tddft_files
 
   END TYPE tddft_type
@@ -328,6 +329,27 @@ CONTAINS
     CALL open_buffer(this%iuntdorbs, 'tddft', nwordwfc, io_level, extant)
 
   END SUBROUTINE open_tddft_files
+
+  SUBROUTINE perfunctory_tddft_business(this)
+    !
+    ! ... Conducts business that might not be needed for TDDFT, per se, but *is* needed for the rest of QE to be happy
+    ! 
+    USE klist,  ONLY : nkstot
+    USE wvfct,  ONLY : btype, nbndx
+     
+    IMPLICIT NONE
+    ! input variable
+    CLASS(tddft_type), INTENT(INOUT) :: this
+    ! internal variables
+    INTEGER :: ierr	! error flag  
+
+    ! btype is allocated because sum_band needs it...
+    ! really, it is used in diagonalization routines for determining which bands need to be fully converged 
+    ! but sum_bands will be mad at us if this isn't allocated and we need it for constructing charge densities
+    ALLOCATE(btype(nbndx,nkstot), stat=ierr)
+    IF(ierr/=0) CALL errore('perfunctory_business','error allocating btype',ierr)
+
+  END SUBROUTINE perfunctory_tddft_business
 
   SUBROUTINE close_tddft_files(this)
     !

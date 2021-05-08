@@ -89,15 +89,8 @@ PROGRAM tddft
   ! check to see whether noncolin is erroneously being flagged...
   IF( noncolin ) CALL errore('tddft', 'non-collinear spin is not yet supported', 1)
 
-  ! pluginization stuff from Davide's code
-  ! it is entirely possible that we don't need any of this, yet
-  nat_ = nat
-  ntyp_ = ntyp
-  ibrav_ = ibrav
-  assume_isolated_ = 'none'
-
-  ! allocate TDDFT stuff
-  !
+  ! do things to keep the code from crashing
+  CALL this_calculation%perfunctory_business()
 
   ! TDDFT setup
   !
