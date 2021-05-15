@@ -18,7 +18,6 @@ MODULE propagator_mod
 
     INTEGER :: nstages                       ! number of stages in the time integrator
     LOGICAL :: limplicit                     ! logical flag for implicit solvers (.TRUE.=>implicit, .FALSE.=>explicit)
-    REAL(dp) :: dt                           ! the time step by which the propagator increments
     TYPE(it_solver_type) :: implicit_solver  ! the object that actually does linear algebra
 
   CONTAINS
@@ -134,8 +133,14 @@ CONTAINS
     ! input variables
     CLASS(propagator_type), INTENT(INOUT) :: this
     INTEGER :: io_unit
+    ! internal variable
+    INTEGER :: ierr
 
-    WRITE(io_unit,'(6x,"step")')
+    IF(this%limplicit)THEN
+      WRITE(io_unit,*) 'step'
+    ELSE
+      CALL errore('propagator_propagate', 'no non-implicit propagators...yet', ierr)
+    ENDIF
 
     RETURN
 
