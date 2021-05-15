@@ -131,7 +131,7 @@ CONTAINS
 
     ! read values from file
     READ(5, projectile, err = 201, iostat = ierr)
-    201 CALL errore('read_settings_file', 'reading projectile namelist', ierr)
+    201 CALL errore('read_projectile_settings', 'reading projectile namelist', ierr)
 
     ! load values from file into calling instance
     this%projectile_direction = projectile_direction
@@ -196,7 +196,7 @@ CONTAINS
 
     ! read values from file
     READ(5, scalar, err = 202, iostat = ierr)
-202 CALL errore('read_settings_file', 'reading scalar namelist', ierr)
+202 CALL errore('read_scalar_settings', 'reading scalar namelist', ierr)
 
     ! load values from the file into the calling instance
     this%efield_strength(:) = efield_strength(:)
@@ -255,7 +255,7 @@ CONTAINS
 
     ! read values from file
     READ(5, vector, err = 203, iostat = ierr)
-203 CALL errore('read_settings_file', 'reading vector namelist', ierr)
+203 CALL errore('read_vector_settings', 'reading vector namelist', ierr)
 
     ! load values from file into the calling instance
     this%afield_strength(:) = afield_strength(:)
@@ -310,7 +310,7 @@ CONTAINS
 
     ! read values from file
     READ(5, xray, err = 204, iostat = ierr)
-204 CALL errore('read_settings_file', 'reading xray namelist', ierr)
+204 CALL errore('read_xray_settings', 'reading xray namelist', ierr)
 
     ! load values from file into the calling instance
     this%cos_or_sin = cos_or_sin

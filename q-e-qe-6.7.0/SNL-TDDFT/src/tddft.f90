@@ -44,11 +44,6 @@ PROGRAM tddft
 #endif
   CALL environment_start(code)
 
-#ifndef __BANDS
-  IF(nbgrp > 1) &
-  CALL errore('tddft', 'configure and recompile TDDFT with --enable-band-parallel', 1)
-#endif
-
   WRITE(stdout,*)
   WRITE(stdout,'(5X,''***** SNL-TDDFT git revision '',A,'' *****'')') tddft_git_revision
   WRITE(stdout,*)
@@ -104,12 +99,15 @@ PROGRAM tddft
 #endif
 
   ! allocate before the loop
-  WRITE(stdout, '(5X, "Preloop allocation...")')
+  WRITE(stdout, '(5X, "Pre-loop allocation...")')
   CALL this_calculation%allocate_preloop()
+  WRITE(stdout, *)
 
   ! main TDDFT loop
   electron_time = 0.0_dp
   ion_time = 0.0_dp
+  WRITE(stdout, '(5X, "Entering main loop")')
+  WRITE(stdout, *)
   DO ion_step_counter = 1, this_calculation%nsteps_ion
 
     DO electron_step_counter = 1, this_calculation%nsteps_el_per_nsteps_ion
@@ -126,11 +124,14 @@ PROGRAM tddft
     ion_time = ion_time + this_calculation%dt_ion
 
   ENDDO
+  WRITE(stdout, '(5X, "Exiting main loop")')
+  WRITE(stdout, *)
 
   ! deallocate after the loop
-  WRITE(stdout, '(5X, "Postloop deallocation...")')
+  WRITE(stdout, '(5X, "Post-loop deallocation...")')
   CALL this_calculation%deallocate_postloop()
-
+  WRITE(stdout, *)
+  
   ! close the files that were opened at the beginning of the TDDFT calculation
   CALL this_calculation%close_files()
 

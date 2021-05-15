@@ -16,11 +16,10 @@ MODULE propagator_mod
   !
   TYPE, PUBLIC :: propagator_type
 
-    INTEGER :: nstages                  ! number of stages in the time integrator
-    LOGICAL :: limplicit                ! logical flag for implicit solvers (.TRUE.=>implicit, .FALSE.=>explicit)
-    REAL(dp) :: dt                      ! the time step by which the propagator increments
-    TYPE(it_solver_type), POINTER :: &  ! the object that actually does linear algebra
-    implicit_solver
+    INTEGER :: nstages                       ! number of stages in the time integrator
+    LOGICAL :: limplicit                     ! logical flag for implicit solvers (.TRUE.=>implicit, .FALSE.=>explicit)
+    REAL(dp) :: dt                           ! the time step by which the propagator increments
+    TYPE(it_solver_type) :: implicit_solver  ! the object that actually does linear algebra
 
   CONTAINS
     PROCEDURE :: read_settings_file => read_propagator_settings
@@ -39,6 +38,37 @@ CONTAINS
     IMPLICIT NONE
     ! input variable
     CLASS(propagator_type), INTENT(INOUT) :: this
+    ! internal variables
+    INTEGER :: ierr
+    INTEGER :: nstages
+    INTEGER :: max_kry_dim, max_restarts
+    LOGICAL :: limplicit
+    REAL(dp) :: tol
+
+    NAMELIST /propagator/ limplicit, nstages, &
+                          max_kry_dim, max_restarts, tol
+ 
+    ! set default values
+    limplicit = .TRUE.
+    nstages = 2
+ 
+    max_kry_dim = 15
+    max_restarts = 200
+    tol = 1.e-12_DP
+
+    READ(5, propagator, err = 201, iostat = ierr)
+    201 CALL errore('read_propagator_settings', 'reading propagator namelist', ierr)
+
+    this%limplicit = limplicit
+    this%nstages = nstages
+
+    IF(this%limplicit)THEN
+      this%implicit_solver%max_kry_dim = max_kry_dim
+      this%implicit_solver%max_restarts = max_restarts
+      this%implicit_solver%tol = tol
+    ELSE
+      CALL errore('read_propagator_settings', 'no non-implicit propagators...yet', ierr)
+    ENDIF
 
     RETURN
 
@@ -52,8 +82,20 @@ CONTAINS
     ! input variables
     CLASS(propagator_type), INTENT(INOUT) :: this
     INTEGER, INTENT(IN) :: io_unit
+    ! internal variable
+    INTEGER :: ierr
 
-    WRITE(io_unit,'(5x,"Summary!")')
+    IF(this%limplicit)THEN
+      WRITE(io_unit,'(5x,"Implicit propagator")')
+      WRITE(io_unit,'(5x," Number of stages         =",I12)') this%nstages
+      WRITE(io_unit,'(5x," Max Krylov dimension     =",I12)') this%implicit_solver%max_kry_dim
+      WRITE(io_unit,'(5x," Max restarts             =",I12)') this%implicit_solver%max_restarts
+      WRITE(io_unit,'(5x," Tolerance for Ax=b       =",E12.4)') this%implicit_solver%tol
+    ELSE
+      CALL errore('print_propagatory_summary', 'no non-implicit propagators...yet', ierr)
+    ENDIF
+    
+    WRITE(io_unit,*)
 
     RETURN
 
@@ -70,6 +112,14 @@ CONTAINS
     IMPLICIT NONE
     ! input variable
     CLASS(propagator_type), INTENT(INOUT) :: this
+    ! internal variables
+    INTEGER, parameter :: root = 0
+
+    CALL mp_bcast(this%limplicit, root, world_comm)
+    CALL mp_bcast(this%nstages, root, world_comm)
+    CALL mp_bcast(this%implicit_solver%max_kry_dim, root, world_comm)
+    CALL mp_bcast(this%implicit_solver%max_restarts, root, world_comm)
+    CALL mp_bcast(this%implicit_solver%tol, root, world_comm)
 
     RETURN
 

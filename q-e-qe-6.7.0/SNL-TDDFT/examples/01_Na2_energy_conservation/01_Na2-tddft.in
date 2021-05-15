@@ -15,3 +15,7 @@ amplitude = 1.0
 delay = 50.0
 width = 10.0
 /
+
+&PROPAGATOR
+limplicit = .TRUE.
+/

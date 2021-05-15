@@ -37,11 +37,11 @@ MODULE tddft_mod
     dt_el,                    &  ! electronic time step
     dt_ion,                   &  ! ionic time step
     duration                     ! total duration in attoseconds
-    CLASS(projectile_perturbation_type), POINTER :: projectile_perturbation
-    CLASS(scalar_perturbation_type), POINTER :: scalar_perturbation
-    CLASS(vector_perturbation_type), POINTER :: vector_perturbation
-    CLASS(xray_perturbation_type), POINTER :: xray_perturbation
-    CLASS(propagator_type), POINTER :: propagator
+    TYPE(projectile_perturbation_type) :: projectile_perturbation
+    TYPE(scalar_perturbation_type) :: scalar_perturbation
+    TYPE(vector_perturbation_type) :: vector_perturbation
+    TYPE(xray_perturbation_type) :: xray_perturbation
+    TYPE(propagator_type) :: propagator
 
     INTEGER, ALLOCATABLE :: nbands_occupied(:)	! array consisting of the number of occupied bands at each k point
     COMPLEX(dp), ALLOCATABLE :: psi(:,:,:)  ! orbitals across all stages of the propagator
@@ -183,26 +183,21 @@ CONTAINS
       END SELECT
 
       IF(this%lprojectile_perturbation)THEN
-        ALLOCATE(this%projectile_perturbation)
         CALL this%projectile_perturbation%read_settings_file()
       ENDIF
 
       IF(this%lscalar_perturbation)THEN
-        ALLOCATE(this%scalar_perturbation)
         CALL this%scalar_perturbation%read_settings_file()
       ENDIF
 
       IF(this%lvector_perturbation)THEN
-        ALLOCATE(this%vector_perturbation)
         CALL this%vector_perturbation%read_settings_file()
       ENDIF
 
       IF(this%lxray_perturbation)THEN
-        ALLOCATE(this%xray_perturbation)
         CALL this%xray_perturbation%read_settings_file()
       ENDIF
 
-      ALLOCATE(this%propagator)
       CALL this%propagator%read_settings_file()
 
     ENDIF
@@ -390,11 +385,11 @@ CONTAINS
     CALL mp_bcast(this%nsteps_ion, root, world_comm)
     CALL mp_bcast(this%dt_el, root, world_comm)
     CALL mp_bcast(this%dt_ion, root, world_comm)
-    IF(ASSOCIATED(this%projectile_perturbation)) CALL this%projectile_perturbation%broadcast_settings
-    IF(ASSOCIATED(this%scalar_perturbation)) CALL this%scalar_perturbation%broadcast_settings
-    IF(ASSOCIATED(this%vector_perturbation)) CALL this%vector_perturbation%broadcast_settings
-    IF(ASSOCIATED(this%xray_perturbation)) CALL this%xray_perturbation%broadcast_settings
-    IF(ASSOCIATED(this%propagator)) CALL this%propagator%broadcast_settings
+    IF(this%lprojectile_perturbation) CALL this%projectile_perturbation%broadcast_settings
+    IF(this%lscalar_perturbation) CALL this%scalar_perturbation%broadcast_settings
+    IF(this%lvector_perturbation) CALL this%vector_perturbation%broadcast_settings
+    IF(this%lxray_perturbation) CALL this%xray_perturbation%broadcast_settings
+    CALL this%propagator%broadcast_settings
 
     RETURN
 

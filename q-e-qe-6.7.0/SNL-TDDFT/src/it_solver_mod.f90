@@ -22,15 +22,12 @@ MODULE it_solver_mod
     outer_counts             ! counter for the outer loop on each RHS
     INTEGER :: &
     number_rhs,             &! number of right hand sides (RHS), almost certainly the number of orbitals per k-point
-    max_kry_dim = 15,	    &! maximum dimension of the Krylov subspace before a restart
-    max_restarts = 200	     ! maximum number of restarts before calling it quits
+    max_kry_dim,	    &! maximum dimension of the Krylov subspace before a restart
+    max_restarts             ! maximum number of restarts before calling it quits
     REAL(dp) :: &
-    tol = 1.E-12_dp          ! tolerance for the iterative solve
+    tol                      ! tolerance for the iterative solve
 
   CONTAINS
-    PROCEDURE :: set_max_kry_dim	! sets the maximum dimension of the Krylov subspace before a restart
-    PROCEDURE :: set_max_restarts   ! sets the maximum number of restarts before calling it quits
-    PROCEDURE :: set_tol		! sets the tolerance for *any* iterative solver
     PROCEDURE :: gmres_begin	! allocates the working space for GMRES
     PROCEDURE :: gmres_end		! deallocates the working space for GMRES
     PROCEDURE :: gmres_solve	! solves A*x = b
@@ -38,51 +35,6 @@ MODULE it_solver_mod
   END TYPE it_solver_type
 
 CONTAINS
-
-  SUBROUTINE set_max_kry_dim(this, max_kry_dim)
-    !
-    ! ... interface for setting the maximum dimension of the Krylov subspace for the iterative solver
-    !
-    IMPLICIT NONE
-    ! input variables
-    CLASS(it_solver_type), INTENT(INOUT) :: this
-    INTEGER, INTENT(IN) :: max_kry_dim
-
-    this%max_kry_dim = max_kry_dim
-
-    RETURN
-
-  END SUBROUTINE set_max_kry_dim
-
-  SUBROUTINE set_max_restarts(this, max_restarts)
-    !
-    ! ... interface for setting the maximum number of restarts before calling it quits
-    !
-    IMPLICIT NONE
-    ! input variables
-    CLASS(it_solver_type), INTENT(INOUT) :: this
-    INTEGER, INTENT(IN) :: max_restarts
-
-    this%max_restarts = max_restarts
-
-    RETURN
-
-  END SUBROUTINE set_max_restarts
-
-  SUBROUTINE set_tol(this, tol)
-    !
-    ! ... interface for setting the tolerance of the iterative solver
-    !
-    IMPLICIT NONE
-    ! input variables
-    CLASS(it_solver_type), INTENT(INOUT) :: this
-    REAL(dp), INTENT(IN) :: tol
-
-    this%tol = tol
-
-    RETURN
-
-  END SUBROUTINE set_tol
 
   SUBROUTINE gmres_begin(this, ndimx)
     !
