@@ -29,7 +29,7 @@ MODULE it_solver_mod
 
   CONTAINS
     PROCEDURE :: gmres_begin	! allocates the working space for GMRES
-    PROCEDURE :: gmres_end		! deallocates the working space for GMRES
+    PROCEDURE :: gmres_end      ! deallocates the working space for GMRES
     PROCEDURE :: gmres_solve	! solves A*x = b
 
   END TYPE it_solver_type

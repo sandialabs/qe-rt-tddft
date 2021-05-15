@@ -563,10 +563,12 @@ CONTAINS
   this%Hpsi(:,:) = (0.0_dp, 0.0_dp)
   this%Spsi(:,:) = (0.0_dp, 0.0_dp)
 
-  ! if this is an implicit propagator, we need to store the RHS
+  ! if this is an implicit propagator, we need to allocate the RHS
+  ! and everything tied to GMRES workspace
   IF(this%propagator%limplicit)THEN
     ALLOCATE(this%rhs(npwx, this%nbands_occupied_max))
     this%rhs(:,:) = (0.0_dp, 0.0_dp)
+    CALL this%propagator%implicit_solver%gmres_begin(npwx)
   ENDIF
 
   END SUBROUTINE allocate_tddft_preloop
@@ -580,7 +582,12 @@ CONTAINS
   CLASS(tddft_type), INTENT(INOUT) :: this
 
   DEALLOCATE(this%psi, this%Hpsi, this%Spsi)
-  IF(this%propagator%limplicit) DEALLOCATE(this%rhs)
+  ! if we are using an implicit propagator, we need to deallocate the RHS
+  ! and everything tied to GMRES
+  IF(this%propagator%limplicit)THEN
+    DEALLOCATE(this%rhs)
+    CALL this%propagator%implicit_solver%gmres_end()
+  ENDIF
 
   END SUBROUTINE deallocate_tddft_postloop
 

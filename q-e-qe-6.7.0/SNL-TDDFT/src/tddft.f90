@@ -8,7 +8,7 @@
 PROGRAM tddft
 
   USE kinds,           ONLY : DP
-  USE io_global,       ONLY : stdout, meta_ionode, meta_ionode_id
+  USE io_global,       ONLY : stdout, ionode, meta_ionode, meta_ionode_id
   USE mp,              ONLY : mp_bcast
   !  USE check_stop,      ONLY : check_stop_init
   USE control_flags,   ONLY : io_level, gamma_only, use_para_diag
@@ -25,6 +25,7 @@ PROGRAM tddft
                                ibrav_ => ibrav
   USE ions_base,        ONLY : nat, ntyp => nsp
   USE cell_base,        ONLY : ibrav
+  USE pwcom
   USE tddft_mod
   USE tddft_version
   !------------------------------------------------------------------------
@@ -113,10 +114,18 @@ PROGRAM tddft
     DO electron_step_counter = 1, this_calculation%nsteps_el_per_nsteps_ion
 
       CALL this_calculation%propagator%propagate(stdout)
-      WRITE(stdout,'(5x," electron time = ",F12.4,"   perturbation ",F12.4)') electron_time,  this_calculation%scalar_perturbation%scalar_envelope%evaluate(electron_time)
 
       ! update the electron time after the step has been taken
       electron_time = electron_time + this_calculation%dt_el
+ 
+      ! update the Hamiltonian for the next time step
+      CALL this_calculation%set_hamiltonian(stdout, electron_step_counter, ion_step_counter)
+      
+      ! now that the step is complete, we report quantities of interest...
+      IF(ionode)THEN
+        WRITE(stdout,'(5X, " Energy:",2X, 6F16.8)') electron_time, etot, eband, ehart, etxc+etxcc, ewld 
+        WRITE(stdout,*)
+      ENDIF
 
     ENDDO
 
