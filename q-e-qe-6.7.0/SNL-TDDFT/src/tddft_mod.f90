@@ -47,7 +47,8 @@ MODULE tddft_mod
 
   CONTAINS
     PROCEDURE :: read_settings_file => read_tddft_settings  ! reads the settings file for a TDDFT calculation in from a file
-    PROCEDURE :: print_summary => print_tddft_summary  ! prints out information about this calculation on stdout
+    PROCEDURE :: print_summary_clock => print_tddft_summary_clock  ! prints out clock information about this calculation on stdout
+    PROCEDURE :: print_summary => print_tddft_summary  ! prints out information about this calculation on stdout    
     PROCEDURE :: perfunctory_business => perfunctory_tddft_business ! sets things up so the rest of the code doesn't throw a fit
     PROCEDURE :: initialize_calculation => initialize_tddft_calculation ! initializes various quantities before heading into the main loop
 #ifdef __MPI
@@ -56,6 +57,8 @@ MODULE tddft_mod
 #endif
     PROCEDURE :: open_files => open_tddft_files ! opens file containing the Kohn-Sham orbitals
     PROCEDURE :: close_files => close_tddft_files ! closes file containing the Kohn-Sham orbitals
+
+    PROCEDURE :: set_hamiltonian => set_tddft_hamiltonian ! sets the Hamiltonian to its value at the passed time step
 
   END TYPE tddft_type
 
@@ -208,6 +211,26 @@ CONTAINS
 
   END SUBROUTINE read_tddft_settings
 
+  SUBROUTINE print_tddft_summary_clock(this, io_unit)
+    ! 
+    ! ... Prints the timing information for TDDFT routines called by this 
+    !     instance to the io_unit passed as an argument
+    ! 
+    IMPLICIT NONE
+    ! input variables
+    CLASS(tddft_type), INTENT(INOUT) :: this
+    INTEGER, INTENT(IN) :: io_unit
+
+    WRITE(io_unit,'(5x,"Summary of TDDFT timing information")')
+    WRITE(io_unit,'(5x,"-----------------------------------")')
+    WRITE(io_unit,'(5x,"Initialization")')
+    CALL print_clock('init_calc')
+    WRITE(io_unit,'(5x,"Time propagation")')
+    CALL print_clock('set_hamiltonian') 
+    RETURN
+    
+  END SUBROUTINE print_tddft_summary_clock
+
   SUBROUTINE print_tddft_summary(this, io_unit)
     !
     ! ... Prints a summary of the settings in this instance to the io_unit
@@ -216,7 +239,7 @@ CONTAINS
     IMPLICIT NONE
     ! input variables
     CLASS(tddft_type), INTENT(INOUT) :: this
-    INTEGER :: io_unit
+    INTEGER, INTENT(IN) :: io_unit
 
     WRITE(io_unit,'(5x,"Summary of TDDFT calculation")')
     WRITE(io_unit,'(5x,"----------------------------")')
@@ -272,7 +295,7 @@ CONTAINS
 
   END SUBROUTINE perfunctory_tddft_business
 
-  SUBROUTINE initialize_tddft_calculation(this)
+  SUBROUTINE initialize_tddft_calculation(this, io_unit)
     ! 
     ! ...Initializes all of the necessary (non-perfunctory) quantities before entering the main loop
     ! 
@@ -288,20 +311,20 @@ CONTAINS
     IMPLICIT NONE
     ! input variables
     CLASS(tddft_type), INTENT(INOUT) :: this
+    INTEGER, INTENT(IN) :: io_unit
     ! internal
     INTEGER :: band_counter, kpt_counter
     INTEGER :: ierr   ! error flag
 
     ! start the clock on initialization
-    CALL start_clock('initialize_tddft_calculation')
+    CALL start_clock('init_calc')
 
-    ! initialize pseudopotentials/projectors, compute the total local potential, compute the D term from both
+    ! initialize pseudopotentials/projectors
     CALL init_us_1
     CALL init_at_1
-    CALL setlocal
-    CALL set_vrs(vrs, vltot, v%of_r, kedtau, v%kin_r, dfftp%nnr, nspin, doublegrid)
-    CALL newd
-    
+    ! set the Hamiltonian at the 0th time step... 
+    CALL this%set_hamiltonian(io_unit, 0, 0)
+
     ! Davide Ceresoli's CE-TDDFT code issues a bunch of warnings at this stage...might be good, someday
 
     ! allocate an array for tracking the number of occupied bands
@@ -324,11 +347,9 @@ CONTAINS
     ENDDO
 
     ! Davide Ceresoli's CE-TDDFT code computes alpha_pv here, used for shifting bands... I don't think we need it  
-
-    !CALL update_hamiltonian(-1)
-
+    
     ! stop the clock on initialization
-    CALL stop_clock('initialize_tddft_calculation')
+    CALL stop_clock('init_calc')
 
   END SUBROUTINE initialize_tddft_calculation
 
@@ -384,7 +405,7 @@ CONTAINS
     IMPLICIT NONE
     ! input variables
     CLASS(tddft_type), INTENT(INOUT) :: this
-    LOGICAL :: lclean_stop
+    LOGICAL, INTENT(IN) :: lclean_stop
 
     CALL mp_global_end()
 
@@ -438,5 +459,84 @@ CONTAINS
     CALL close_buffer(this%iuntdorbs, 'keep')
 
   END SUBROUTINE close_tddft_files
+
+  SUBROUTINE set_tddft_hamiltonian(this, io_unit, electron_step_counter, ion_step_counter)
+    !
+    ! ... Sets the Hamiltonian to its value at the specified time step 
+    !     This is a part of tddft_mod (for now) because it will rely on perturbations (and eventually, maybe the propagator)
+    !
+    USE kinds,         ONLY : dp
+    USE becmod,        ONLY : becp, is_allocated_bec_type, deallocate_bec_type
+    USE cell_base,     ONLY : alat, omega, at, bg
+    USE control_flags, ONLY : gamma_only
+    USE dfunct,        ONLY : newd
+    USE fft_base,      ONLY : dfftp
+    USE gvecs,         ONLY : doublegrid
+    USE gvect,         ONLY : g, gg, gcutm, gstart, ngm
+    USE ions_base,     ONLY : nsp, zv, nat, tau, ityp
+    USE ldaU,          ONLY : lda_plus_U
+    USE lsda_mod,      ONLY : nspin
+    USE scf,           ONLY : rho, rho_core, rhog_core, vltot, v, kedtau, vrs
+    USE uspp,          ONLY : okvan
+    USE pwcom
+
+    IMPLICIT NONE
+    ! input variables
+    CLASS(tddft_type), INTENT(INOUT) :: this
+    INTEGER, INTENT(IN) :: io_unit
+    INTEGER, INTENT(IN) :: electron_step_counter, ion_step_counter
+    ! internal variables
+    REAL(dp) :: charge
+    REAL(dp) :: eth  ! Hubbard energy that we will never use, but interfaces...
+    REAL(dp) :: etotefield  ! energy due to coupling to electric field that we will use...
+    REAL(dp), EXTERNAL :: ewald, get_one_electron_shift
+
+    ! start the clock on setting the Hamiltonian
+    CALL start_clock('set_hamiltonian')
+   
+    ! begin by computing the charge density
+    ! first, null out real and reciprocal space arrays
+    rho%of_g(:,:) = (0.0_dp, 0.0_dp)
+    rho%of_r(:,:) = (0.0_dp)
+    ! recall, if ovkan is false then this is strictly norm conserving and we don't need to deal with this
+    IF(okvan .AND. is_allocated_bec_type(becp)) CALL deallocate_bec_type(becp)
+    ! add up across bands
+    CALL sum_band()
+
+    ! check to see if LDA+U is on...it shouldn't be
+    IF(lda_plus_U) CALL errore('set_tddft_hamiltonian','why are you running with LDA+U?',1)
+   
+    ! computes the HXC potential *and* energies...recall that pwcom is where MODULE ener lives
+    CALL v_of_rho(rho, rho_core, rhog_core, ehart, etxc, vtxc, eth, etotefield, charge, v)
+
+    ! compute the total local potential...this is where we will have to add perturbations...
+    CALL setlocal()
+    CALL set_vrs(vrs, vltot, v%of_r, kedtau, v%kin_r, dfftp%nnr, nspin, doublegrid)
+
+    ! now that we have the local potential, let's get the non-local potential (if USPP)
+    ! TODO: we will certainly want to change the conditions for updating this...
+    IF(okvan .AND. (ion_step_counter+electron_step_counter) == 0) CALL newd()
+
+    ! compute the one-body contribution
+    deband = get_one_electron_shift() 
+
+    ! compute the Ewald energy
+    ewld = ewald(alat, nat, nsp, ityp, zv, at, bg, tau, omega, g, gg, ngm, &
+                 gcutm, gstart, gamma_only, strf)
+
+    ! TODO: someday we will want to add other contributions, e.g., vdW and stuff...
+
+    ! sum up the total energy
+    etot = eband + deband + (etxc-etxcc) + ewld + ehart
+
+    IF( (ion_step_counter+electron_step_counter) == 0) THEN
+      WRITE(io_unit,'(16X, 11X, "Total", 8X, "One-body", 9X, "Hartree", 14X, "XC", 11X, "Ewald")')
+      WRITE(io_unit,'("Initial energy",2X,5F16.8)') etot, eband, ehart, etxc+etxcc, ewld
+      WRITE(io_unit,*)
+    ENDIF
+    ! stop the clock on setting the Hamiltonian
+    CALL stop_clock('set_hamiltonian')
+
+  END SUBROUTINE set_tddft_hamiltonian
 
 END MODULE tddft_mod

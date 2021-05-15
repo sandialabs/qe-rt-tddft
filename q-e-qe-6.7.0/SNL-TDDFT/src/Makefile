@@ -8,11 +8,11 @@ DFLAGS +=
 MODFLAGS = $(MOD_FLAG)$(QE_SOURCE)/Modules \
            $(MOD_FLAG)$(QE_SOURCE)/FFTXlib $(MOD_FLAG)$(QE_SOURCE)/LAXlib \
            $(MOD_FLAG)$(QE_SOURCE)/KS_Solvers/CG $(MOD_FLAG)$(QE_SOURCE)/KS_Solvers/Davidson $(MOD_FLAG)$(QE_SOURCE)/KS_Solvers/DENSE \
-           $(MOD_FLAG)$(QE_SOURCE)/PW/src \
+           $(MOD_FLAG)$(QE_SOURCE)/PW/src $(MOD_FLAG)$(QE_SOURCE)/upflib \
            $(MOD_FLAG)$(QE_SOURCE)/UtilXlib $(MOD_FLAG).
 
-TDDFT_OBJS = tddft_version.o it_solver_mod.o propagator_mod.o tddft_envelope_mod.o \
-             tddft_perturbations_mod.o tddft_mod.o tddft.o 
+TDDFT_OBJS = tddft_version.o it_solver_mod.o propagator_mod.o tddft_functions.o \
+             tddft_envelope_mod.o tddft_perturbations_mod.o tddft_mod.o tddft.o 
 
 LIBOBJS = $(QE_SOURCE)/clib/clib.a $(QE_SOURCE)/upflib/libupf.a
 QEMODS = $(QE_SOURCE)/Modules/libqemod.a \

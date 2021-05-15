@@ -93,7 +93,7 @@ PROGRAM tddft
   CALL this_calculation%perfunctory_business()
 
   ! set everything up before heading into the main TDDFT loop
-  CALL this_calculation%initialize_calculation()
+  CALL this_calculation%initialize_calculation(stdout)
  
   ! print summary
   CALL this_calculation%print_summary(stdout)
@@ -110,12 +110,15 @@ PROGRAM tddft
 
     DO electron_step_counter = 1, this_calculation%nsteps_el_per_nsteps_ion
 
-      electron_time = electron_time + this_calculation%dt_el
       CALL this_calculation%propagator%propagate(stdout)
       WRITE(stdout,'(5x," electron time = ",F12.4,"   perturbation ",F12.4)') electron_time,  this_calculation%scalar_perturbation%scalar_envelope%evaluate(electron_time)
 
+      ! update the electron time after the step has been taken
+      electron_time = electron_time + this_calculation%dt_el
+
     ENDDO
 
+    ! update the ion time after the step has been taken
     ion_time = ion_time + this_calculation%dt_ion
 
   ENDDO
@@ -124,7 +127,7 @@ PROGRAM tddft
   CALL this_calculation%close_files()
 
   ! print timings
-  !
+  CALL this_calculation%print_summary_clock(stdout)
 
   CALL environment_end(code)
 
