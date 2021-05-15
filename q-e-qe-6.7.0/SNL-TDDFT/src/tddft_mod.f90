@@ -44,6 +44,9 @@ MODULE tddft_mod
     CLASS(propagator_type), POINTER :: propagator
 
     INTEGER, ALLOCATABLE :: nbands_occupied(:)	! array consisting of the number of occupied bands at each k point
+    COMPLEX(dp), ALLOCATABLE :: psi(:,:,:)  ! orbitals across all stages of the propagator
+    COMPLEX(dp), ALLOCATABLE :: Hpsi(:,:), Spsi(:,:)  ! H and S acting on the orbitals
+    COMPLEX(dp), ALLOCATABLE :: rhs(:,:)  ! RHS for implicit propagators
 
   CONTAINS
     PROCEDURE :: read_settings_file => read_tddft_settings  ! reads the settings file for a TDDFT calculation in from a file
@@ -59,6 +62,8 @@ MODULE tddft_mod
     PROCEDURE :: close_files => close_tddft_files ! closes file containing the Kohn-Sham orbitals
 
     PROCEDURE :: set_hamiltonian => set_tddft_hamiltonian ! sets the Hamiltonian to its value at the passed time step
+    PROCEDURE :: allocate_preloop => allocate_tddft_preloop  ! allocates space for orbitals and stuff before the main loop
+    PROCEDURE :: deallocate_postloop => deallocate_tddft_postloop ! deallocates things after the main loop
 
   END TYPE tddft_type
 
@@ -530,13 +535,58 @@ CONTAINS
     etot = eband + deband + (etxc-etxcc) + ewld + ehart
 
     IF( (ion_step_counter+electron_step_counter) == 0) THEN
-      WRITE(io_unit,'(16X, 11X, "Total", 8X, "One-body", 9X, "Hartree", 14X, "XC", 11X, "Ewald")')
-      WRITE(io_unit,'("Initial energy",2X,5F16.8)') etot, eband, ehart, etxc+etxcc, ewld
+      WRITE(io_unit,'(5X, "Initial call to set_hamiltonian...building things before entering main TDDFT loop")')
+      WRITE(io_unit,'(5X, "Note: This should match up with the output of the SCF calculation")')
+      WRITE(io_unit,'(5X, 16X, 11X, "Total", 8X, "One-body", 9X, "Hartree", 14X, "XC", 11X, "Ewald")')
+      WRITE(io_unit,'(5X,"Initial energy",2X,5F16.8)') etot, eband, ehart, etxc+etxcc, ewld
       WRITE(io_unit,*)
     ENDIF
     ! stop the clock on setting the Hamiltonian
     CALL stop_clock('set_hamiltonian')
 
   END SUBROUTINE set_tddft_hamiltonian
+  
+  SUBROUTINE allocate_tddft_preloop(this)
+  !
+  ! ...Allocates space for storing orbitals in the main TDDFT loop
+  ! 
+  USE wvfct,        ONLY : nbnd, npwx
+  ! 
+  IMPLICIT NONE
+  ! input variable
+  CLASS(tddft_type), INTENT(INOUT) :: this
+
+  ! space for the KS orbitals across all stages of the propagator
+  ALLOCATE(this%psi(npwx, nbnd, this%propagator%nstages))
+  ! space for the Hamiltonian acting on the KS orbitals
+  ALLOCATE(this%Hpsi(npwx, this%nbands_occupied_max))
+  ! space for the overlap matrix acting on the KS orbitals
+  ALLOCATE(this%Spsi(npwx, this%nbands_occupied_max)) 
+
+  ! initialize to zero...
+  this%psi(:,:,:) = (0.0_dp, 0.0_dp)
+  this%Hpsi(:,:) = (0.0_dp, 0.0_dp)
+  this%Spsi(:,:) = (0.0_dp, 0.0_dp)
+
+  ! if this is an implicit propagator, we need to store the RHS
+  IF(this%propagator%limplicit)THEN
+    ALLOCATE(this%rhs(npwx, this%nbands_occupied_max))
+    this%rhs(:,:) = (0.0_dp, 0.0_dp)
+  ENDIF
+
+  END SUBROUTINE allocate_tddft_preloop
+
+  SUBROUTINE deallocate_tddft_postloop(this)
+  ! 
+  ! ...Deallocates things that were used in the main TDDFT loop
+  ! 
+  IMPLICIT NONE
+  ! input variable
+  CLASS(tddft_type), INTENT(INOUT) :: this
+
+  DEALLOCATE(this%psi, this%Hpsi, this%Spsi)
+  IF(this%propagator%limplicit) DEALLOCATE(this%rhs)
+
+  END SUBROUTINE deallocate_tddft_postloop
 
 END MODULE tddft_mod

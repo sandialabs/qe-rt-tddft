@@ -103,6 +103,10 @@ PROGRAM tddft
   CALL init_parallel_over_band(inter_bgrp_comm, nbnd)
 #endif
 
+  ! allocate before the loop
+  WRITE(stdout, '(5X, "Preloop allocation...")')
+  CALL this_calculation%allocate_preloop()
+
   ! main TDDFT loop
   electron_time = 0.0_dp
   ion_time = 0.0_dp
@@ -122,6 +126,10 @@ PROGRAM tddft
     ion_time = ion_time + this_calculation%dt_ion
 
   ENDDO
+
+  ! deallocate after the loop
+  WRITE(stdout, '(5X, "Postloop deallocation...")')
+  CALL this_calculation%deallocate_postloop()
 
   ! close the files that were opened at the beginning of the TDDFT calculation
   CALL this_calculation%close_files()
