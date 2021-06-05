@@ -24,7 +24,6 @@ MODULE propagator_mod
     PROCEDURE :: read_settings_file => read_propagator_settings
     PROCEDURE :: print_summary => print_propagator_summary
     PROCEDURE :: broadcast_settings => broadcast_propagator_settings
-    PROCEDURE :: propagate => propagator_propagate
 
   END TYPE propagator_type
 
@@ -124,26 +123,5 @@ CONTAINS
 
   END SUBROUTINE broadcast_propagator_settings
 #endif
-
-  SUBROUTINE propagator_propagate(this, io_unit)
-    !
-    ! ... interface for marching the electrons forward by one step
-    !
-    IMPLICIT NONE
-    ! input variables
-    CLASS(propagator_type), INTENT(INOUT) :: this
-    INTEGER :: io_unit
-    ! internal variable
-    INTEGER :: ierr
-
-    IF(this%limplicit)THEN
-      WRITE(io_unit,*) 'step'
-    ELSE
-      CALL errore('propagator_propagate', 'no non-implicit propagators...yet', ierr)
-    ENDIF
-
-    RETURN
-
-  END SUBROUTINE propagator_propagate
 
 END MODULE propagator_mod

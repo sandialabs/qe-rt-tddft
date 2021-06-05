@@ -113,7 +113,8 @@ PROGRAM tddft
 
     DO electron_step_counter = 1, this_calculation%nsteps_el_per_nsteps_ion
 
-      CALL this_calculation%propagator%propagate(stdout)
+      ! move all of the orbitals forward by one time step
+      CALL this_calculation%propagate_all_orbitals(stdout, ion_step_counter, electron_step_counter)
 
       ! update the electron time after the step has been taken
       electron_time = electron_time + this_calculation%dt_el

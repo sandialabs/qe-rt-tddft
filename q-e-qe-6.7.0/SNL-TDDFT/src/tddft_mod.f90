@@ -19,7 +19,7 @@ MODULE tddft_mod
   TYPE, PUBLIC :: tddft_type
 
     INTEGER :: &
-    iuntdorbs = 42,           &  ! fixed unit of the file associated with the time-dependent orbitals
+    iuntdorbs = 42,           &  ! fixed unit of the file associated with old time-dependent orbitals
     iverbosity,		    &  ! integer indicating the level of verbosity
     nbands_occupied_max,		& ! integer indicating the largest number of occupied bands at any given k point
     nsteps_el,          	    &  ! total number of electronic steps
@@ -64,6 +64,8 @@ MODULE tddft_mod
     PROCEDURE :: set_hamiltonian => set_tddft_hamiltonian ! sets the Hamiltonian to its value at the passed time step
     PROCEDURE :: allocate_preloop => allocate_tddft_preloop  ! allocates space for orbitals and stuff before the main loop
     PROCEDURE :: deallocate_postloop => deallocate_tddft_postloop ! deallocates things after the main loop
+
+    PROCEDURE :: propagate_all_orbitals => propagate_tddft_all_orbitals ! updates all of the orbitals in the calculation...
 
   END TYPE tddft_type
 
@@ -590,5 +592,77 @@ CONTAINS
   ENDIF
 
   END SUBROUTINE deallocate_tddft_postloop
+
+  SUBROUTINE propagate_tddft_all_orbitals(this, io_unit, ion_step_counter, electron_step_counter)
+    ! 
+    ! ... Moves all of the orbitals in the calculation forward by one time step
+    ! 
+    USE becmod,		ONLY : becp, &
+			       allocate_bec_type, calbec, is_allocated_bec_type
+    USE buffers,	ONLY : get_buffer, save_buffer
+    USE io_files,	ONLY : iunwfc, nwordwfc
+    USE klist,		ONLY : igk_k, ngk, nks, xk
+    USE uspp,		ONLY : nkb, vkb
+    USE wavefunctions,	ONLY : evc
+    USE wvfct,		ONLY : nbnd, npwx
+    IMPLICIT NONE
+    ! input variable
+    CLASS(tddft_type), INTENT(INOUT) :: this
+    INTEGER, INTENT(IN) :: io_unit
+    INTEGER, INTENT(IN) :: ion_step_counter, electron_step_counter
+    ! internal
+    INTEGER :: ierr
+    INTEGER :: kpt_counter
+    INTEGER :: npw
+
+    IF(this%propagator%limplicit)THEN
+      WRITE(io_unit,*) 'step'
+      ! loop over k points
+      DO kpt_counter = 1, nks
+
+        ! get the number of plane waves at the current k point
+        npw = ngk(kpt_counter)
+        ! calculates the kinetic energy array at the current k point
+        CALL g2_kin(kpt_counter) 
+        ! calculates the Kleinman-Bylander projectors + structure factor in reciprocal space... 
+        CALL init_us_2(npw, igk_k(1, kpt_counter), xk(1, kpt_counter), vkb)
+
+        ! read orbitals from the file and calculate becp
+        evc = (0.d0, 0.d0)
+        ! if this is the very first step, then get the current orbitals from unit iunwfc, else iuntdorbs
+        ! presently, we are saving at each time step
+        WRITE(io_unit,*) 'buffer stuff'
+        IF(ion_step_counter*electron_step_counter==1)THEN
+          CALL get_buffer(evc, nwordwfc, iunwfc, kpt_counter)
+        ELSE
+          CALL get_buffer(evc, nwordwfc, this%iuntdorbs, kpt_counter)
+        ENDIF
+        WRITE(io_unit,*) 'not buffer stuff'
+        IF(.NOT. is_allocated_bec_type(becp))THEN
+          CALL allocate_bec_type(nkb, nbnd, becp)
+        ENDIF
+        CALL calbec(npw, vkb, evc, becp) 
+        
+        ! compute matrix-vector products
+        WRITE(io_unit,*) 'matrix vector products'
+        WRITE(io_unit,*) evc(1,1), this%Hpsi(1,1)
+        CALL tddft_h_psi(npwx, npw, this%nbands_occupied(kpt_counter), evc, this%Hpsi)
+        WRITE(io_unit,*) 'crap'
+        CALL tddft_s_psi(npwx, npw, this%nbands_occupied(kpt_counter), evc, this%Spsi)
+        WRITE(io_unit,*) 'not matrix vector products'
+
+        ! save the orbitals at the end of the step...
+        WRITE(io_unit,*) 'writing to buffer'
+        CALL save_buffer(this%psi(:,:,1), nwordwfc, this%iuntdorbs, kpt_counter)
+        WRITE(io_unit,*) 'not'
+
+      ENDDO
+    ELSE
+      CALL errore('propagate_tddft_all_orbitals', 'no non-implicit propagators...yet', ierr)
+    ENDIF
+
+    RETURN
+
+  END SUBROUTINE propagate_tddft_all_orbitals
 
 END MODULE tddft_mod
