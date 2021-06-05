@@ -546,7 +546,8 @@ CONTAINS
   SUBROUTINE allocate_tddft_preloop(this)
   !
   ! ...Allocates space for storing orbitals in the main TDDFT loop
-  ! 
+  !
+  USE constants,    ONLY : au_sec 
   USE wvfct,        ONLY : nbnd, npwx
   ! 
   IMPLICIT NONE
@@ -571,7 +572,9 @@ CONTAINS
     ALLOCATE(this%rhs(npwx, this%nbands_occupied_max))
     this%rhs(:,:) = (0.0_dp, 0.0_dp)
     CALL this%propagator%implicit_solver%gmres_begin(npwx)
-    this%propagator%cn_factor = (0.0_dp,1.0_dp)*this%dt_el/2.0_dp
+    ! IMPORTANT: cn_factor is set in Rydberg atomic units (thus the extra extra factor of 2...)
+    this%propagator%cn_factor = (0.d0,1d-18)*this%dt_el/(4.0_dp*au_sec)
+
   ENDIF
 
   END SUBROUTINE allocate_tddft_preloop
