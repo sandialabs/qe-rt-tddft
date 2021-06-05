@@ -1,4 +1,28 @@
-!
+! Copyright 2020 National Technology & Engineering Solutions of Sandia, LLC (NTESS).
+! Under the terms of Contract DE-NA0003525 with NTESS, the U.S. Government retains certain rights in this software.
+! This file is distributed under the terms of the
+! GNU General Public License. See the file `License'
+! in the root directory of the present distribution,
+! or http://www.gnu.org/copyleft/gpl.txt .
+
+SUBROUTINE identity_matvec(ndimx, ndim, vec_in, vec_out)
+  !
+  !...Applies the identity to a vector...used to test iterative solvers and their interfaces
+  ! 
+  USE kinds, 		ONLY : dp
+  !
+  IMPLICIT NONE
+  ! input variables
+  INTEGER :: ndimx, ndim
+  COMPLEX(dp), INTENT(IN) :: vec_in(ndimx)
+  COMPLEX(dp), INTENT(INOUT) :: vec_out(ndimx)
+  
+  vec_out(:) = vec_in(:)
+  
+  RETURN
+
+END SUBROUTINE identity_matvec
+
 ! Copyright (C) 2002-2016 Quantum ESPRESSO group
 ! This file is distributed under the terms of the
 ! GNU General Public License. See the file `License'
@@ -211,7 +235,8 @@ SUBROUTINE tddft_h_psi_( lda, n, m, psi, hpsi )
         !
      ENDIF
      !
-  ENDIF  
+  ENDIF 
+  
   !
   ! ... Here the product with the non local potential V_NL psi
   ! ... (not in the real-space case: it is done together with V_loc)
@@ -226,7 +251,7 @@ SUBROUTINE tddft_h_psi_( lda, n, m, psi, hpsi )
   ENDIF
   !
   CALL stop_clock( 'tddft_h_psi:pot' ); !write (*,*) 'stop h_psi:pot';FLUSH(6)
-  !  
+  ! 
   IF (dft_is_meta()) CALL h_psi_meta( lda, n, m, psi, hpsi )
   !
   ! ... Here we add the Hubbard potential times psi

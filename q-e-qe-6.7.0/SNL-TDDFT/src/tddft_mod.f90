@@ -571,6 +571,7 @@ CONTAINS
     ALLOCATE(this%rhs(npwx, this%nbands_occupied_max))
     this%rhs(:,:) = (0.0_dp, 0.0_dp)
     CALL this%propagator%implicit_solver%gmres_begin(npwx)
+    this%propagator%cn_factor = (0.0_dp,1.0_dp)*this%dt_el/2.0_dp
   ENDIF
 
   END SUBROUTINE allocate_tddft_preloop
@@ -602,9 +603,10 @@ CONTAINS
     USE buffers,	ONLY : get_buffer, save_buffer
     USE io_files,	ONLY : iunwfc, nwordwfc
     USE klist,		ONLY : igk_k, ngk, nks, xk
+    USE lsda_mod,	ONLY : current_spin, isk
     USE uspp,		ONLY : nkb, vkb
     USE wavefunctions,	ONLY : evc
-    USE wvfct,		ONLY : nbnd, npwx
+    USE wvfct,		ONLY : current_k, nbnd, npwx
     IMPLICIT NONE
     ! input variable
     CLASS(tddft_type), INTENT(INOUT) :: this
@@ -612,13 +614,20 @@ CONTAINS
     INTEGER, INTENT(IN) :: ion_step_counter, electron_step_counter
     ! internal
     INTEGER :: ierr
-    INTEGER :: kpt_counter
+    INTEGER :: band_counter, kpt_counter
     INTEGER :: npw
+    COMPLEX(dp) :: cn_factor
 
     IF(this%propagator%limplicit)THEN
-      WRITE(io_unit,*) 'step'
+      ! grab the Crank-Nicolson factor...
+      cn_factor = this%propagator%cn_factor 
+
       ! loop over k points
       DO kpt_counter = 1, nks
+
+        ! if you don't set these effectively global variables, bad things happen...
+        current_k = kpt_counter
+        current_spin = isk(kpt_counter)
 
         ! get the number of plane waves at the current k point
         npw = ngk(kpt_counter)
@@ -631,30 +640,32 @@ CONTAINS
         evc = (0.d0, 0.d0)
         ! if this is the very first step, then get the current orbitals from unit iunwfc, else iuntdorbs
         ! presently, we are saving at each time step
-        WRITE(io_unit,*) 'buffer stuff'
         IF(ion_step_counter*electron_step_counter==1)THEN
           CALL get_buffer(evc, nwordwfc, iunwfc, kpt_counter)
         ELSE
           CALL get_buffer(evc, nwordwfc, this%iuntdorbs, kpt_counter)
         ENDIF
-        WRITE(io_unit,*) 'not buffer stuff'
         IF(.NOT. is_allocated_bec_type(becp))THEN
           CALL allocate_bec_type(nkb, nbnd, becp)
         ENDIF
         CALL calbec(npw, vkb, evc, becp) 
         
         ! compute matrix-vector products
-        WRITE(io_unit,*) 'matrix vector products'
-        WRITE(io_unit,*) evc(1,1), this%Hpsi(1,1)
         CALL tddft_h_psi(npwx, npw, this%nbands_occupied(kpt_counter), evc, this%Hpsi)
-        WRITE(io_unit,*) 'crap'
         CALL tddft_s_psi(npwx, npw, this%nbands_occupied(kpt_counter), evc, this%Spsi)
-        WRITE(io_unit,*) 'not matrix vector products'
+
+        ! load the right hand side
+        this%rhs(:,:) = this%Spsi(:,:)-cn_factor*this%Hpsi(:,:)
+        ! call GMRES
+        CALL this%propagator%implicit_solver%gmres_solve(crank_nicolson_matvec, this%rhs(:,:), this%psi(:,:,1), npwx, npw, nbnd, cn_factor)
+        ! for Crank-Nicolson, after the step, move the new wave functions to the position of the 'old' wave functions
+        this%psi(:,:,2) = this%psi(:,:,1)
+
+        ! update the wave functions for computation of energies, etc.
+        evc(:,:) = this%psi(:,:,1)
 
         ! save the orbitals at the end of the step...
-        WRITE(io_unit,*) 'writing to buffer'
         CALL save_buffer(this%psi(:,:,1), nwordwfc, this%iuntdorbs, kpt_counter)
-        WRITE(io_unit,*) 'not'
 
       ENDDO
     ELSE
@@ -664,5 +675,31 @@ CONTAINS
     RETURN
 
   END SUBROUTINE propagate_tddft_all_orbitals
+
+  SUBROUTINE crank_nicolson_matvec(npwx, npw, cn_factor, vec_in, vec_out)
+    !
+    !...Applies the Crank-Nicolson propagator to a vector
+    !
+    USE kinds,		ONLY : dp
+    ! 
+    IMPLICIT NONE
+    ! input variables
+    INTEGER :: npwx, npw
+    COMPLEX(dp) :: cn_factor
+    COMPLEX(dp), INTENT(IN) :: vec_in(npwx)
+    COMPLEX(dp), INTENT(INOUT) :: vec_out(npwx)
+    ! internal variable
+    COMPLEX(dp) :: vec_tmp(npwx)
+
+    ! store S|vec_in> in |vec_out>
+    CALL s_psi(npwx, npw, 1, vec_in, vec_out)
+    ! store H|vec_in> in |vec_tmp>
+    CALL h_psi(npwx, npw, 1, vec_in, vec_tmp)
+    ! compute (S+idt/2 H)|vec_in> and store in |vec_out>
+    vec_out(:) = vec_out(:) + cn_factor*vec_tmp(:)
+
+    RETURN
+
+  END SUBROUTINE crank_nicolson_matvec
 
 END MODULE tddft_mod

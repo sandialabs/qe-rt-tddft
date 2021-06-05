@@ -15,7 +15,8 @@ MODULE propagator_mod
   SAVE
   !
   TYPE, PUBLIC :: propagator_type
-
+ 
+    COMPLEX(dp) :: cn_factor                 ! scalar factor of idt/2 for Crank-Nicolson
     INTEGER :: nstages                       ! number of stages in the time integrator
     LOGICAL :: limplicit                     ! logical flag for implicit solvers (.TRUE.=>implicit, .FALSE.=>explicit)
     TYPE(it_solver_type) :: implicit_solver  ! the object that actually does linear algebra

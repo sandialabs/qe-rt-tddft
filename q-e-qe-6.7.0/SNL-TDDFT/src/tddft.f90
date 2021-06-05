@@ -124,7 +124,7 @@ PROGRAM tddft
       
       ! now that the step is complete, we report quantities of interest...
       IF(ionode)THEN
-        WRITE(stdout,'(5X, " Energy:",2X, 6F16.8)') electron_time, etot, eband, ehart, etxc+etxcc, ewld 
+        WRITE(stdout,'(5X, " Time, energy:",2X, 6F16.8)') electron_time, etot, eband, ehart, etxc+etxcc, ewld 
         WRITE(stdout,*)
       ENDIF
 

@@ -75,7 +75,7 @@ CONTAINS
 
   END SUBROUTINE gmres_end
 
-  SUBROUTINE gmres_solve(this, A, b, x, ndimx, ndim, nbnd)
+  SUBROUTINE gmres_solve(this, A, b, x, ndimx, ndim, nbnd, cn_factor)
     !
     ! ... solves A*x=b
     !
@@ -88,6 +88,7 @@ CONTAINS
     INTEGER, INTENT(IN) :: ndimx		! the maximum dimension of the vectors
     INTEGER, INTENT(IN) :: ndim			! the actual dimension of the vectors
     INTEGER, INTENT(IN) :: nbnd			! the number of bands
+    COMPLEX(dp) :: cn_factor                    ! for Crank-Nicolson... (CLEAN THIS INTERFACE SOMEDAY)
     EXTERNAL :: A 				! the subroutine that computes A*x
     COMPLEX(dp), INTENT(IN) :: b(ndimx, nbnd)	! the matrix of right hand sides (each column is an orbital/band)
     COMPLEX(dp), INTENT(INOUT) :: x(ndimx, nbnd) ! the matrix of solution vectors (each column is an orbital/band)
@@ -107,10 +108,14 @@ CONTAINS
 
     converged_flag = .FALSE.	! of course, we haven't converged yet
     this%number_rhs = nbnd	! set the number of RHS to the number of bands
-    ALLOCATE(this%inner_counts(this%number_rhs), stat=ierr)
-    IF(ierr/=0) CALL errore('gmres_solve','error allocating inner_counts',ierr)
-    ALLOCATE(this%outer_counts(this%number_rhs), stat=ierr)
-    IF(ierr/=0) CALL errore('gmres_solve','error allocating outer_counts',ierr)
+    IF(.NOT.ALLOCATED(this%inner_counts))THEN 
+      ALLOCATE(this%inner_counts(this%number_rhs), stat=ierr)
+      IF(ierr/=0) CALL errore('gmres_solve','error allocating inner_counts',ierr)
+    ENDIF
+    IF(.NOT.ALLOCATED(this%outer_counts))THEN
+      ALLOCATE(this%outer_counts(this%number_rhs), stat=ierr)
+      IF(ierr/=0) CALL errore('gmres_solve','error allocating outer_counts',ierr)
+    ENDIF
 
     IF(.NOT.ALLOCATED(this%work)) CALL errore('gmres_solve','work not allocated', 1)
 
@@ -128,7 +133,7 @@ CONTAINS
       tolb = normb*this%tol
 
       ! interface with Michele / compute A*x0, store in the second column of this%work
-      !CALL A( ) ! x(1,irhs), this%work(:,2)
+      CALL A(ndimx, ndim, cn_factor, x(:,irhs), this%work(:,2)) ! x(1,irhs), this%work(:,2)
       ! copy A*x0 into the residual/first column of the working space
       CALL zcopy(ndim, this%work(:,2), 1, this%work(:,1), 1)
       ! subtract off b (i.e., the residual is A*x0-b)
@@ -162,7 +167,7 @@ CONTAINS
 
         IF(outer/=1)THEN ! we can save a matvec on the first iteration, because we know b-A*x0 was just computed
           ! compute A*x, store it in the space for w for efficiency
-          !CALL A( ) ! x(1,irhs), this%work(:,2)
+          CALL A(ndimx, ndim, cn_factor, x(:,irhs), this%work(:,2)) ! x(1,irhs), this%work(:,2)
           ! copy A*x into the residual
           CALL zcopy(ndim, this%work(:,2), 1, this%work(:,1), 1)
           ! subtract off b
@@ -185,7 +190,7 @@ CONTAINS
           this%inner_counts(irhs) = inner
 
           ! compute w
-          !CALL A( ) ! this%work(:,2+inner), this%work(:,2)
+          CALL A(ndimx, ndim, cn_factor, this%work(:,2+inner), this%work(:,2)) ! this%work(:,2+inner), this%work(:,2)
           DO k = 1, inner
 
             tmp = zdotc(ndim, this%work(:,2+k), 1, this%work(:,2), 1)
@@ -238,7 +243,7 @@ CONTAINS
         ENDDO
 
         ! compute the residual, just like the other two times
-        !CALL A( ) ! x(1,irhs), this%work(:,2)
+        CALL A(ndimx, ndim, cn_factor, x(:,irhs), this%work(:,2)) ! x(1,irhs), this%work(:,2)
         CALL zcopy(ndim, this%work(:,2), 1, this%work(:,1), 1)
         CALL zaxpy(ndim, -1.0_dp, b(1,irhs), 1, this%work(:,1), 1)
         CALL zscal(ndim, -1.0_dp, this%work(:,1), 1)
@@ -260,6 +265,7 @@ CONTAINS
 
     ! check flag
     IF(.NOT. converged_flag)THEN
+      WRITE(*,*) error
       CALL errore('gmres_solve', 'gmres did not achieve convergence, increase maximum inner/outer iterations', 1)
       STOP
     ENDIF
