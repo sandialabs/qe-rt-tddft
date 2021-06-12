@@ -226,7 +226,7 @@ CONTAINS
           h(inner,inner) = CONJG(cs(inner))*h(inner,inner) + CONJG(sn(inner))*h(inner+1,inner)
 
           error = abs(s(inner+1))/normb
-          WRITE(*,*) 'Error: ', outer, inner, error
+          !WRITE(*,*) 'Error: ', outer, inner, error
           IF(error<=this%tol)THEN
             y(1:inner) = s(1:inner)
             CALL gaussian_elimination(this%max_kry_dim+1, inner, h, y)
@@ -234,6 +234,7 @@ CONTAINS
               x(:,irhs) = x(:,irhs) + this%work(:,2+k)*y(k)
             ENDDO
             CALL stop_clock('gmres_solve')
+            !WRITE(*,*) 'GMRES: ', outer, inner, error
             RETURN
           ENDIF
 
