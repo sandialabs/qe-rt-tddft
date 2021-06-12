@@ -96,7 +96,9 @@ PROGRAM tddft
 
   ! initialize parallelization over bands
 #ifdef __BANDS
+  CALL start_clock('init_par_band')
   CALL init_parallel_over_band(inter_bgrp_comm, nbnd)
+  CALL stop_clock('init_par_band')
 #endif
 
   ! allocate before the loop

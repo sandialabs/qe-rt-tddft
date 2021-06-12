@@ -226,9 +226,16 @@ CONTAINS
     WRITE(io_unit,'(5x,"Summary of TDDFT timing information")')
     WRITE(io_unit,'(5x,"-----------------------------------")')
     WRITE(io_unit,'(5x,"Initialization")')
+    CALL print_clock('perf_bus')
     CALL print_clock('init_calc')
+    CALL print_clock('init_par_band')
+    CALL print_clock('alloc_preloop')
     WRITE(io_unit,'(5x,"Time propagation")')
+    CALL print_clock('rhs_eval')
+    CALL print_clock('gmres_solve')
     CALL print_clock('set_hamiltonian') 
+    CALL print_clock('read_ks')
+    CALL print_clock('write_ks')
     RETURN
     
   END SUBROUTINE print_tddft_summary_clock
@@ -289,11 +296,15 @@ CONTAINS
     ! internal variables
     INTEGER :: ierr   ! error flag  
 
+    CALL start_clock('perf_bus')
+
     ! btype is allocated because sum_band needs it...
     ! really, it is used in diagonalization routines for determining which bands need to be fully converged 
     ! but sum_bands will be mad at us if this isn't allocated and we need it for constructing charge densities
     ALLOCATE(btype(nbndx, nkstot), stat=ierr)
     IF(ierr/=0) CALL errore('perfunctory_tddft_business','error allocating btype',ierr)
+
+    CALL stop_clock('perf_bus')
 
   END SUBROUTINE perfunctory_tddft_business
 
@@ -554,6 +565,8 @@ CONTAINS
   ! input variable
   CLASS(tddft_type), INTENT(INOUT) :: this
 
+  CALL start_clock('alloc_preloop')
+
   ! space for the KS orbitals across all stages of the propagator
   ALLOCATE(this%psi(npwx, nbnd, this%propagator%nstages))
   ! space for the Hamiltonian acting on the KS orbitals
@@ -576,6 +589,8 @@ CONTAINS
     this%propagator%cn_factor = (0.d0,1d-18)*this%dt_el/(4.0_dp*au_sec)
 
   ENDIF
+
+  CALL stop_clock('alloc_preloop')
 
   END SUBROUTINE allocate_tddft_preloop
 
@@ -644,21 +659,27 @@ CONTAINS
         ! if this is the very first step, then get the current orbitals from unit iunwfc, else iuntdorbs
         ! presently, we are saving at each time step
         IF(ion_step_counter*electron_step_counter==1)THEN
+          CALL start_clock('read_ks')
           CALL get_buffer(evc, nwordwfc, iunwfc, kpt_counter)
+          CALL stop_clock('read_ks')
         ELSE
+          CALL start_clock('read_ks')
           CALL get_buffer(evc, nwordwfc, this%iuntdorbs, kpt_counter)
+          CALL stop_clock('read_ks')
         ENDIF
         IF(.NOT. is_allocated_bec_type(becp))THEN
           CALL allocate_bec_type(nkb, nbnd, becp)
         ENDIF
         CALL calbec(npw, vkb, evc, becp) 
         
+        CALL start_clock('rhs_eval')
         ! compute matrix-vector products
         CALL tddft_h_psi(npwx, npw, this%nbands_occupied(kpt_counter), evc, this%Hpsi)
         CALL tddft_s_psi(npwx, npw, this%nbands_occupied(kpt_counter), evc, this%Spsi)
-
         ! load the right hand side
         this%rhs(:,:) = this%Spsi(:,:)-cn_factor*this%Hpsi(:,:)
+        CALL stop_clock('rhs_eval')
+
         ! call GMRES
         CALL this%propagator%implicit_solver%gmres_solve(crank_nicolson_matvec, this%rhs(:,:), this%psi(:,:,1), npwx, npw, nbnd, cn_factor)
         ! for Crank-Nicolson, after the step, move the new wave functions to the position of the 'old' wave functions
@@ -668,7 +689,9 @@ CONTAINS
         evc(:,:) = this%psi(:,:,1)
 
         ! save the orbitals at the end of the step...
+        CALL start_clock('write_ks')
         CALL save_buffer(this%psi(:,:,1), nwordwfc, this%iuntdorbs, kpt_counter)
+        CALL stop_clock('write_ks')
 
       ENDDO
     ELSE

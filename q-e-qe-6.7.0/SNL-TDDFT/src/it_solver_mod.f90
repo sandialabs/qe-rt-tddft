@@ -105,6 +105,7 @@ CONTAINS
     COMPLEX(dp) :: s(this%max_kry_dim+1), y(this%max_kry_dim+1)
     COMPLEX(dp) :: h(this%max_kry_dim+1, this%max_kry_dim)
 
+    CALL start_clock('gmres_solve')
 
     converged_flag = .FALSE.	! of course, we haven't converged yet
     this%number_rhs = nbnd	! set the number of RHS to the number of bands
@@ -231,6 +232,7 @@ CONTAINS
             DO k = 1, inner
               x(:,irhs) = x(:,irhs) + this%work(:,2+k)*y(k)
             ENDDO
+            CALL stop_clock('gmres_solve')
             RETURN
           ENDIF
 
@@ -256,6 +258,7 @@ CONTAINS
 
         error = abs(s(this%max_kry_dim+1))/normb
         IF(error<=this%tol)THEN
+          CALL stop_clock('gmres_solve')
           RETURN
         ENDIF
 
