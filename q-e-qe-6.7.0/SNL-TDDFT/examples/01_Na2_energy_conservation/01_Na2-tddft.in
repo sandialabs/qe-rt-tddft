@@ -2,8 +2,8 @@
 prefix = 'na2'
 tmp_dir = './scratch/'
 verbosity = 'high'
-dt_el = 1.0
-dt_ion = 1.0
+dt_el = 0.5
+dt_ion = 0.5
 duration = 100.0
 lscalar_perturbation = .TRUE.
 /
@@ -18,4 +18,5 @@ width = 10.0
 
 &PROPAGATOR
 limplicit = .TRUE.
+max_restarts = 50
 /

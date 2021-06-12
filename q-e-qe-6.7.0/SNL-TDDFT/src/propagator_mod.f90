@@ -51,8 +51,8 @@ CONTAINS
     limplicit = .TRUE.
     nstages = 2
  
-    max_kry_dim = 15
-    max_restarts = 200
+    max_kry_dim = 50
+    max_restarts = 10
     tol = 1.e-12_DP
 
     READ(5, propagator, err = 201, iostat = ierr)
