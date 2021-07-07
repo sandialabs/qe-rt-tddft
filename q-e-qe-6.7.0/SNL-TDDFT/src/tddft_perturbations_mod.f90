@@ -18,9 +18,9 @@ MODULE tddft_perturbations_mod
   !
   TYPE projectile_perturbation_type
 
-    CHARACTER(len=1) :: projectile_direction          ! direction of motion of the projectile, 'a', 'b', 'c', or 'r' = a lattice vector or a random vector
-    INTEGER :: projectile_index                       ! the number of the atom that is designated as projectile
+    INTEGER :: projectile_index                       ! the number of the atom that is designated as projectile  
     REAL(dp) :: projectile_kinetic_energy             ! kinetic energy of the projectile in units of eV
+    REAL(dp) :: projectile_velocity(3)         ! vector that orients the projectile's velocity (normalized...or forced to be normalized :))
     TYPE(tddft_envelope_type) :: projectile_envelope  ! defines the time-dependence of the motion of the projectile
 
   CONTAINS
@@ -88,7 +88,7 @@ CONTAINS
     INTEGER, INTENT(IN) :: io_unit
 
     WRITE(io_unit,'(5x,"Projectile perturbation active")')
-    WRITE(io_unit,'(5x,"Direction                  =",A)') this%projectile_direction
+    WRITE(io_unit,'(5x,"Velocity vector            =",3F12.4," unitless ")') this%projectile_velocity(1:3)
     WRITE(io_unit,'(5x,"Index                      =",I12)') this%projectile_index
     WRITE(io_unit,'(5x,"Kinetic energy             =",F12.4, " eV ")') this%projectile_kinetic_energy
     WRITE(io_unit,'(5x,"Envelope")')
@@ -104,9 +104,10 @@ CONTAINS
     ! input variables
     CLASS(projectile_perturbation_type), INTENT(INOUT) :: this
     ! internal variables
-    CHARACTER(len=1) :: projectile_direction
     INTEGER :: projectile_index
     REAL(dp) :: projectile_kinetic_energy
+    REAL(dp) :: projectile_velocity(3)
+    REAL(dp) :: scratch_real
     TYPE(tddft_envelope_type) :: projectile_envelope
     INTEGER :: ierr
 
@@ -114,11 +115,11 @@ CONTAINS
     INTEGER :: envelope_index
     REAL(dp) :: linear_slope, amplitude, carrier_frequency, delay, width
 
-    NAMELIST /projectile/ projectile_direction, projectile_index, projectile_kinetic_energy, &
+    NAMELIST /projectile/ projectile_velocity, projectile_index, projectile_kinetic_energy, &
     envelope_index, linear_slope, amplitude, carrier_frequency, delay, width
 
     ! set default values
-    projectile_direction = 'r'
+    projectile_velocity = (/1.0_dp, 0.0_dp, 0.0_dp/)
     projectile_index = 1
 
     ! default values for the envelope variables
@@ -133,8 +134,11 @@ CONTAINS
     READ(5, projectile, err = 201, iostat = ierr)
     201 CALL errore('read_projectile_settings', 'reading projectile namelist', ierr)
 
+    ! force normalization of the projectile velocity vector
+    scratch_real = SQRT(projectile_velocity(1)**2 + projectile_velocity(2)**2 + projectile_velocity(3)**2)
+
     ! load values from file into calling instance
-    this%projectile_direction = projectile_direction
+    this%projectile_velocity(:) = projectile_velocity(:)/scratch_real
     this%projectile_index = projectile_index
     this%projectile_kinetic_energy = projectile_kinetic_energy
     ! envelope values
@@ -339,7 +343,7 @@ CONTAINS
     ! internal variables
     INTEGER, parameter :: root = 0
 
-    CALL mp_bcast(this%projectile_direction, root, world_comm)
+    CALL mp_bcast(this%projectile_velocity, root, world_comm)
     CALL mp_bcast(this%projectile_index, root, world_comm)
     CALL mp_bcast(this%projectile_kinetic_energy, root, world_comm)
     CALL mp_bcast(this%projectile_envelope%envelope_index, root, world_comm)

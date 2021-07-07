@@ -12,9 +12,10 @@ PROGRAM tddft
   USE mp,              ONLY : mp_bcast
   !  USE check_stop,      ONLY : check_stop_init
   USE becmod,          ONLY : becp, allocate_bec_type, is_allocated_bec_type, deallocate_bec_type
+  USE constants,       ONLY : amu_ry, rytoev
   USE control_flags,   ONLY : io_level, gamma_only, use_para_diag
   USE dynamics_module, ONLY : allocate_dyn_vars, deallocate_dyn_vars, vel, verlet
-  USE ions_base,       ONLY : if_pos
+  USE ions_base,       ONLY : amass, if_pos
   USE mp_global,       ONLY : mp_startup
   USE mp_bands,        ONLY : nbgrp
   USE mp_world,        ONLY : world_comm
@@ -39,6 +40,9 @@ PROGRAM tddft
   !------------------------------------------------------------------------
   INTEGER :: electron_step_counter, ion_step_counter
   REAL(dp) :: electron_time, ion_time
+
+  INTEGER :: scratch_index
+  REAL(dp) :: scratch_real
 
   ! initialization
 #ifdef __MPI
@@ -107,16 +111,39 @@ PROGRAM tddft
   ! allocate before the loop
   WRITE(stdout, '(5X, "Pre-loop allocation...")')
   CALL this_calculation%allocate_preloop()
-  ! for Ehrenfest...
-  CALL allocate_dyn_vars()
   WRITE(stdout, *)
 
-  ! initialize velocities to zero, TODO: write interface to projectile perturbation...
-  vel(:,:) = 0.d0  
-  ! allocation for Ehrenfest 
-  ALLOCATE(if_pos(3,nat))
-  if_pos(:,:) = 1 
-
+  ! allocate / deal with variables for ionic motion
+  WRITE(stdout, '(5X, "Initializing quantities for molecular dynamics...")')
+  CALL allocate_dyn_vars()
+  ! note: if_pos is a multiplier for the ith component of the jth atom
+  !       it can be set to zero to constrain certain atoms
+  !       we should allow for the use of if_pos, at some point, but for now it
+  !       is always 1 (i.e., no atoms are constrained) unless a projectile
+  !       perturbation is on...
+  ALLOCATE(if_pos(3, nat))
+  IF(this_calculation%lprojectile_perturbation)THEN
+    ! only move the projectile atom
+    ! first set a scratch index variable for convenience (projectile index)
+    scratch_index = this_calculation%projectile_perturbation%projectile_index
+    ! and then a scratch real...(projectile velocity in Rydberg units...gross)
+    scratch_real = SQRT(2.d0*(this_calculation%projectile_perturbation%projectile_kinetic_energy)/(amass(scratch_index)*amu_ry*rytoev))
+    ! report velocity in Hartree atomic units (because it is what humans use for this
+    ! sort of thing) and work with Rydberg atomic units (because it is apparently what computers use...)
+    WRITE(stdout, '(5X, "Projectile velocity ",F12.4," (a.u.) ")') scratch_real/SQRT(2.d0)
+    if_pos(:, :) = 0
+    if_pos(:, scratch_index) = 1
+    vel(:, :) = 0.d0
+    vel(1, scratch_index) = scratch_real*this_calculation%projectile_perturbation%projectile_velocity(1)
+    vel(2, scratch_index) = scratch_real*this_calculation%projectile_perturbation%projectile_velocity(2)
+    vel(3, scratch_index) = scratch_real*this_calculation%projectile_perturbation%projectile_velocity(3)
+  ELSE
+    ! let all of the atoms move
+    if_pos(:, :) = 1
+    vel(:, :) = 0.d0
+  ENDIF
+  WRITE(stdout, *)
+  
   ! main TDDFT loop
   electron_time = 0.0_dp
   ion_time = 0.0_dp
