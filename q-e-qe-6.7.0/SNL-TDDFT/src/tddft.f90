@@ -15,7 +15,7 @@ PROGRAM tddft
   USE constants,       ONLY : amu_ry, rytoev
   USE control_flags,   ONLY : io_level, gamma_only, use_para_diag
   USE dynamics_module, ONLY : allocate_dyn_vars, deallocate_dyn_vars, vel, verlet
-  USE ions_base,       ONLY : amass, if_pos
+  USE ions_base,       ONLY : amass, if_pos, tau
   USE mp_global,       ONLY : mp_startup
   USE mp_bands,        ONLY : nbgrp
   USE mp_world,        ONLY : world_comm
@@ -173,7 +173,13 @@ PROGRAM tddft
     ! compute forces and update the ion positions according to the Verlet algorithm
     IF(is_allocated_bec_type(becp)) CALL deallocate_bec_type(becp)
     CALL forces()
-    CALL verlet()
+
+    IF(this_calculation%lprojectile_perturbation)THEN
+      tau(:, scratch_index) = tau(:, scratch_index) + vel(:, scratch_index)*this_calculation%dt_ion
+      WRITE(stdout,'(5X, " Projectile position:",2X, 3F16.8)') tau(:, scratch_index)
+    ELSE
+      CALL verlet()
+    ENDIF
 
     ! update the ion time after the step has been taken
     ion_time = ion_time + this_calculation%dt_ion
