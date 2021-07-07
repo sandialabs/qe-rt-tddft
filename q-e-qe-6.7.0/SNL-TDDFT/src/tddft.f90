@@ -11,7 +11,10 @@ PROGRAM tddft
   USE io_global,       ONLY : stdout, ionode, meta_ionode, meta_ionode_id
   USE mp,              ONLY : mp_bcast
   !  USE check_stop,      ONLY : check_stop_init
+  USE becmod,          ONLY : becp, allocate_bec_type, is_allocated_bec_type, deallocate_bec_type
   USE control_flags,   ONLY : io_level, gamma_only, use_para_diag
+  USE dynamics_module, ONLY : allocate_dyn_vars, deallocate_dyn_vars, vel, verlet
+  USE ions_base,       ONLY : if_pos
   USE mp_global,       ONLY : mp_startup
   USE mp_bands,        ONLY : nbgrp
   USE mp_world,        ONLY : world_comm
@@ -104,7 +107,15 @@ PROGRAM tddft
   ! allocate before the loop
   WRITE(stdout, '(5X, "Pre-loop allocation...")')
   CALL this_calculation%allocate_preloop()
+  ! for Ehrenfest...
+  CALL allocate_dyn_vars()
   WRITE(stdout, *)
+
+  ! initialize velocities to zero, TODO: write interface to projectile perturbation...
+  vel(:,:) = 0.d0  
+  ! allocation for Ehrenfest 
+  ALLOCATE(if_pos(3,nat))
+  if_pos(:,:) = 1 
 
   ! main TDDFT loop
   electron_time = 0.0_dp
@@ -132,6 +143,11 @@ PROGRAM tddft
 
     ENDDO
 
+    ! compute forces and update the ion positions according to the Verlet algorithm
+    IF(is_allocated_bec_type(becp)) CALL deallocate_bec_type(becp)
+    CALL forces()
+    CALL verlet()
+
     ! update the ion time after the step has been taken
     ion_time = ion_time + this_calculation%dt_ion
 
@@ -142,8 +158,13 @@ PROGRAM tddft
   ! deallocate after the loop
   WRITE(stdout, '(5X, "Post-loop deallocation...")')
   CALL this_calculation%deallocate_postloop()
+  ! for Ehrenfest...
+  CALL deallocate_dyn_vars()
   WRITE(stdout, *)
-  
+ 
+  ! for Ehrenfest 
+  DEALLOCATE(if_pos)
+
   ! close the files that were opened at the beginning of the TDDFT calculation
   CALL this_calculation%close_files()
 
