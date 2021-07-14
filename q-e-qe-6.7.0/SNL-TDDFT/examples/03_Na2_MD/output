@@ -1,0 +1,2500 @@
+
+     Program TDDFT v.6.7MaX starts on  7Jul2021 at 11:50:37 
+
+     This program is part of the open-source Quantum ESPRESSO suite
+     for quantum simulation of materials; please cite
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 21 395502 (2009);
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 29 465901 (2017);
+          URL http://www.quantum-espresso.org", 
+     in publications or presentations arising from this work. More details at
+     http://www.quantum-espresso.org/quote
+
+     Parallel version (MPI), running on     1 processors
+
+     MPI processes distributed on     1 nodes
+ 
+     ***** SNL-TDDFT git revision f197175d7fda6b83a4f58a3c51d7a12af2763a0a *****
+ 
+
+     Reading xml data from directory:
+
+     ./scratch/na2.save/
+
+     IMPORTANT: XC functional enforced from input :
+     Exchange-correlation= PZ
+                           (   1   1   0   0   0   0   0)
+     Any further DFT definition will be discarded
+     Please, verify this is what you really want
+
+ 
+     G-vector sticks info
+     --------------------
+     sticks:   dense  smooth     PW     G-vecs:    dense   smooth      PW
+     Sum        2253    2253    569                81313    81313   10131
+ 
+     Reading collected, re-writing distributed wavefunctions
+
+     Subspace diagonalization in iterative solution of the eigenvalue problem:
+     a serial algorithm will be used
+
+     Initial call to set_hamiltonian...building things before entering main TDDFT loop
+     Note: This should match up with the output of the SCF calculation
+                                Total        One-body         Hartree              XC           Ewald
+     Initial energy        0.19595030     -0.56279297      0.39808368     -1.13190407      1.51669177
+ 
+     Summary of TDDFT calculation
+     ----------------------------
+     Duration                   =      10.0000 as 
+
+     Electronic time step       =       0.1000 as 
+     Total electronic steps     =          100
+
+     Ionic time step            =       0.1000 as 
+     Total ionic steps          =          100
+     Electron-ion step ratio    =            1
+
+     Scalar perturbation active
+     E-field strength           =      1.0000      0.0000      0.0000 eV/A 
+     Envelope
+      Gaussian 
+      Amplitude                 =      1.0000 (as) 
+      Delay                     =     50.0000 (as) 
+      Width                     =     10.0000 (as) 
+      
+     Implicit propagator
+      Number of stages         =           2
+      Max Krylov dimension     =          50
+      Max restarts             =          50
+      Tolerance for Ax=b       =  0.1000E-11
+ 
+     Pre-loop allocation...
+ 
+     Initializing quantities for molecular dynamics...
+ 
+     Entering main loop
+ 
+      Time, energy:        0.10000000      0.19595030     -0.56279297      0.39808368     -1.13190407      1.51669177
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.17267034   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.17267034    0.00000000   -0.00000000
+
+     Total force =     3.072620     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   963
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4750070458        0.5000000000        0.5000000000
+Na            0.5249929542        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        0.20000000      0.19627459     -0.56279297      0.39808368     -1.13190407      1.51701606
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.17374962   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.17374962    0.00000000   -0.00000000
+
+     Total force =     3.074146     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   964
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4750140916        0.5000000000        0.5000000000
+Na            0.5249859084        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        0.30000000      0.19659921     -0.56279297      0.39808368     -1.13190407      1.51734068
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.17483006   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.17483006    0.00000000   -0.00000000
+
+     Total force =     3.075674     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   965
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4750211374        0.5000000000        0.5000000000
+Na            0.5249788626        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        0.40000000      0.19692416     -0.56279297      0.39808368     -1.13190407      1.51766563
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.17591165   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.17591165    0.00000000   -0.00000000
+
+     Total force =     3.077204     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   966
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4750281832        0.5000000000        0.5000000000
+Na            0.5249718168        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        0.50000000      0.19724943     -0.56279297      0.39808368     -1.13190407      1.51799090
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.17699439   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.17699439    0.00000000   -0.00000000
+
+     Total force =     3.078735     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   967
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4750352290        0.5000000000        0.5000000000
+Na            0.5249647710        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        0.60000000      0.19757504     -0.56279297      0.39808368     -1.13190408      1.51831651
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.17807829   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.17807829    0.00000000   -0.00000000
+
+     Total force =     3.080268     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   968
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4750422748        0.5000000000        0.5000000000
+Na            0.5249577252        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        0.70000000      0.19790097     -0.56279297      0.39808368     -1.13190408      1.51864244
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.17916336   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.17916336    0.00000000   -0.00000000
+
+     Total force =     3.081802     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   969
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4750493206        0.5000000000        0.5000000000
+Na            0.5249506794        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        0.80000000      0.19822723     -0.56279297      0.39808368     -1.13190408      1.51896870
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.18024958   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.18024958    0.00000000   -0.00000000
+
+     Total force =     3.083339     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   970
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4750563664        0.5000000000        0.5000000000
+Na            0.5249436336        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        0.90000000      0.19855382     -0.56279297      0.39808368     -1.13190408      1.51929529
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.18133697   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.18133697    0.00000000   -0.00000000
+
+     Total force =     3.084876     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   971
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4750634122        0.5000000000        0.5000000000
+Na            0.5249365878        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        1.00000000      0.19888074     -0.56279297      0.39808368     -1.13190408      1.51962221
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.18242552   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.18242552    0.00000000   -0.00000000
+
+     Total force =     3.086416     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   972
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4750704580        0.5000000000        0.5000000000
+Na            0.5249295420        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        1.10000000      0.19920799     -0.56279297      0.39808368     -1.13190408      1.51994946
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.18351524   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.18351524    0.00000000   -0.00000000
+
+     Total force =     3.087957     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   973
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4750775038        0.5000000000        0.5000000000
+Na            0.5249224962        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        1.20000000      0.19953557     -0.56279297      0.39808368     -1.13190408      1.52027704
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.18460612   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.18460612    0.00000000   -0.00000000
+
+     Total force =     3.089500     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   974
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4750845496        0.5000000000        0.5000000000
+Na            0.5249154504        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        1.30000000      0.19986347     -0.56279297      0.39808368     -1.13190408      1.52060495
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.18569817   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.18569817    0.00000000   -0.00000000
+
+     Total force =     3.091044     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   975
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4750915954        0.5000000000        0.5000000000
+Na            0.5249084046        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        1.40000000      0.20019171     -0.56279297      0.39808368     -1.13190408      1.52093319
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.18679139   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.18679139    0.00000000   -0.00000000
+
+     Total force =     3.092590     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   976
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4750986412        0.5000000000        0.5000000000
+Na            0.5249013588        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        1.50000000      0.20052028     -0.56279297      0.39808368     -1.13190408      1.52126176
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.18788579   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.18788579    0.00000000   -0.00000000
+
+     Total force =     3.094138     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   977
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4751056870        0.5000000000        0.5000000000
+Na            0.5248943130        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        1.60000000      0.20084919     -0.56279297      0.39808368     -1.13190408      1.52159066
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.18898135   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.18898135    0.00000000   -0.00000000
+
+     Total force =     3.095687     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   978
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4751127328        0.5000000000        0.5000000000
+Na            0.5248872672        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        1.70000000      0.20117842     -0.56279297      0.39808368     -1.13190409      1.52191990
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.19007809   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.19007809    0.00000000   -0.00000000
+
+     Total force =     3.097238     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   979
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4751197786        0.5000000000        0.5000000000
+Na            0.5248802214        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        1.80000000      0.20150799     -0.56279297      0.39808368     -1.13190409      1.52224946
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.19117601   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.19117601    0.00000000   -0.00000000
+
+     Total force =     3.098791     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   980
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4751268244        0.5000000000        0.5000000000
+Na            0.5248731756        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        1.90000000      0.20183788     -0.56279297      0.39808368     -1.13190409      1.52257936
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.19227510   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.19227510    0.00000000   -0.00000000
+
+     Total force =     3.100345     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   981
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4751338702        0.5000000000        0.5000000000
+Na            0.5248661298        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        2.00000000      0.20216812     -0.56279297      0.39808368     -1.13190409      1.52290959
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.19337537   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.19337537    0.00000000   -0.00000000
+
+     Total force =     3.101901     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   982
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4751409160        0.5000000000        0.5000000000
+Na            0.5248590840        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        2.10000000      0.20249868     -0.56279297      0.39808368     -1.13190409      1.52324016
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.19447683   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.19447683    0.00000000   -0.00000000
+
+     Total force =     3.103459     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   983
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4751479618        0.5000000000        0.5000000000
+Na            0.5248520382        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        2.20000000      0.20282958     -0.56279297      0.39808368     -1.13190409      1.52357106
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.19557946   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.19557946    0.00000000   -0.00000000
+
+     Total force =     3.105018     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   984
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4751550076        0.5000000000        0.5000000000
+Na            0.5248449924        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        2.30000000      0.20316081     -0.56279297      0.39808368     -1.13190409      1.52390229
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.19668328   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.19668328    0.00000000   -0.00000000
+
+     Total force =     3.106579     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   985
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4751620534        0.5000000000        0.5000000000
+Na            0.5248379466        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        2.40000000      0.20349237     -0.56279297      0.39808368     -1.13190409      1.52423385
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.19778828   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.19778828    0.00000000   -0.00000000
+
+     Total force =     3.108142     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   986
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4751690992        0.5000000000        0.5000000000
+Na            0.5248309008        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        2.50000000      0.20382427     -0.56279297      0.39808368     -1.13190410      1.52456575
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.19889447   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.19889447    0.00000000   -0.00000000
+
+     Total force =     3.109706     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   987
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4751761450        0.5000000000        0.5000000000
+Na            0.5248238550        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        2.60000000      0.20415651     -0.56279297      0.39808368     -1.13190410      1.52489799
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.20000185   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.20000185    0.00000000   -0.00000000
+
+     Total force =     3.111272     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   988
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4751831908        0.5000000000        0.5000000000
+Na            0.5248168092        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        2.70000000      0.20448907     -0.56279297      0.39808368     -1.13190410      1.52523056
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.20111042   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.20111042    0.00000000   -0.00000000
+
+     Total force =     3.112840     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   989
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4751902366        0.5000000000        0.5000000000
+Na            0.5248097634        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        2.80000000      0.20482198     -0.56279297      0.39808368     -1.13190410      1.52556346
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.20222017   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.20222017    0.00000000   -0.00000000
+
+     Total force =     3.114410     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   990
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4751972824        0.5000000000        0.5000000000
+Na            0.5248027176        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        2.90000000      0.20515522     -0.56279297      0.39808368     -1.13190410      1.52589670
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.20333113   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.20333113    0.00000000   -0.00000000
+
+     Total force =     3.115981     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   991
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4752043282        0.5000000000        0.5000000000
+Na            0.5247956718        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        3.00000000      0.20548880     -0.56279297      0.39808368     -1.13190410      1.52623028
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.20444327   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.20444327    0.00000000   -0.00000000
+
+     Total force =     3.117554     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   992
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4752113740        0.5000000000        0.5000000000
+Na            0.5247886260        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        3.10000000      0.20582271     -0.56279297      0.39808368     -1.13190410      1.52656419
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.20555661   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.20555661    0.00000000   -0.00000000
+
+     Total force =     3.119128     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   993
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4752184198        0.5000000000        0.5000000000
+Na            0.5247815802        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        3.20000000      0.20615696     -0.56279297      0.39808368     -1.13190410      1.52689844
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.20667115   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.20667115    0.00000000   -0.00000000
+
+     Total force =     3.120704     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   994
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4752254656        0.5000000000        0.5000000000
+Na            0.5247745344        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        3.30000000      0.20649154     -0.56279297      0.39808368     -1.13190410      1.52723303
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.20778688   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.20778688    0.00000000   -0.00000000
+
+     Total force =     3.122282     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   995
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4752325114        0.5000000000        0.5000000000
+Na            0.5247674886        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        3.40000000      0.20682647     -0.56279297      0.39808368     -1.13190410      1.52756796
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.20890382   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.20890382    0.00000000   -0.00000000
+
+     Total force =     3.123862     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   996
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4752395572        0.5000000000        0.5000000000
+Na            0.5247604428        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        3.50000000      0.20716173     -0.56279297      0.39808369     -1.13190410      1.52790322
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.21002196   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.21002196    0.00000000   -0.00000000
+
+     Total force =     3.125443     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   997
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4752466030        0.5000000000        0.5000000000
+Na            0.5247533970        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        3.60000000      0.20749733     -0.56279297      0.39808369     -1.13190410      1.52823882
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.21114130   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.21114130    0.00000000   -0.00000000
+
+     Total force =     3.127026     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   998
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4752536488        0.5000000000        0.5000000000
+Na            0.5247463512        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        3.70000000      0.20783326     -0.56279297      0.39808369     -1.13190411      1.52857475
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.21226184   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.21226184    0.00000000   -0.00000000
+
+     Total force =     3.128611     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =   999
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4752606946        0.5000000000        0.5000000000
+Na            0.5247393054        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        3.80000000      0.20816954     -0.56279297      0.39808369     -1.13190411      1.52891103
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.21338359   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.21338359    0.00000000   -0.00000000
+
+     Total force =     3.130197     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1000
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4752677404        0.5000000000        0.5000000000
+Na            0.5247322596        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        3.90000000      0.20850616     -0.56279297      0.39808369     -1.13190411      1.52924765
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.21450655   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.21450655    0.00000000   -0.00000000
+
+     Total force =     3.131785     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1001
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4752747862        0.5000000000        0.5000000000
+Na            0.5247252138        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        4.00000000      0.20884311     -0.56279297      0.39808369     -1.13190411      1.52958460
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.21563071   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.21563071    0.00000000   -0.00000000
+
+     Total force =     3.133375     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1002
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4752818320        0.5000000000        0.5000000000
+Na            0.5247181680        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        4.10000000      0.20918041     -0.56279297      0.39808369     -1.13190411      1.52992190
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.21675608   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.21675608    0.00000000   -0.00000000
+
+     Total force =     3.134967     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1003
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4752888778        0.5000000000        0.5000000000
+Na            0.5247111222        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        4.20000000      0.20951804     -0.56279297      0.39808369     -1.13190411      1.53025953
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.21788267   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.21788267    0.00000000   -0.00000000
+
+     Total force =     3.136560     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1004
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4752959236        0.5000000000        0.5000000000
+Na            0.5247040764        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        4.30000000      0.20985602     -0.56279297      0.39808369     -1.13190411      1.53059751
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.21901047   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.21901047    0.00000000   -0.00000000
+
+     Total force =     3.138155     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1005
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4753029694        0.5000000000        0.5000000000
+Na            0.5246970306        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        4.40000000      0.21019433     -0.56279297      0.39808369     -1.13190411      1.53093582
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.22013948   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.22013948    0.00000000   -0.00000000
+
+     Total force =     3.139751     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1006
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4753100152        0.5000000000        0.5000000000
+Na            0.5246899848        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        4.50000000      0.21053299     -0.56279297      0.39808369     -1.13190411      1.53127448
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.22126970   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.22126970    0.00000000   -0.00000000
+
+     Total force =     3.141350     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1007
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4753170610        0.5000000000        0.5000000000
+Na            0.5246829390        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        4.60000000      0.21087199     -0.56279297      0.39808369     -1.13190411      1.53161348
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.22240114   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.22240114    0.00000000   -0.00000000
+
+     Total force =     3.142950     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1008
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4753241068        0.5000000000        0.5000000000
+Na            0.5246758932        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        4.70000000      0.21121133     -0.56279297      0.39808368     -1.13190411      1.53195282
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.22353380   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.22353380    0.00000000   -0.00000000
+
+     Total force =     3.144552     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1009
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4753311526        0.5000000000        0.5000000000
+Na            0.5246688474        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        4.80000000      0.21155101     -0.56279297      0.39808368     -1.13190410      1.53229250
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.22466768   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.22466768    0.00000000   -0.00000000
+
+     Total force =     3.146155     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1010
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4753381984        0.5000000000        0.5000000000
+Na            0.5246618016        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        4.90000000      0.21189103     -0.56279297      0.39808368     -1.13190410      1.53263252
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.22580278   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.22580278    0.00000000   -0.00000000
+
+     Total force =     3.147760     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1011
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4753452442        0.5000000000        0.5000000000
+Na            0.5246547558        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        5.00000000      0.21223140     -0.56279297      0.39808368     -1.13190410      1.53297289
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.22693910   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.22693910    0.00000000   -0.00000000
+
+     Total force =     3.149367     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1012
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4753522900        0.5000000000        0.5000000000
+Na            0.5246477100        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        5.10000000      0.21257211     -0.56279297      0.39808368     -1.13190410      1.53331360
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.22807664   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.22807664    0.00000000   -0.00000000
+
+     Total force =     3.150976     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1013
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4753593357        0.5000000000        0.5000000000
+Na            0.5246406643        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        5.20000000      0.21291317     -0.56279297      0.39808368     -1.13190410      1.53365465
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.22921540   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.22921540    0.00000000   -0.00000000
+
+     Total force =     3.152587     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1014
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4753663815        0.5000000000        0.5000000000
+Na            0.5246336185        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        5.30000000      0.21325456     -0.56279297      0.39808368     -1.13190410      1.53399605
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.23035539   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.23035539    0.00000000   -0.00000000
+
+     Total force =     3.154199     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1015
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4753734273        0.5000000000        0.5000000000
+Na            0.5246265727        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        5.40000000      0.21359631     -0.56279297      0.39808368     -1.13190410      1.53433779
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.23149660   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.23149660    0.00000000   -0.00000000
+
+     Total force =     3.155813     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1016
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4753804731        0.5000000000        0.5000000000
+Na            0.5246195269        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        5.50000000      0.21393839     -0.56279297      0.39808368     -1.13190410      1.53467988
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.23263905   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.23263905    0.00000000   -0.00000000
+
+     Total force =     3.157428     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1017
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4753875189        0.5000000000        0.5000000000
+Na            0.5246124811        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        5.60000000      0.21428082     -0.56279297      0.39808368     -1.13190410      1.53502231
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.23378272   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.23378272    0.00000000   -0.00000000
+
+     Total force =     3.159046     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1018
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4753945647        0.5000000000        0.5000000000
+Na            0.5246054353        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        5.70000000      0.21462360     -0.56279297      0.39808368     -1.13190410      1.53536508
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.23492761   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.23492761    0.00000000   -0.00000000
+
+     Total force =     3.160665     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1019
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4754016105        0.5000000000        0.5000000000
+Na            0.5245983895        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        5.80000000      0.21496672     -0.56279297      0.39808368     -1.13190410      1.53570821
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.23607374   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.23607374    0.00000000   -0.00000000
+
+     Total force =     3.162286     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1020
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4754086563        0.5000000000        0.5000000000
+Na            0.5245913437        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        5.90000000      0.21531019     -0.56279297      0.39808368     -1.13190410      1.53605167
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.23722111   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.23722111    0.00000000   -0.00000000
+
+     Total force =     3.163908     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1021
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4754157021        0.5000000000        0.5000000000
+Na            0.5245842979        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        6.00000000      0.21565400     -0.56279297      0.39808368     -1.13190409      1.53639549
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.23836970   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.23836970    0.00000000   -0.00000000
+
+     Total force =     3.165533     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1022
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4754227479        0.5000000000        0.5000000000
+Na            0.5245772521        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        6.10000000      0.21599816     -0.56279297      0.39808368     -1.13190409      1.53673964
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.23951953   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.23951953    0.00000000   -0.00000000
+
+     Total force =     3.167159     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1023
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4754297937        0.5000000000        0.5000000000
+Na            0.5245702063        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        6.20000000      0.21634267     -0.56279297      0.39808368     -1.13190409      1.53708415
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.24067059   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.24067059    0.00000000   -0.00000000
+
+     Total force =     3.168787     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1024
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4754368395        0.5000000000        0.5000000000
+Na            0.5245631605        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        6.30000000      0.21668752     -0.56279297      0.39808368     -1.13190409      1.53742900
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.24182289   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.24182289    0.00000000   -0.00000000
+
+     Total force =     3.170416     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1025
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4754438853        0.5000000000        0.5000000000
+Na            0.5245561147        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        6.40000000      0.21703273     -0.56279297      0.39808368     -1.13190409      1.53777421
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.24297643   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.24297643    0.00000000   -0.00000000
+
+     Total force =     3.172048     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1026
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4754509311        0.5000000000        0.5000000000
+Na            0.5245490689        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        6.50000000      0.21737828     -0.56279297      0.39808368     -1.13190409      1.53811975
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.24413120   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.24413120    0.00000000   -0.00000000
+
+     Total force =     3.173681     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1027
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4754579769        0.5000000000        0.5000000000
+Na            0.5245420231        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        6.60000000      0.21772417     -0.56279297      0.39808368     -1.13190409      1.53846565
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.24528722   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.24528722    0.00000000   -0.00000000
+
+     Total force =     3.175316     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1028
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4754650227        0.5000000000        0.5000000000
+Na            0.5245349773        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        6.70000000      0.21807042     -0.56279297      0.39808368     -1.13190409      1.53881190
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.24644447   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.24644447    0.00000000   -0.00000000
+
+     Total force =     3.176952     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1029
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4754720685        0.5000000000        0.5000000000
+Na            0.5245279315        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        6.80000000      0.21841701     -0.56279297      0.39808368     -1.13190409      1.53915849
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.24760297   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.24760297    0.00000000   -0.00000000
+
+     Total force =     3.178591     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1030
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4754791143        0.5000000000        0.5000000000
+Na            0.5245208857        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        6.90000000      0.21876396     -0.56279297      0.39808368     -1.13190409      1.53950543
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.24876271   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.24876271    0.00000000   -0.00000000
+
+     Total force =     3.180231     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1031
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4754861601        0.5000000000        0.5000000000
+Na            0.5245138399        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        7.00000000      0.21911125     -0.56279297      0.39808368     -1.13190408      1.53985273
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.24992370   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.24992370    0.00000000   -0.00000000
+
+     Total force =     3.181873     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1032
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4754932059        0.5000000000        0.5000000000
+Na            0.5245067941        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        7.10000000      0.21945890     -0.56279297      0.39808368     -1.13190408      1.54020037
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.25108593   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.25108593    0.00000000   -0.00000000
+
+     Total force =     3.183516     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1033
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4755002517        0.5000000000        0.5000000000
+Na            0.5244997483        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        7.20000000      0.21980689     -0.56279297      0.39808368     -1.13190408      1.54054836
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.25224941   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.25224941    0.00000000   -0.00000000
+
+     Total force =     3.185162     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1034
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4755072975        0.5000000000        0.5000000000
+Na            0.5244927025        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        7.30000000      0.22015524     -0.56279297      0.39808368     -1.13190408      1.54089671
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.25341413   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.25341413    0.00000000   -0.00000000
+
+     Total force =     3.186809     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1035
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4755143433        0.5000000000        0.5000000000
+Na            0.5244856567        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        7.40000000      0.22050393     -0.56279297      0.39808368     -1.13190408      1.54124540
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.25458011   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.25458011    0.00000000   -0.00000000
+
+     Total force =     3.188458     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1036
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4755213891        0.5000000000        0.5000000000
+Na            0.5244786109        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        7.50000000      0.22085298     -0.56279297      0.39808368     -1.13190408      1.54159445
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.25574734   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.25574734    0.00000000   -0.00000000
+
+     Total force =     3.190108     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1037
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4755284349        0.5000000000        0.5000000000
+Na            0.5244715651        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        7.60000000      0.22120238     -0.56279297      0.39808368     -1.13190408      1.54194385
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.25691581   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.25691581    0.00000000   -0.00000000
+
+     Total force =     3.191761     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1038
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4755354807        0.5000000000        0.5000000000
+Na            0.5244645193        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        7.70000000      0.22155213     -0.56279297      0.39808368     -1.13190408      1.54229360
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.25808554   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.25808554    0.00000000   -0.00000000
+
+     Total force =     3.193415     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1039
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4755425265        0.5000000000        0.5000000000
+Na            0.5244574735        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        7.80000000      0.22190223     -0.56279297      0.39808368     -1.13190408      1.54264370
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.25925653   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.25925653    0.00000000   -0.00000000
+
+     Total force =     3.195071     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1040
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4755495723        0.5000000000        0.5000000000
+Na            0.5244504277        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        7.90000000      0.22225269     -0.56279297      0.39808368     -1.13190408      1.54299416
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.26042877   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.26042877    0.00000000   -0.00000000
+
+     Total force =     3.196729     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1041
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4755566181        0.5000000000        0.5000000000
+Na            0.5244433819        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        8.00000000      0.22260349     -0.56279297      0.39808368     -1.13190408      1.54334496
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.26160227   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.26160227    0.00000000   -0.00000000
+
+     Total force =     3.198389     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1042
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4755636639        0.5000000000        0.5000000000
+Na            0.5244363361        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        8.10000000      0.22295466     -0.56279297      0.39808368     -1.13190408      1.54369613
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.26277703   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.26277703    0.00000000   -0.00000000
+
+     Total force =     3.200050     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1043
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4755707097        0.5000000000        0.5000000000
+Na            0.5244292903        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        8.20000000      0.22330617     -0.56279297      0.39808368     -1.13190408      1.54404764
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.26395305   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.26395305    0.00000000   -0.00000000
+
+     Total force =     3.201713     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1044
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4755777555        0.5000000000        0.5000000000
+Na            0.5244222445        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        8.30000000      0.22365804     -0.56279297      0.39808367     -1.13190408      1.54439951
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.26513032   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.26513032    0.00000000   -0.00000000
+
+     Total force =     3.203378     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1045
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4755848013        0.5000000000        0.5000000000
+Na            0.5244151987        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        8.40000000      0.22401027     -0.56279297      0.39808367     -1.13190408      1.54475174
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.26630886   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.26630886    0.00000000   -0.00000000
+
+     Total force =     3.205045     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1046
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4755918471        0.5000000000        0.5000000000
+Na            0.5244081529        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        8.50000000      0.22436284     -0.56279297      0.39808367     -1.13190408      1.54510431
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.26748867   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.26748867    0.00000000   -0.00000000
+
+     Total force =     3.206713     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1047
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4755988929        0.5000000000        0.5000000000
+Na            0.5244011071        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        8.60000000      0.22471578     -0.56279297      0.39808367     -1.13190408      1.54545725
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.26866974   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.26866974    0.00000000   -0.00000000
+
+     Total force =     3.208384     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1048
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4756059387        0.5000000000        0.5000000000
+Na            0.5243940613        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        8.70000000      0.22506907     -0.56279297      0.39808368     -1.13190408      1.54581054
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.26985208   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.26985208    0.00000000   -0.00000000
+
+     Total force =     3.210056     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1049
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4756129845        0.5000000000        0.5000000000
+Na            0.5243870155        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        8.80000000      0.22542271     -0.56279297      0.39808368     -1.13190408      1.54616418
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.27103568   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.27103568    0.00000000   -0.00000000
+
+     Total force =     3.211729     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1050
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4756200303        0.5000000000        0.5000000000
+Na            0.5243799697        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        8.90000000      0.22577671     -0.56279297      0.39808368     -1.13190408      1.54651819
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.27222056   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.27222056    0.00000000   -0.00000000
+
+     Total force =     3.213405     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1051
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4756270761        0.5000000000        0.5000000000
+Na            0.5243729239        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        9.00000000      0.22613107     -0.56279297      0.39808368     -1.13190408      1.54687254
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.27340671   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.27340671    0.00000000   -0.00000000
+
+     Total force =     3.215083     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1052
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4756341219        0.5000000000        0.5000000000
+Na            0.5243658781        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        9.10000000      0.22648579     -0.56279297      0.39808368     -1.13190408      1.54722726
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.27459413   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.27459413    0.00000000   -0.00000000
+
+     Total force =     3.216762     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1053
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4756411677        0.5000000000        0.5000000000
+Na            0.5243588323        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        9.20000000      0.22684086     -0.56279297      0.39808368     -1.13190408      1.54758233
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.27578282   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.27578282    0.00000000   -0.00000000
+
+     Total force =     3.218443     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1054
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4756482135        0.5000000000        0.5000000000
+Na            0.5243517865        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        9.30000000      0.22719629     -0.56279297      0.39808368     -1.13190408      1.54793776
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.27697279   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.27697279    0.00000000   -0.00000000
+
+     Total force =     3.220126     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1055
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4756552593        0.5000000000        0.5000000000
+Na            0.5243447407        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        9.40000000      0.22755208     -0.56279297      0.39808368     -1.13190408      1.54829355
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.27816404   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.27816404    0.00000000   -0.00000000
+
+     Total force =     3.221810     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1056
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4756623051        0.5000000000        0.5000000000
+Na            0.5243376949        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        9.50000000      0.22790822     -0.56279297      0.39808368     -1.13190408      1.54864970
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.27935656   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.27935656    0.00000000   -0.00000000
+
+     Total force =     3.223497     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1057
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4756693509        0.5000000000        0.5000000000
+Na            0.5243306491        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        9.60000000      0.22826473     -0.56279297      0.39808368     -1.13190408      1.54900620
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.28055037   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.28055037    0.00000000   -0.00000000
+
+     Total force =     3.225185     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1058
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4756763967        0.5000000000        0.5000000000
+Na            0.5243236033        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        9.70000000      0.22862159     -0.56279297      0.39808368     -1.13190408      1.54936307
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.28174546   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.28174546    0.00000000   -0.00000000
+
+     Total force =     3.226875     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1059
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4756834425        0.5000000000        0.5000000000
+Na            0.5243165575        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        9.80000000      0.22897882     -0.56279297      0.39808368     -1.13190409      1.54972029
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.28294183   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.28294183    0.00000000   -0.00000000
+
+     Total force =     3.228567     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1060
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4756904883        0.5000000000        0.5000000000
+Na            0.5243095117        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:        9.90000000      0.22933640     -0.56279297      0.39808368     -1.13190409      1.55007788
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.28413949   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.28413949    0.00000000   -0.00000000
+
+     Total force =     3.230261     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1061
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4756975341        0.5000000000        0.5000000000
+Na            0.5243024659        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+      Time, energy:       10.00000000      0.22969434     -0.56279297      0.39808368     -1.13190409      1.55043582
+ 
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -2.28533844   -0.00000000    0.00000000
+     atom    2 type  1   force =     2.28533844    0.00000000   -0.00000000
+
+     Total force =     3.231957     Total SCF correction =     0.000000
+
+     Entering Dynamics:    iteration =  1062
+                           time      =   0.0000 pico-seconds
+
+
+ATOMIC_POSITIONS
+Na            0.4757045799        0.5000000000        0.5000000000
+Na            0.5242954201        0.5000000000        0.5000000000
+
+
+     kinetic energy (Ekin) =             Infinity Ry
+     temperature           =             Infinity K 
+     Ekin + Etot (const)   =             Infinity Ry
+
+     Linear momentum :             NaN        Infinity        Infinity
+     Exiting main loop
+ 
+     Post-loop deallocation...
+ 
+     Summary of TDDFT timing information
+     -----------------------------------
+     Initialization
+     perf_bus     :      0.00s CPU      0.00s WALL (       1 calls)
+     init_calc    :      0.01s CPU      0.02s WALL (       1 calls)
+     alloc_preloo :      0.00s CPU      0.00s WALL (       1 calls)
+     Time propagation
+     rhs_eval     :      0.19s CPU      0.20s WALL (     100 calls)
+     gmres_solve  :      0.60s CPU      0.61s WALL (     100 calls)
+     set_hamilton :      1.21s CPU      1.38s WALL (     101 calls)
+     read_ks      :      0.00s CPU      0.00s WALL (     100 calls)
+     write_ks     :      0.01s CPU      0.01s WALL (     100 calls)
+ 
+     TDDFT        :      3.86s CPU      5.42s WALL
+
+ 
+   This run was terminated on:  11:50:43   7Jul2021            
+
+=------------------------------------------------------------------------------=
+   JOB DONE.
+=------------------------------------------------------------------------------=

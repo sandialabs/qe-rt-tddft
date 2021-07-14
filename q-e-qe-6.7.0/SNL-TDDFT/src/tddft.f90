@@ -137,6 +137,7 @@ PROGRAM tddft
     vel(1, scratch_index) = scratch_real*this_calculation%projectile_perturbation%projectile_velocity(1)
     vel(2, scratch_index) = scratch_real*this_calculation%projectile_perturbation%projectile_velocity(2)
     vel(3, scratch_index) = scratch_real*this_calculation%projectile_perturbation%projectile_velocity(3)
+    WRITE(*,*) vel(:,scratch_index)
   ELSE
     ! let all of the atoms move
     if_pos(:, :) = 1
@@ -175,8 +176,8 @@ PROGRAM tddft
     CALL forces()
 
     IF(this_calculation%lprojectile_perturbation)THEN
-      tau(:, scratch_index) = tau(:, scratch_index) + vel(:, scratch_index)*this_calculation%dt_ion
-      WRITE(stdout,'(5X, " Projectile position:",2X, 3F16.8)') tau(:, scratch_index)
+      WRITE(stdout,'(5X, " Projectile velocity:",2X, 3F16.8)') vel(:, scratch_index)     
+      CALL verlet()
     ELSE
       CALL verlet()
     ENDIF
