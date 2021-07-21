@@ -1,0 +1,79 @@
+
+     Program TDDFT v.6.7MaX starts on 20Jul2021 at 17:21: 6 
+
+     This program is part of the open-source Quantum ESPRESSO suite
+     for quantum simulation of materials; please cite
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 21 395502 (2009);
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 29 465901 (2017);
+          URL http://www.quantum-espresso.org", 
+     in publications or presentations arising from this work. More details at
+     http://www.quantum-espresso.org/quote
+
+     Parallel version (MPI), running on    16 processors
+
+     MPI processes distributed on     1 nodes
+     R & G space division:  proc/nbgrp/npool/nimage =      16
+ 
+     ***** SNL-TDDFT git revision 5242b8b69f5184ef390e74f652eba2c6b444bd37 *****
+ 
+
+     Reading xml data from directory:
+
+     ./scratch/be.save/
+     file Be.pz-n-kjpaw_psl.0.2.UPF: wavefunction(s)  2S 2P renormalized
+
+     IMPORTANT: XC functional enforced from input :
+     Exchange-correlation= PZ
+                           (   1   1   0   0   0   0   0)
+     Any further DFT definition will be discarded
+     Please, verify this is what you really want
+
+ 
+     Parallelization info
+     --------------------
+     sticks:   dense  smooth     PW     G-vecs:    dense   smooth      PW
+     Min         796     796    405                55462    55462   20239
+     Max         797     797    407                55465    55465   20242
+     Sum       12743   12743   6497               887411   887411  323835
+ 
+     Reading collected, re-writing distributed wavefunctions
+
+     Subspace diagonalization in iterative solution of the eigenvalue problem:
+     a serial algorithm will be used
+
+     Initial call to set_hamiltonian...building things before entering main TDDFT loop
+     Note: This should match up with the output of the SCF calculation
+                                Total        One-body         Hartree              XC           Ewald
+     Initial energy        8.37554857    113.98723863      7.33569196    -67.26500114   -109.86436889
+ 
+     Summary of TDDFT calculation
+     ----------------------------
+     Duration                   =     100.0000 as 
+
+     Electronic time step       =       1.0000 as 
+     Total electronic steps     =          100
+
+     Ionic time step            =       1.0000 as 
+     Total ionic steps          =          100
+     Electron-ion step ratio    =            1
+
+     Scalar perturbation active
+     E-field strength           =      0.0000      0.0000      0.0000 eV/A 
+     Envelope
+      Gaussian 
+      Amplitude                 =      1.0000 (as) 
+      Delay                     =     50.0000 (as) 
+      Width                     =     10.0000 (as) 
+      
+     Implicit propagator
+      Number of stages         =           2
+      Max Krylov dimension     =          50
+      Max restarts             =          50
+      Tolerance for Ax=b       =  0.1000E-11
+ 
+     Pre-loop allocation...
+ 
+     Initializing quantities for molecular dynamics...
+ 
+     Entering main loop
+ 
