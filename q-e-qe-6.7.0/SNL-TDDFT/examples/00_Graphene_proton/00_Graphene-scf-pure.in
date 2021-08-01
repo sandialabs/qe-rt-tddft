@@ -9,14 +9,14 @@
 /
 &system
     ibrav = 12
-    a = 2.46
-    b = 2.46
+    a = 4.92
+    b = 4.92
     c = 20.0
     cosab = -0.5
     nat = 2
     ntyp = 1
-    ecutwfc = 200.
-    ecutrho = 800.
+    ecutwfc = 400.
+    ecutrho = 1600.
     occupations = 'smearing'
     smearing = 'gaussian'
     degauss = 0.01

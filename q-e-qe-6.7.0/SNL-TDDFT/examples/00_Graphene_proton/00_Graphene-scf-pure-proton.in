@@ -9,8 +9,8 @@
 /
 &system
     ibrav = 12
-    a = 2.46
-    b = 2.46
+    a = 4.92
+    b = 4.92
     c = 20.0
     cosab = -0.5
     nat = 3
