@@ -151,6 +151,11 @@ PROGRAM tddft
   WRITE(stdout, *)
   DO ion_step_counter = 1, this_calculation%nsteps_ion
 
+    ! for 'simple' stopping calculations... just update the position at the beginning of each ionic time step
+    IF(this_calculation%lprojectile_perturbation)THEN
+      tau(:, scratch_index) = tau(:, scratch_index) + vel(:, scratch_index)*this_calculation%dt_ion
+    ENDIF
+
     DO electron_step_counter = 1, this_calculation%nsteps_el_per_nsteps_ion
 
       ! move all of the orbitals forward by one time step
@@ -170,12 +175,12 @@ PROGRAM tddft
 
     ENDDO
 
-    ! compute forces and update the ion positions according to the Verlet algorithm
+    ! compute forces 
     IF(is_allocated_bec_type(becp)) CALL deallocate_bec_type(becp)
     CALL forces()
 
     IF(this_calculation%lprojectile_perturbation)THEN
-      WRITE(stdout,'(5X, " Projectile velocity:",2X, 3F16.8)') vel(:, scratch_index)     
+      WRITE(stdout,'(5X, " Projectile position:",2X, 3F16.8)') tau(:, scratch_index)
     ENDIF
 
     ! update the ion time after the step has been taken

@@ -8,6 +8,7 @@
     tprnfor = .true.
 /
 &system
+    nbnd = 48
     ibrav = 12
     a = 9.84
     b = 9.84
