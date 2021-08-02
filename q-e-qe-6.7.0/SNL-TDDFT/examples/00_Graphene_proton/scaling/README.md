@@ -7,10 +7,60 @@ You can run this script as follows:
 
 python3 generate_graphene_proton_supercell.py 2 2
 
-will generate the 2x2 supercell that you've been studying.
+This will generate the 2x2 supercell that you've been studying in the file graphene_proton_2x2-scf.in.
 By substituting the two arguments (here, 2 and 2) you can change the shape of the tiling.
 E.g., 4 3 would tile the cell 4 times along the first lattice vector and 3 times along the second lattice vector.
 The total number of atoms will be 1 (proton) plus 2 times the product of the two arguments.
 E.g., 2 2 will give you 1 + (2 atoms)*(2 cells in direction A)*(2 cells in direction B).
 
+To run the 2x2 calculation in parallel, you will enter the command
+
+mpiexec -n <# of tasks> -nb NB <path to pw.x>/pw.x -i graphene_proton_2x2-scf.in
+
+where NB is an integer that you will specify that is a factor of both the number of tasks and the number of bands.
+
+So, say that you run this on one node of Manzano.
+Each node has 48 cores and it is natural to then divide the calculation into 48 tasks.
+The division into communicators is such that NB specifies the distribution over bands.
+For the 2x2 tiling, we're specifying the number of bands as 32.
+So you could imagine running with NB=1, 2, 4, 8, and 16.
+You might get funny behavior if you specify 48 tasks and NB=32, though this would be reasonable division of work.
+This is because 32 isn't a factor of 48, even though it is a factor of 32.
+Give it a try, Espresso should be smart enough to divide up the calculation but TDDFT (the next step) might not be.
+
+Once you've run an SCF calculation, you can 
+Next, you'll run a TDDFT calculation using (you guess it) the TDDFT code.
+
+mpiexec -n <# of tasks> -nb NB <path to tddft.x>/tddft.x -i graphene_proton_2x2-tddft.in
+
+Note that the TDDFT code is set up to read the results of the SCF calculation
+specified in the prefix argument of the TDDFT control block in the input file.
+Also note that you can change the electron and ion time steps from their default value and
+this will change the time per step / the overall execution time.
+
+One thing to note is that once you get to a large enough cell, the TDDFT
+calculation will be more parallel than the SCF calculation.
+That is, eventually you won't be able to throw a larger computer at the SCF calculation to get it to finish faster,
+but you'll be able to do so with the TDDF±T calculation.
+Ideally, we will be able to identify where that crossover point is on the machines that you have access to presently.
+
 ## To do list
+
+* Verify that you can run the SCF calculation in parallel for a few different tilings.
+See how the cost scales with the number of times you tesselate the primitive cell.
+You should also take note that I changed a minor mistake in my original geometry specification 
+and now the SCF calculation is converging a bit faster.
+
+* See how the time taken by the SCF calculation varies with # of tasks and NB.
+For a given tiling and number of tasks, what is the NB that results in the fastest execution of the SCF calculation?
+How about the slowest?
+
+* See how the time taken per step in the TDDFT calculation varies with # of tasks and NB.
+For a given tiling and number of tasks, what is the NB that results in the fastest execution of the SCF calculation?
+How about the slowest?
+
+* If you feel like getting into some of the scripting, you can edit generate_graphene_proton_supercell.py 2 2 
+so that you can specify the point at which the proton will pass through the graphene sheet.
+Presently the default is the center of the supercell, i.e., (1/2, 1/2, 0), where the final 
+0 coordinate indicates that the trajectory starts with the proton at the bottom of the cell
+relative to the graphene sheet in the middle of the supercell.
