@@ -119,6 +119,7 @@ CONTAINS
     envelope_index, linear_slope, amplitude, carrier_frequency, delay, width
 
     ! set default values
+    projectile_kinetic_energy = 1.0_dp
     projectile_velocity = (/0.0_dp, 0.0_dp, 1.0_dp/)
     projectile_index = 1
 
