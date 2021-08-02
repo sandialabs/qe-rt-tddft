@@ -56,6 +56,7 @@ fSCFInput.write("/\n")
 
 # the system part of the input namelist
 fSCFInput.write("&system\n")
+fSCFInput.write("    nbnd = "+str(8*nCellsA*nCellsB)+"\n")   # note: the number of bands is padded for scaling studies
 fSCFInput.write("    ibrav = 12\n")
 fSCFInput.write("    a = "+str(rA)+"\n")
 fSCFInput.write("    b = "+str(rB)+"\n")
