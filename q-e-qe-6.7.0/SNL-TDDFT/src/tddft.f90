@@ -130,7 +130,7 @@ PROGRAM tddft
     scratch_real = SQRT(2.d0*(this_calculation%projectile_perturbation%projectile_kinetic_energy)/(amass(scratch_index)*amu_ry*rytoev))
     ! report velocity in Hartree atomic units (because it is what humans use for this
     ! sort of thing) and work with Rydberg atomic units (because it is apparently what computers use...)
-    WRITE(stdout, '(5X, "Projectile velocity ",F12.4," (a.u.) ")') scratch_real/SQRT(2.d0)
+    WRITE(stdout, '(5X, "Projectile velocity ",F12.4," (a.u.) ")') scratch_real/2.d0
     if_pos(:, :) = 0
     if_pos(:, scratch_index) = 1
     vel(:, :) = 0.d0
