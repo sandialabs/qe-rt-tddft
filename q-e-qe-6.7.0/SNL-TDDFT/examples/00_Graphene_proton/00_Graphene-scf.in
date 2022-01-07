@@ -12,7 +12,7 @@
     a = 9.84
     b = 9.84
     c = 20.0
-    cosab = -0.5
+    cosab = 0.5
     nat = 9
     ntyp = 2
     ecutwfc = 200.
