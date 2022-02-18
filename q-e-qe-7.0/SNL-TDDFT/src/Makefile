@@ -1,0 +1,52 @@
+# Makefile for SNL-TDDFT
+
+QE_SOURCE=/home/akonono/qe-rt-tddft/q-e-qe-7.0
+include $(QE_SOURCE)/make.inc
+DFLAGS += 
+
+# location of needed modules
+MODFLAGS = $(MOD_FLAG)$(QE_SOURCE)/Modules \
+           $(MOD_FLAG)$(QE_SOURCE)/FFTXlib $(MOD_FLAG)$(QE_SOURCE)/LAXlib $(MOD_FLAG)$(QE_SOURCE)/MBD \
+           $(MOD_FLAG)$(QE_SOURCE)/KS_Solvers/CG $(MOD_FLAG)$(QE_SOURCE)/KS_Solvers/Davidson $(MOD_FLAG)$(QE_SOURCE)/KS_Solvers/DENSE \
+           $(MOD_FLAG)$(QE_SOURCE)/PW/src $(MOD_FLAG)$(QE_SOURCE)/upflib \
+           $(MOD_FLAG)$(QE_SOURCE)/UtilXlib \
+		   $(MOD_FLAG)$(QE_SOURCE)/XClib $(MOD_FLAG).
+
+TDDFT_OBJS = tddft_version.o it_solver_mod.o propagator_mod.o tddft_functions.o \
+             tddft_envelope_mod.o tddft_perturbations_mod.o tddft_matvecs.o tddft_mod.o tddft.o 
+
+LIBOBJS = $(QE_SOURCE)/upflib/libupf.a
+QEMODS = $(QE_SOURCE)/Modules/libqemod.a \
+         $(QE_SOURCE)/KS_Solvers/Davidson/libdavid.a \
+         $(QE_SOURCE)/KS_Solvers/DENSE/libdense.a \
+         $(QE_SOURCE)/KS_Solvers/CG/libcg.a \
+         $(QE_SOURCE)/KS_Solvers/PPCG/libppcg.a \
+         $(QE_SOURCE)/FFTXlib/libqefft.a \
+         $(QE_SOURCE)/LAXlib/libqela.a \
+		 $(QE_SOURCE)/MBD/libmbd.a \
+         $(QE_SOURCE)/UtilXlib/libutil.a \
+		 $(QE_SOURCE)/dft-d3/libdftd3qe.a \
+		 $(QE_SOURCE)/XClib/xc_lib.a
+
+PWOBJS = $(QE_SOURCE)/PW/src/libpw.a
+
+all: version tddft.x
+
+version:
+	./update_tddft_version
+
+tddft_version.f90: version
+
+
+tddft.x: $(TDDFT_OBJS) $(PWOBJS) $(QEMODS) $(LIBOBJS)
+	$(LD) $(LDFLAGS) -o $@ $(TDDFT_OBJS) $(PWOBJS) $(QEMODS) $(LIBOBJS) $(QELIBS)
+	
+clean:
+	-/bin/rm -f tddft.x *.o *.F90 *__genmod.f90 *.d *.mod *.i *.L
+
+distclean: clean
+	-/bin/rm -f Makefile make.depend
+
+include make.depend
+
+# DO NOT DELETE

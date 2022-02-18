@@ -1,0 +1,44 @@
+&control
+    prefix = 'graphene_proton'
+    calculation = 'scf'
+    restart_mode = 'from_scratch'
+    pseudo_dir = './pseudo/'
+    outdir = './scratch/'
+    tstress = .false.
+    tprnfor = .true.
+/
+&system
+    ibrav = 12
+    a = 9.84
+    b = 9.84
+    c = 20.0
+    cosab = 0.5
+    nat = 9
+    ntyp = 2
+    ecutwfc = 200.
+    ecutrho = 800.
+    occupations = 'smearing'
+    smearing = 'gaussian'
+    degauss = 0.01
+/
+&electrons
+    diagonalization = 'davidson'
+    conv_thr = 1.d-6
+/
+ATOMIC_SPECIES
+H    1   H.upf
+C   12   C.upf
+
+K_POINTS automatic
+1 1 1    0 0 0
+
+ATOMIC_POSITIONS crystal
+H   0.500   0.500   0.000 
+C   0.167   0.167   0.500
+C   0.333   0.333   0.500
+C   0.667   0.167   0.500
+C   0.833   0.333   0.500
+C   0.167   0.667   0.500
+C   0.333   0.833   0.500
+C   0.667   0.667   0.500
+C   0.833   0.833   0.500  
